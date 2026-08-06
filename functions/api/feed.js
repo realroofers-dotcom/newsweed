@@ -1,26 +1,29 @@
 // functions/api/feed.js
-// Fetches the live Newsweed Substack RSS feed and returns parsed JSON
-// for the site's ticker, "Today's brief" cards, and "The wire" list.
+// Fetches published posts from Newsweed's Substack via its public JSON API
+// (more reliable than scraping the RSS/XML feed, which Substack was rate-limiting).
 
 export async function onRequest(context) {
-  const SUBSTACK_FEED_URL = "https://newsweedcom.substack.com/feed";
+  const SUBSTACK_API_URL = "https://newsweedcom.substack.com/api/v1/posts?limit=12";
 
   try {
-    const res = await fetch(SUBSTACK_FEED_URL, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; NewsweedFeedBot/1.0)" }
+    const res = await fetch(SUBSTACK_API_URL, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        "Accept": "application/json"
+      }
     });
 
     if (!res.ok) {
-      throw new Error("Substack feed responded with " + res.status);
+      throw new Error("Substack API responded with " + res.status);
     }
 
-    const xml = await res.text();
-    const items = parseRssItems(xml);
+    const data = await res.json();
+    const items = parsePosts(data);
 
     return new Response(JSON.stringify({ items }), {
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=600" // cache 10 min at the edge
+        "Cache-Control": "public, max-age=1800" // cache 30 min at the edge
       }
     });
   } catch (err) {
@@ -31,53 +34,23 @@ export async function onRequest(context) {
   }
 }
 
-function parseRssItems(xml) {
-  const items = [];
-  const itemBlocks = xml.split("<item>").slice(1); // drop content before first <item>
+function parsePosts(data) {
+  if (!Array.isArray(data)) return [];
 
-  for (const block of itemBlocks) {
-    const chunk = block.split("</item>")[0];
-
-    const title = extractTag(chunk, "title");
-    const link = extractTag(chunk, "link");
-    const pubDateRaw = extractTag(chunk, "pubDate");
-    const description = extractTag(chunk, "description");
-
-    if (!title || !link) continue;
-
-    items.push({
+  return data
+    .filter(post => post && post.title && (post.canonical_url || post.slug))
+    .map(post => ({
       category: "substack",
       categoryLabel: "Newsweed",
-      title: decodeEntities(stripCdata(title)),
-      link: stripCdata(link).trim(),
-      pubDate: pubDateRaw ? new Date(pubDateRaw).toISOString() : new Date().toISOString(),
-      excerpt: truncate(decodeEntities(stripHtml(stripCdata(description || ""))), 140)
-    });
-  }
-
-  return items;
-}
-
-function extractTag(xml, tag) {
-  const match = xml.match(new RegExp("<" + tag + "[^>]*>([\\s\\S]*?)</" + tag + ">"));
-  return match ? match[1].trim() : "";
-}
-
-function stripCdata(str) {
-  return str.replace(/<!\[CDATA\[/g, "").replace(/\]\]>/g, "");
+      title: post.title,
+      link: post.canonical_url || ("https://newsweedcom.substack.com/p/" + post.slug),
+      pubDate: post.post_date || new Date().toISOString(),
+      excerpt: truncate(stripHtml(post.subtitle || post.description || ""), 140)
+    }));
 }
 
 function stripHtml(str) {
-  return str.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function decodeEntities(str) {
-  return str
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+  return String(str).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function truncate(str, maxLen) {

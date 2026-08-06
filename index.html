@@ -58,6 +58,14 @@
   .hero h1 em { font-style: italic; color: var(--moss-bright); }
   .hero p.lede { margin-top: 24px; font-size: 18px; color: var(--slate); max-width: 680px; line-height: 1.6; }
   .hero-actions { margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .hero-future { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--panel-line); max-width: 460px; }
+  .hero-future .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-bright); margin-bottom: 10px; }
+  .hero-future-form { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hero-future-form input[type="email"] { flex: 1; min-width: 200px; padding: 12px 14px; border-radius: 5px; border: 1px solid var(--panel-line); font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; }
+  .hero-future-form button { background: var(--ember); color: var(--ink); font-weight: 600; padding: 12px 20px; border-radius: 5px; border: none; font-size: 14px; cursor: pointer; transition: background 0.15s ease; }
+  .hero-future-form button:hover { background: var(--ember-bright); }
+  .hero-future-form button:disabled { opacity: 0.6; cursor: default; }
+  .hero-future-status { margin-top: 10px; font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
   .btn-primary { background: var(--ember); color: var(--ink); font-weight: 600; padding: 14px 26px; border-radius: 5px; text-decoration: none; font-size: 15px; transition: background 0.15s ease, transform 0.15s ease; display: inline-block; }
   .btn-primary:hover { background: var(--ember-bright); transform: translateY(-1px); }
   .btn-secondary { background: transparent; color: var(--bone); border: 1px solid var(--panel-line); font-weight: 500; padding: 13px 24px; border-radius: 5px; text-decoration: none; font-size: 15px; display: inline-block; }
@@ -189,6 +197,14 @@
     <div class="hero-actions">
       <a class="btn-primary" href="#subscribe">Subscribe free</a>
       <a class="btn-secondary" href="#audience">See the worldwide data</a>
+    </div>
+    <div class="hero-future">
+      <div class="label">Be part of Newsweed's future</div>
+      <form class="hero-future-form" id="heroFutureForm">
+        <input type="email" id="heroFutureEmail" placeholder="you@email.com" required>
+        <button type="submit" id="heroFutureSubmit">Count me in</button>
+      </form>
+      <div class="hero-future-status" id="heroFutureStatus"></div>
     </div>
   </div>
 </section>
@@ -346,37 +362,41 @@
     if (e.key === "Escape") closeAcquireModal();
   });
 
-  const futureForm = document.getElementById("futureForm");
-  const futureStatus = document.getElementById("futureStatus");
-  const futureSubmit = document.getElementById("futureSubmit");
-  futureForm.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const email = document.getElementById("futureEmail").value.trim();
-    futureSubmit.disabled = true;
-    futureSubmit.textContent = "Joining…";
-    futureStatus.textContent = "";
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      });
-      const data = await res.json();
-      if (data.success) {
-        futureStatus.textContent = data.alreadySubscribed
-          ? "You're already on the list — thanks for being here."
-          : "You're in! Watch your inbox for merch drops and offers.";
-        futureForm.reset();
-      } else {
-        futureStatus.textContent = data.error || "Something went wrong. Please try again.";
+  function wireFutureForm(formId, emailId, submitId, statusId) {
+    const form = document.getElementById(formId);
+    const status = document.getElementById(statusId);
+    const submitBtn = document.getElementById(submitId);
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const email = document.getElementById(emailId).value.trim();
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Joining…";
+      status.textContent = "";
+      try {
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (data.success) {
+          status.textContent = data.alreadySubscribed
+            ? "You're already on the list — thanks for being here."
+            : "You're in! Watch your inbox for merch drops and offers.";
+          form.reset();
+        } else {
+          status.textContent = data.error || "Something went wrong. Please try again.";
+        }
+      } catch (err) {
+        status.textContent = "Something went wrong. Please try again.";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Count me in";
       }
-    } catch (err) {
-      futureStatus.textContent = "Something went wrong. Please try again.";
-    } finally {
-      futureSubmit.disabled = false;
-      futureSubmit.textContent = "Count me in";
-    }
-  });
+    });
+  }
+  wireFutureForm("heroFutureForm", "heroFutureEmail", "heroFutureSubmit", "heroFutureStatus");
+  wireFutureForm("futureForm", "futureEmail", "futureSubmit", "futureStatus");
 
   const API_BASE = "/api/feed";
   const EVERGREEN_ITEMS = [

@@ -108,6 +108,17 @@
   .subscribe-strip h2 { font-size: clamp(26px, 3.6vw, 38px); max-width: 640px; margin: 0 auto 14px; }
   .subscribe-strip p { color: var(--slate); max-width: 480px; margin: 0 auto 26px; font-size: 16px; }
 
+  .future-strip { background: var(--ember); color: var(--ink); text-align: center; padding: 56px 24px; border-bottom: 1px solid var(--panel-line); }
+  .future-strip h2 { font-size: clamp(24px, 3.2vw, 32px); max-width: 620px; margin: 0 auto 10px; color: var(--ink); }
+  .future-strip p { opacity: 0.88; max-width: 480px; margin: 0 auto 26px; font-size: 15px; line-height: 1.6; }
+  .future-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 460px; margin: 0 auto; }
+  .future-form input[type="email"] { flex: 1; min-width: 220px; padding: 13px 16px; border-radius: 5px; border: none; font-size: 15px; font-family: 'IBM Plex Sans', sans-serif; }
+  .future-form button { background: var(--moss-bright); color: var(--ink); font-weight: 600; padding: 13px 22px; border-radius: 5px; border: none; font-size: 15px; cursor: pointer; transition: background 0.15s ease; }
+  .future-form button:hover { background: #046b38; }
+  .future-form button:disabled { opacity: 0.6; cursor: default; }
+  .future-note { margin-top: 14px; font-size: 13px; opacity: 0.75; }
+  .future-status { margin-top: 14px; font-size: 14px; font-weight: 500; min-height: 20px; }
+
   .acquire-section { padding: 64px 0; }
   .acquire-box { display: flex; gap: 36px; align-items: center; flex-wrap: wrap; background: var(--panel); border: 1px solid var(--panel-line); border-radius: 14px; padding: 40px; }
   .acquire-box img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 3px solid var(--ink); box-shadow: 0 4px 18px rgba(0,0,0,0.12); }
@@ -275,6 +286,17 @@
   <a class="btn-primary" href="https://newsweedcom.substack.com/subscribe" target="_blank" rel="noopener">Subscribe free on Substack</a>
 </div>
 
+<div class="future-strip" id="future">
+  <h2>Be part of Newsweed's future</h2>
+  <p>Drop your email for early access to merch drops, special offers, and giveaways — t-shirts, hats, and more, before anyone else hears about them.</p>
+  <form class="future-form" id="futureForm">
+    <input type="email" id="futureEmail" placeholder="you@email.com" required>
+    <button type="submit" id="futureSubmit">Count me in</button>
+  </form>
+  <div class="future-status" id="futureStatus"></div>
+  <div class="future-note">No spam — just merch drops and the occasional special offer.</div>
+</div>
+
 <section class="acquire-section" id="acquire">
   <div class="wrap">
     <div class="acquire-box">
@@ -322,6 +344,38 @@
   }
   document.addEventListener("keydown", function(e) {
     if (e.key === "Escape") closeAcquireModal();
+  });
+
+  const futureForm = document.getElementById("futureForm");
+  const futureStatus = document.getElementById("futureStatus");
+  const futureSubmit = document.getElementById("futureSubmit");
+  futureForm.addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const email = document.getElementById("futureEmail").value.trim();
+    futureSubmit.disabled = true;
+    futureSubmit.textContent = "Joining…";
+    futureStatus.textContent = "";
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        futureStatus.textContent = data.alreadySubscribed
+          ? "You're already on the list — thanks for being here."
+          : "You're in! Watch your inbox for merch drops and offers.";
+        futureForm.reset();
+      } else {
+        futureStatus.textContent = data.error || "Something went wrong. Please try again.";
+      }
+    } catch (err) {
+      futureStatus.textContent = "Something went wrong. Please try again.";
+    } finally {
+      futureSubmit.disabled = false;
+      futureSubmit.textContent = "Count me in";
+    }
   });
 
   const API_BASE = "/api/feed";

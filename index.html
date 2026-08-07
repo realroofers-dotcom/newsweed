@@ -129,6 +129,10 @@
   .callout .src { margin-top: 10px; font-size: 12px; color: var(--slate); }
   .newsroom { border-top: 1px solid var(--panel-line); }
   .newsroom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .tipline { border-top: 1px solid var(--panel-line); }
+  .tipline-grid { display: grid; grid-template-columns: minmax(0,0.9fr) minmax(0,1.1fr); gap: 34px; align-items: start; }
+  .journo-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 34px; align-items: start; }
+  .journo-pitch p { font-size: 15px; color: var(--slate); line-height: 1.65; margin-bottom: 14px; max-width: 460px; }
   .nr-card { border: 1px solid var(--panel-line); border-radius: 8px; padding: 26px; background: var(--panel); }
   .nr-card h3 { font-size: 20px; margin-bottom: 8px; }
   .nr-card p.nr-sub { font-size: 14px; color: var(--slate); line-height: 1.55; margin-bottom: 18px; }
@@ -148,7 +152,7 @@
   .nr-status { font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
   .nr-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; line-height: 1.6; color: var(--slate); margin-top: 4px; }
   .nr-counter { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate); margin: -6px 0 2px; }
-  .tipwall { margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--panel-line); }
+  .tipwall { margin-top: 0; }
   .tipwall-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
   .tipwall-head h3 { font-size: 20px; }
   .tipwall-head .meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.08em; }
@@ -163,7 +167,7 @@
   .tip-empty { font-size: 14px; color: var(--slate); padding: 14px 0; }
   @media (max-width: 700px) { .tip-row { flex-direction: column; gap: 4px; } .tip-stamp { min-width: 0; } }
   .acquire-journos { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--moss-bright); margin: -6px 0 18px; }
-  @media (max-width: 800px) { .newsroom-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) { .newsroom-grid, .tipline-grid, .journo-grid { grid-template-columns: 1fr; } }
   .subscribe-strip h2 { font-size: clamp(26px, 3.6vw, 38px); max-width: 640px; margin: 0 auto 14px; }
   .subscribe-strip p { color: var(--slate); max-width: 480px; margin: 0 auto 26px; font-size: 16px; }
 
@@ -354,21 +358,67 @@
   </div>
 </section>
 
+<section class="tipline" id="tipline">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The tip line</h2>
+      <span class="meta">Reader submissions · not validated</span>
+    </div>
+    <div class="tipline-grid">
+
+      <div class="nr-card">
+        <h3>Send us a story or tip</h3>
+        <p class="nr-sub">Something happening in your state or country that the majors are ignoring? Send it in one line. Court rulings, licensing fights, raids, research, business moves, culture — we read everything that comes in.</p>
+        <form class="nr-form" id="tipForm">
+          <input type="text" id="tipHeadline" placeholder="Your tip in one line" maxlength="120" required>
+          <div class="nr-counter"><span id="tipHeadlineCount">0</span>/120 — this is the line that gets posted</div>
+          <textarea id="tipDetails" placeholder="Details for us only: who, where, when, and how you know." maxlength="500" required></textarea>
+          <div class="nr-counter"><span id="tipDetailsCount">0</span>/500 — not published, for our checking</div>
+          <input type="url" id="tipLink" placeholder="Link or source (optional)">
+          <div class="row2">
+            <input type="text" id="tipName" placeholder="Your name (optional)">
+            <input type="email" id="tipEmail" placeholder="Email, if we can follow up">
+          </div>
+          <input type="text" id="tipHp" class="nr-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" id="tipSubmit">Send it in</button>
+          <div class="nr-status" id="tipStatus" role="status" aria-live="polite"></div>
+          <div class="nr-note">Your name and email are never shown · Posted tips show region and time only · Don't send anything you can't stand behind</div>
+        </form>
+      </div>
+
+      <div class="tipwall" id="tipwall">
+        <div class="tipwall-head">
+          <h3>Last 24 hours</h3>
+        </div>
+        <div class="tip-disclaimer">
+          <strong>Tips are not validated.</strong> Nothing on this wall has been verified by Newsweed.com. We read what comes in and post what seems reasonable — that is a judgment call, not a fact-check, and we can be wrong about it. Every line here is an unconfirmed claim from a reader, not Newsweed reporting. When a tip becomes a Newsweed story, it is reported and sourced separately, and it will say so.
+        </div>
+        <div id="tipwallList"><div class="loading-note">Loading tips…</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section class="newsroom" id="newsroom">
   <div class="wrap">
     <div class="section-head">
-      <h2>The newsroom</h2>
-      <span class="meta">Write for us · Send us a story</span>
+      <h2>Write for Newsweed</h2>
+      <span class="meta">Reporters · Columnists · Photographers · Stringers</span>
     </div>
-    <div class="newsroom-grid">
+    <div class="journo-grid">
 
-      <div class="nr-card">
+      <div class="journo-pitch">
         <div class="nr-count">
           <span class="num" id="journoCount">—</span>
           <span class="lab" id="journoLabel">journalists signed up to write for Newsweed</span>
         </div>
-        <h3>Write for Newsweed</h3>
-        <p class="nr-sub">Reporters, columnists, photographers, and stringers — worldwide. Tell us your beat and where you are. As assignments and budget come online, we work down this list.</p>
+        <p>Newsweed is building a roster of working journalists across every market where this beat matters — statehouses, courtrooms, trade shows, and the streets. Worldwide, not just American.</p>
+        <p>Tell us your beat and where you are. As assignments and budget come online, we work down this list. This is a roster, not a job offer — but nothing gets assigned to anyone who isn't on it.</p>
+      </div>
+
+      <div class="nr-card">
+        <h3>Join the roster</h3>
         <form class="nr-form" id="journoForm">
           <div class="row2">
             <input type="text" id="journoName" placeholder="Your name" autocomplete="name" required>
@@ -386,37 +436,6 @@
         </form>
       </div>
 
-      <div class="nr-card">
-        <h3>Submit a story or tip</h3>
-        <p class="nr-sub">Something happening in your state or country that the majors are ignoring? Send it in one line. Tips post unvalidated — we run what looks reasonable, not as Newsweed reporting. Court rulings, licensing fights, raids, research, business moves, culture — we read everything that comes in.</p>
-        <form class="nr-form" id="tipForm">
-          <input type="text" id="tipHeadline" placeholder="Your tip in one line" maxlength="120" required>
-          <div class="nr-counter"><span id="tipHeadlineCount">0</span>/120 — this is the line that gets posted</div>
-          <textarea id="tipDetails" placeholder="Details for us only: who, where, when, and how you know." maxlength="500" required></textarea>
-          <div class="nr-counter"><span id="tipDetailsCount">0</span>/500 — not published, for our checking</div>
-          <input type="url" id="tipLink" placeholder="Link or source (optional)">
-          <div class="row2">
-            <input type="text" id="tipName" placeholder="Your name (optional)">
-            <input type="email" id="tipEmail" placeholder="Email, if we can follow up">
-          </div>
-          <input type="text" id="tipHp" class="nr-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button type="submit" id="tipSubmit">Send it in</button>
-          <div class="nr-status" id="tipStatus" role="status" aria-live="polite"></div>
-          <div class="nr-note">Tips are not validated — we post what seems reasonable, unverified · Your name and email are never shown · Posted tips show region and time only · Don't send anything you can't stand behind</div>
-        </form>
-      </div>
-
-    </div>
-
-    <div class="tipwall" id="tipwall">
-      <div class="tipwall-head">
-        <h3>The tip line — last 24 hours</h3>
-        <span class="meta" id="tipwallMeta">Reader submissions · not validated</span>
-      </div>
-      <div class="tip-disclaimer">
-        <strong>Tips are not validated.</strong> Nothing on this wall has been verified by Newsweed.com. We read what comes in and post what seems reasonable — that is a judgment call, not a fact-check, and we can be wrong about it. Every line here is an unconfirmed claim from a reader, not Newsweed reporting. When a tip becomes a Newsweed story, it is reported and sourced separately, and it will say so.
-      </div>
-      <div id="tipwallList"><div class="loading-note">Loading tips…</div></div>
     </div>
   </div>
 </section>

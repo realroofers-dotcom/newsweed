@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Newsweed — Tip queue</title>
+<style>
+  :root { --ink:#ffffff; --bone:#14150f; --panel:#f5f5f0; --panel-line:#e0e0d6;
+          --slate:#6b6b5e; --moss:#0f9d58; --moss-bright:#0b7a43; --ember:#2e3192; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:20px 16px 60px; background:var(--ink); color:var(--bone);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; line-height:1.5; }
+  .wrap { max-width:760px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sub { color:var(--slate); font-size:13px; margin-bottom:20px; }
+  .keybar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
+  .keybar input { flex:1; min-width:200px; padding:12px; border:1px solid var(--panel-line);
+                  border-radius:5px; font-size:16px; }
+  .keybar button { background:var(--ember); color:#fff; border:none; border-radius:5px;
+                   padding:12px 20px; font-size:15px; font-weight:600; cursor:pointer; }
+  .tip { border:1px solid var(--panel-line); border-radius:8px; padding:16px; margin-bottom:14px;
+         background:var(--panel); }
+  .stamp { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px;
+           color:var(--slate); margin-bottom:8px; }
+  .stamp b { color:var(--moss-bright); }
+  .headline { width:100%; font-size:16px; font-weight:600; padding:10px; border-radius:5px;
+              border:1px solid var(--panel-line); margin-bottom:10px; font-family:inherit; }
+  .details { font-size:14px; color:#3a3a30; background:#fff; border:1px solid var(--panel-line);
+             border-radius:5px; padding:10px; margin-bottom:10px; white-space:pre-wrap; }
+  .meta { font-size:12px; color:var(--slate); margin-bottom:12px; word-break:break-all; }
+  .meta a { color:var(--ember); }
+  .acts { display:flex; gap:10px; }
+  .acts button { border:none; border-radius:5px; padding:11px 20px; font-size:14px;
+                 font-weight:600; cursor:pointer; }
+  .ok { background:var(--moss); color:#fff; }
+  .no { background:#fff; color:#9b2226; border:1px solid #d9c2c2; }
+  .note { font-size:13px; color:var(--slate); padding:16px 0; }
+  .err { color:#9b2226; font-size:14px; padding:10px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tip queue</h1>
+  <div class="sub">Nothing posts to Newsweed.com until you approve it here. Approving means the line seems reasonable enough to post — the site states plainly that tips are not validated, so you are not vouching for it. Reject anything naming a person or business in a way that could be defamatory if false.</div>
+
+  <div class="keybar">
+    <input type="password" id="adminKey" placeholder="Admin key" autocomplete="off">
+    <button id="loadBtn">Load queue</button>
+  </div>
+
+  <div id="out"><div class="note">Enter your admin key to see pending tips.</div></div>
+</div>
+
+<script>
+  const out = document.getElementById("out");
+  const keyInput = document.getElementById("adminKey");
+
+  // Remember the key for this browser only, so you don't retype it every time
+  const saved = sessionStorage.getItem("nwTipKey");
+  if (saved) keyInput.value = saved;
+
+  function esc(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    })[c]);
+  }
+
+  function when(iso) {
+    const d = new Date(iso);
+    return isNaN(d) ? "" : d.toLocaleString();
+  }
+
+  async function load() {
+    const key = keyInput.value.trim();
+    if (!key) { out.innerHTML = '<div class="err">Enter your admin key.</div>'; return; }
+    sessionStorage.setItem("nwTipKey", key);
+    out.innerHTML = '<div class="note">Loading…</div>';
+    try {
+      const res = await fetch("/api/tips?pending=1&admin=" + encodeURIComponent(key));
+      const data = await res.json();
+      if (data.error) { out.innerHTML = '<div class="err">' + esc(data.error) + '</div>'; return; }
+      const tips = data.pending || [];
+      if (!tips.length) { out.innerHTML = '<div class="note">Queue is empty. Nothing waiting on you.</div>'; return; }
+      out.innerHTML = tips.map(t => `
+        <div class="tip" data-key="${esc(t.key)}">
+          <div class="stamp"><b>${esc(t.place || "Unknown")}</b> · ${esc(when(t.submitted))}</div>
+          <input class="headline" value="${esc(t.headline)}" maxlength="120">
+          <div class="details">${esc(t.details)}</div>
+          <div class="meta">
+            ${t.link ? 'Source: <a href="' + esc(t.link) + '" target="_blank" rel="noopener nofollow">' + esc(t.link) + '</a><br>' : ""}
+            ${t.name ? "From: " + esc(t.name) + " " : ""}${t.email ? "&lt;" + esc(t.email) + "&gt;" : ""}
+          </div>
+          <div class="acts">
+            <button class="ok">Approve &amp; post</button>
+            <button class="no">Reject</button>
+          </div>
+        </div>`).join("");
+
+      out.querySelectorAll(".tip").forEach(card => {
+        const k = card.dataset.key;
+        card.querySelector(".ok").addEventListener("click", () =>
+          act(card, k, "approve", card.querySelector(".headline").value));
+        card.querySelector(".no").addEventListener("click", () => {
+          if (confirm("Reject and delete this tip?")) act(card, k, "reject");
+        });
+      });
+    } catch (err) {
+      out.innerHTML = '<div class="err">Could not load the queue.</div>';
+    }
+  }
+
+  async function act(card, key, action, headline) {
+    const buttons = card.querySelectorAll("button");
+    buttons.forEach(b => b.disabled = true);
+    try {
+      const res = await fetch("/api/tips?admin=" + encodeURIComponent(keyInput.value.trim()), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, key, headline })
+      });
+      const data = await res.json();
+      if (data.success) {
+        card.style.opacity = "0.4";
+        card.querySelector(".acts").innerHTML =
+          '<span class="note">' + (action === "approve" ? "Posted." : "Rejected.") + "</span>";
+      } else {
+        alert(data.error || "Something went wrong.");
+        buttons.forEach(b => b.disabled = false);
+      }
+    } catch (err) {
+      alert("Something went wrong.");
+      buttons.forEach(b => b.disabled = false);
+    }
+  }
+
+  document.getElementById("loadBtn").addEventListener("click", load);
+  keyInput.addEventListener("keydown", e => { if (e.key === "Enter") load(); });
+  if (saved) load();
+</script>
+</body>
+</html>

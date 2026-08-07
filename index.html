@@ -32,6 +32,7 @@
   a { color: inherit; }
   .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
   .mono { font-family: 'IBM Plex Mono', monospace; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .ticker-bar { background: var(--panel); border-bottom: 1px solid var(--panel-line); overflow: hidden; position: sticky; top: 0; z-index: 50; }
   .ticker-track { display: flex; width: max-content; animation: scroll-left 70s linear infinite; }
   .ticker-track:hover { animation-play-state: paused; }
@@ -56,16 +57,30 @@
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   .hero h1 { font-size: clamp(36px, 5.5vw, 60px); line-height: 1.05; max-width: 920px; }
   .hero h1 em { font-style: italic; color: var(--moss-bright); }
-  .hero p.lede { margin-top: 24px; font-size: 18px; color: var(--slate); max-width: 680px; line-height: 1.6; }
-  .hero-actions { margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-  .hero-future { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--panel-line); max-width: 460px; }
-  .hero-future .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss-bright); margin-bottom: 10px; }
-  .hero-future-form { display: flex; gap: 10px; flex-wrap: wrap; }
-  .hero-future-form input[type="email"] { flex: 1; min-width: 200px; padding: 12px 14px; border-radius: 5px; border: 1px solid var(--panel-line); font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; }
-  .hero-future-form button { background: var(--ember); color: var(--ink); font-weight: 600; padding: 12px 20px; border-radius: 5px; border: none; font-size: 14px; cursor: pointer; transition: background 0.15s ease; }
-  .hero-future-form button:hover { background: var(--ember-bright); }
-  .hero-future-form button:disabled { opacity: 0.6; cursor: default; }
-  .hero-future-status { margin-top: 10px; font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
+  .hero p.lede { margin-top: 18px; font-size: 18px; color: var(--slate); max-width: 680px; line-height: 1.6; }
+  .hero p.lede:first-of-type { margin-top: 24px; }
+  .hero p.lede-contact { font-weight: 600; color: var(--bone); }
+  .hero p.lede-contact a { color: var(--ember-bright); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .hero-cta-row { margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--panel-line); display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; max-width: 900px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .giveaway { flex: 1 1 400px; max-width: 520px; }
+  @media (max-width: 860px) {
+    .hero-cta-row { gap: 26px; }
+    .hero-actions { order: -1; width: 100%; }
+    .giveaway { flex: 1 1 100%; }
+  }
+  .giveaway-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink); background: var(--moss); padding: 4px 8px; border-radius: 3px; font-weight: 500; }
+  .giveaway p.sub { margin: 10px 0 12px; font-size: 14px; color: var(--slate); line-height: 1.5; }
+  .giveaway p.sub strong { color: var(--bone); font-weight: 600; }
+  .giveaway-form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .giveaway-form input[type="email"] { flex: 1; min-width: 200px; padding: 12px 14px; border-radius: 5px; border: 1px solid var(--panel-line); font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; }
+  .giveaway-form input[type="email"]:focus { outline: 2px solid var(--moss); outline-offset: 1px; }
+  .giveaway-form button { background: var(--ember); color: var(--ink); font-weight: 600; padding: 12px 20px; border-radius: 5px; border: none; font-size: 14px; cursor: pointer; transition: background 0.15s ease; }
+  .giveaway-form button:hover { background: var(--ember-bright); }
+  .giveaway-form button:disabled { opacity: 0.6; cursor: default; }
+  .giveaway-status { margin-top: 10px; font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
+  .giveaway-rules { margin-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; line-height: 1.5; color: var(--slate); }
+  @media (max-width: 640px) { .giveaway { padding: 22px 20px 20px; } .giveaway-form input[type="email"], .giveaway-form button { width: 100%; flex: none; } }
   .btn-primary { background: var(--ember); color: var(--ink); font-weight: 600; padding: 14px 26px; border-radius: 5px; text-decoration: none; font-size: 15px; transition: background 0.15s ease, transform 0.15s ease; display: inline-block; }
   .btn-primary:hover { background: var(--ember-bright); transform: translateY(-1px); }
   .btn-secondary { background: transparent; color: var(--bone); border: 1px solid var(--panel-line); font-weight: 500; padding: 13px 24px; border-radius: 5px; text-decoration: none; font-size: 15px; display: inline-block; }
@@ -112,7 +127,43 @@
   .callout .k { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ember-bright); }
   .callout p { margin: 10px 0 0; font-size: 15px; color: var(--bone); line-height: 1.6; }
   .callout .src { margin-top: 10px; font-size: 12px; color: var(--slate); }
-  .subscribe-strip { background: var(--panel); text-align: center; padding: 64px 24px; border-bottom: 1px solid var(--panel-line); }
+  .newsroom { border-top: 1px solid var(--panel-line); }
+  .newsroom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .nr-card { border: 1px solid var(--panel-line); border-radius: 8px; padding: 26px; background: var(--panel); }
+  .nr-card h3 { font-size: 20px; margin-bottom: 8px; }
+  .nr-card p.nr-sub { font-size: 14px; color: var(--slate); line-height: 1.55; margin-bottom: 18px; }
+  .nr-count { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--panel-line); }
+  .nr-count .num { font-family: 'Fraunces', Georgia, serif; font-size: 42px; line-height: 1; color: var(--moss-bright); font-weight: 700; }
+  .nr-count .lab { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); max-width: 180px; line-height: 1.5; }
+  .nr-form { display: flex; flex-direction: column; gap: 10px; }
+  .nr-form input, .nr-form textarea, .nr-form select { width: 100%; padding: 11px 13px; border-radius: 5px; border: 1px solid var(--panel-line); font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; background: var(--ink); color: var(--bone); }
+  .nr-form textarea { min-height: 96px; resize: vertical; }
+  .nr-form input:focus, .nr-form textarea:focus { outline: 2px solid var(--moss); outline-offset: 1px; }
+  .nr-form .row2 { display: flex; gap: 10px; flex-wrap: wrap; }
+  .nr-form .row2 > * { flex: 1; min-width: 150px; }
+  .nr-form button { background: var(--ember); color: var(--ink); font-weight: 600; padding: 13px 22px; border-radius: 5px; border: none; font-size: 15px; cursor: pointer; align-self: flex-start; transition: background 0.15s ease; }
+  .nr-form button:hover { background: var(--ember-bright); }
+  .nr-form button:disabled { opacity: 0.6; cursor: default; }
+  .nr-hp { position: absolute; left: -9999px; opacity: 0; height: 0; }
+  .nr-status { font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
+  .nr-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; line-height: 1.6; color: var(--slate); margin-top: 4px; }
+  .nr-counter { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate); margin: -6px 0 2px; }
+  .tipwall { margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--panel-line); }
+  .tipwall-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .tipwall-head h3 { font-size: 20px; }
+  .tipwall-head .meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.08em; }
+  .tip-disclaimer { background: var(--panel); border-left: 3px solid var(--slate); border-radius: 0 5px 5px 0; padding: 13px 16px; margin-bottom: 16px; font-size: 13px; line-height: 1.6; color: var(--slate); max-width: 860px; }
+  .tip-disclaimer strong { color: var(--bone); }
+  .tip-row { display: flex; gap: 14px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--panel-line); font-size: 15px; line-height: 1.5; }
+  .tip-row:last-child { border-bottom: none; }
+  .tip-stamp { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--slate); white-space: nowrap; letter-spacing: 0.04em; flex-shrink: 0; min-width: 168px; }
+  .tip-stamp .place { color: var(--moss-bright); }
+  .tip-text { color: var(--bone); }
+  .tip-text a { color: var(--ember-bright); text-decoration: none; border-bottom: 1px solid currentColor; font-size: 12px; margin-left: 6px; }
+  .tip-empty { font-size: 14px; color: var(--slate); padding: 14px 0; }
+  @media (max-width: 700px) { .tip-row { flex-direction: column; gap: 4px; } .tip-stamp { min-width: 0; } }
+  .acquire-journos { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--moss-bright); margin: -6px 0 18px; }
+  @media (max-width: 800px) { .newsroom-grid { grid-template-columns: 1fr; } }
   .subscribe-strip h2 { font-size: clamp(26px, 3.6vw, 38px); max-width: 640px; margin: 0 auto 14px; }
   .subscribe-strip p { color: var(--slate); max-width: 480px; margin: 0 auto 26px; font-size: 16px; }
 
@@ -193,18 +244,25 @@
   <div class="wrap">
     <div class="eyebrow">A brand built for a worldwide audience, not just an American one</div>
     <h1>News for the <em>hundreds of millions</em><br>cannabis touches — everywhere.</h1>
-    <p class="lede">Newsweed speaks to four audiences at once: people who use cannabis, people who used to, people thinking about it, and people who will never touch it but think about it anyway. Politics, crime, business, culture, sports, obituaries — daily news for readers mainstream outlets still treat as a niche, when they're closer to a majority.</p>
+    <p class="lede">Newsweed.com can become a very powerful voice in news, and here is why. Is news today meant to inform or to persuade? Or is it simply a fact that if you want to change people's minds, you change the information you give them? That is the issue with news today: it has become the business of pushing the masses in one direction or another.</p>
+    <p class="lede">We hope the strong minds of the weed audience will demand broad perspectives, so they can move the news in the right direction. Major media companies should take a hard look at this powerful demographic and bring Newsweed.com to the next level. We are considering carefully who to sell to or partner with, because the weed audience is growing into one of the largest and most diverse audiences in the world.</p>
+    <p class="lede lede-contact">Contact Mark Nejmeh about this opportunity: <a href="tel:+17329953914">732-995-3914</a></p>
+    <div class="hero-cta-row">
+    <div class="giveaway" id="giveaway">
+      <span class="giveaway-badge">Free giveaway</span>
+      <p class="sub">Enter your email for a chance to win a <strong>Newsweed t-shirt and hat</strong> — plus first look at merch drops and offers.</p>
+      <form class="giveaway-form" id="giveawayForm">
+        <label for="giveawayEmail" class="visually-hidden">Email address</label>
+        <input type="email" id="giveawayEmail" placeholder="you@email.com" autocomplete="email" required>
+        <button type="submit" id="giveawaySubmit">Enter to win</button>
+      </form>
+      <div class="giveaway-status" id="giveawayStatus" role="status" aria-live="polite"></div>
+      <div class="giveaway-rules">No purchase necessary · One entry per email · 21+ · Drawn monthly</div>
+    </div>
     <div class="hero-actions">
       <a class="btn-primary" href="#subscribe">Subscribe free</a>
       <a class="btn-secondary" href="#audience">See the worldwide data</a>
     </div>
-    <div class="hero-future">
-      <div class="label">Be part of Newsweed's future</div>
-      <form class="hero-future-form" id="heroFutureForm">
-        <input type="email" id="heroFutureEmail" placeholder="you@email.com" required>
-        <button type="submit" id="heroFutureSubmit">Count me in</button>
-      </form>
-      <div class="hero-future-status" id="heroFutureStatus"></div>
     </div>
   </div>
 </section>
@@ -296,6 +354,73 @@
   </div>
 </section>
 
+<section class="newsroom" id="newsroom">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The newsroom</h2>
+      <span class="meta">Write for us · Send us a story</span>
+    </div>
+    <div class="newsroom-grid">
+
+      <div class="nr-card">
+        <div class="nr-count">
+          <span class="num" id="journoCount">—</span>
+          <span class="lab" id="journoLabel">journalists signed up to write for Newsweed</span>
+        </div>
+        <h3>Write for Newsweed</h3>
+        <p class="nr-sub">Reporters, columnists, photographers, and stringers — worldwide. Tell us your beat and where you are. As assignments and budget come online, we work down this list.</p>
+        <form class="nr-form" id="journoForm">
+          <div class="row2">
+            <input type="text" id="journoName" placeholder="Your name" autocomplete="name" required>
+            <input type="email" id="journoEmail" placeholder="you@email.com" autocomplete="email" required>
+          </div>
+          <div class="row2">
+            <input type="text" id="journoBeat" placeholder="Beat (politics, business, culture…)">
+            <input type="text" id="journoLocation" placeholder="City / country">
+          </div>
+          <input type="url" id="journoLink" placeholder="Link to your work (optional)">
+          <input type="text" id="journoHp" class="nr-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" id="journoSubmit">Add me to the list</button>
+          <div class="nr-status" id="journoStatus" role="status" aria-live="polite"></div>
+          <div class="nr-note">Free to join · No exclusivity · We contact you before publishing anything of yours</div>
+        </form>
+      </div>
+
+      <div class="nr-card">
+        <h3>Submit a story or tip</h3>
+        <p class="nr-sub">Something happening in your state or country that the majors are ignoring? Send it in one line. Tips post unvalidated — we run what looks reasonable, not as Newsweed reporting. Court rulings, licensing fights, raids, research, business moves, culture — we read everything that comes in.</p>
+        <form class="nr-form" id="tipForm">
+          <input type="text" id="tipHeadline" placeholder="Your tip in one line" maxlength="120" required>
+          <div class="nr-counter"><span id="tipHeadlineCount">0</span>/120 — this is the line that gets posted</div>
+          <textarea id="tipDetails" placeholder="Details for us only: who, where, when, and how you know." maxlength="500" required></textarea>
+          <div class="nr-counter"><span id="tipDetailsCount">0</span>/500 — not published, for our checking</div>
+          <input type="url" id="tipLink" placeholder="Link or source (optional)">
+          <div class="row2">
+            <input type="text" id="tipName" placeholder="Your name (optional)">
+            <input type="email" id="tipEmail" placeholder="Email, if we can follow up">
+          </div>
+          <input type="text" id="tipHp" class="nr-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" id="tipSubmit">Send it in</button>
+          <div class="nr-status" id="tipStatus" role="status" aria-live="polite"></div>
+          <div class="nr-note">Tips are not validated — we post what seems reasonable, unverified · Your name and email are never shown · Posted tips show region and time only · Don't send anything you can't stand behind</div>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="tipwall" id="tipwall">
+      <div class="tipwall-head">
+        <h3>The tip line — last 24 hours</h3>
+        <span class="meta" id="tipwallMeta">Reader submissions · not validated</span>
+      </div>
+      <div class="tip-disclaimer">
+        <strong>Tips are not validated.</strong> Nothing on this wall has been verified by Newsweed.com. We read what comes in and post what seems reasonable — that is a judgment call, not a fact-check, and we can be wrong about it. Every line here is an unconfirmed claim from a reader, not Newsweed reporting. When a tip becomes a Newsweed story, it is reported and sourced separately, and it will say so.
+      </div>
+      <div id="tipwallList"><div class="loading-note">Loading tips…</div></div>
+    </div>
+  </div>
+</section>
+
 <div class="subscribe-strip" id="subscribe">
   <h2>One email a day. Straight reporting, worldwide, no stigma.</h2>
   <p>Join readers who want real news without pretending a few hundred million people don't exist.</p>
@@ -322,7 +447,8 @@
         <h2>Newsweed.com is for sale</h2>
         <div class="price">$900,000</div>
         <p>Domain, brand, and an active Substack audience — positioned ahead of one of the largest underserved readerships in world media. Talk to me directly, no gatekeepers.</p>
-        <p style="font-size:14px; color:var(--slate); margin:-6px 0 18px;">A compensated merger or partnership with an established media company would also be considered, in place of an outright sale.</p>
+        <p style="font-size:14px; color:var(--slate); margin:-6px 0 10px;">A compensated merger or partnership with an established media company would also be considered, in place of an outright sale.</p>
+        <div class="acquire-journos" id="acquireJournos"></div>
         <div class="acquire-actions">
           <a class="btn-primary" href="tel:7329953914">Call 732-995-3914</a>
           <a class="btn-secondary" href="mailto:realroofers@gmail.com?subject=Newsweed.com%20Acquisition%20Inquiry">Email realroofers@gmail.com</a>
@@ -362,27 +488,175 @@
     if (e.key === "Escape") closeAcquireModal();
   });
 
-  function wireFutureForm(formId, emailId, submitId, statusId) {
+  const JOURNO_SHOW_AT = 5;
+  async function loadJournoCount() {
+    const numEl = document.getElementById("journoCount");
+    const labEl = document.getElementById("journoLabel");
+    const acqEl = document.getElementById("acquireJournos");
+    try {
+      const res = await fetch("/api/journalists");
+      const data = await res.json();
+      const n = Number(data.count) || 0;
+      if (n >= JOURNO_SHOW_AT) {
+        numEl.textContent = n.toLocaleString();
+        labEl.textContent = "journalists signed up to write for Newsweed";
+        if (acqEl) acqEl.textContent = n.toLocaleString() + " journalists worldwide have signed up to write for Newsweed.";
+      } else {
+        numEl.textContent = "";
+        labEl.textContent = "Be among the first journalists on the Newsweed roster";
+        if (acqEl) acqEl.textContent = "";
+      }
+    } catch (err) {
+      numEl.textContent = "";
+      labEl.textContent = "Join the Newsweed roster";
+    }
+  }
+  loadJournoCount();
+
+  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+
+  const journoForm = document.getElementById("journoForm");
+  if (journoForm) {
+    journoForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById("journoSubmit");
+      const status = document.getElementById("journoStatus");
+      const rest = btn.textContent;
+      btn.disabled = true; btn.textContent = "Sending…"; status.textContent = "";
+      try {
+        const res = await fetch("/api/journalists", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: val("journoName"), email: val("journoEmail"),
+            beat: val("journoBeat"), location: val("journoLocation"),
+            link: val("journoLink"), website: val("journoHp")
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          status.textContent = data.alreadyListed
+            ? "You're already on the roster — we have your details."
+            : "You're on the roster. We'll be in touch as assignments open up.";
+          journoForm.reset();
+          loadJournoCount();
+        } else {
+          status.textContent = data.error || "Something went wrong. Please try again.";
+        }
+      } catch (err) {
+        status.textContent = "Something went wrong. Please try again.";
+      } finally { btn.disabled = false; btn.textContent = rest; }
+    });
+  }
+
+  function bindCounter(inputId, countId) {
+    const input = document.getElementById(inputId);
+    const out = document.getElementById(countId);
+    if (!input || !out) return;
+    const update = () => { out.textContent = input.value.length; };
+    input.addEventListener("input", update);
+    update();
+  }
+  bindCounter("tipHeadline", "tipHeadlineCount");
+  bindCounter("tipDetails", "tipDetailsCount");
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[c]);
+  }
+
+  function stampTime(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleString(undefined, {
+      month: "short", day: "numeric", hour: "numeric", minute: "2-digit"
+    });
+  }
+
+  async function loadTipWall() {
+    const list = document.getElementById("tipwallList");
+    if (!list) return;
+    try {
+      const res = await fetch("/api/tips");
+      const data = await res.json();
+      const tips = data.tips || [];
+      if (!tips.length) {
+        list.innerHTML = '<div class="tip-empty">No tips posted in the last 24 hours. Send one in — the wall clears daily, so nothing old sits here.</div>';
+        return;
+      }
+      list.innerHTML = tips.map(t => {
+        const link = t.link
+          ? ' <a href="' + escapeHtml(t.link) + '" target="_blank" rel="noopener nofollow">source</a>'
+          : "";
+        return '<div class="tip-row">'
+          + '<span class="tip-stamp"><span class="place">' + escapeHtml(t.place || "Unknown") + '</span> · ' + escapeHtml(stampTime(t.submitted)) + '</span>'
+          + '<span class="tip-text">' + escapeHtml(t.headline) + link + '</span>'
+          + '</div>';
+      }).join("");
+    } catch (err) {
+      list.innerHTML = '<div class="tip-empty">Tip line unavailable right now.</div>';
+    }
+  }
+  loadTipWall();
+  setInterval(loadTipWall, 5 * 60 * 1000);
+
+  const tipForm = document.getElementById("tipForm");
+  if (tipForm) {
+    tipForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById("tipSubmit");
+      const status = document.getElementById("tipStatus");
+      const rest = btn.textContent;
+      btn.disabled = true; btn.textContent = "Sending…"; status.textContent = "";
+      try {
+        const res = await fetch("/api/tips", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            headline: val("tipHeadline"), details: val("tipDetails"),
+            link: val("tipLink"), name: val("tipName"),
+            email: val("tipEmail"), website: val("tipHp")
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          status.textContent = "Got it. If it looks reasonable it posts to the tip line, marked unvalidated.";
+          tipForm.reset();
+        } else {
+          status.textContent = data.error || "Something went wrong. Please try again.";
+        }
+      } catch (err) {
+        status.textContent = "Something went wrong. Please try again.";
+      } finally { btn.disabled = false; btn.textContent = rest; }
+    });
+  }
+
+  function wireFutureForm(formId, emailId, submitId, statusId, opts) {
     const form = document.getElementById(formId);
+    if (!form) return;
     const status = document.getElementById(statusId);
     const submitBtn = document.getElementById(submitId);
+    const settings = opts || {};
+    const restLabel = submitBtn.textContent;
+    const busyLabel = settings.busyLabel || "Sending…";
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
       const email = document.getElementById(emailId).value.trim();
       submitBtn.disabled = true;
-      submitBtn.textContent = "Joining…";
+      submitBtn.textContent = busyLabel;
       status.textContent = "";
       try {
         const res = await fetch("/api/subscribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, source: settings.source || "newsweed.com" })
         });
         const data = await res.json();
         if (data.success) {
           status.textContent = data.alreadySubscribed
-            ? "You're already on the list — thanks for being here."
-            : "You're in! Watch your inbox for merch drops and offers.";
+            ? (settings.repeatMsg || "You're already on the list — thanks for being here.")
+            : (settings.successMsg || "You're in! Watch your inbox for merch drops and offers.");
           form.reset();
         } else {
           status.textContent = data.error || "Something went wrong. Please try again.";
@@ -391,12 +665,20 @@
         status.textContent = "Something went wrong. Please try again.";
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Count me in";
+        submitBtn.textContent = restLabel;
       }
     });
   }
-  wireFutureForm("heroFutureForm", "heroFutureEmail", "heroFutureSubmit", "heroFutureStatus");
-  wireFutureForm("futureForm", "futureEmail", "futureSubmit", "futureStatus");
+  wireFutureForm("giveawayForm", "giveawayEmail", "giveawaySubmit", "giveawayStatus", {
+    source: "hero-giveaway",
+    busyLabel: "Entering…",
+    successMsg: "You're entered — good luck. We'll email the winner and send merch drops your way.",
+    repeatMsg: "You're already entered — one entry per email, so you're all set."
+  });
+  wireFutureForm("futureForm", "futureEmail", "futureSubmit", "futureStatus", {
+    source: "footer-signup",
+    busyLabel: "Joining…"
+  });
 
   const API_BASE = "/api/feed";
   const EVERGREEN_ITEMS = [

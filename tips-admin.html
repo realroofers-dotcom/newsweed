@@ -37,6 +37,14 @@
   .no { background:#fff; color:#9b2226; border:1px solid #d9c2c2; }
   .note { font-size:13px; color:var(--slate); padding:16px 0; }
   .err { color:#9b2226; font-size:14px; padding:10px 0; }
+  .exports { margin-top:34px; padding-top:22px; border-top:1px solid var(--panel-line); }
+  .exports h2 { font-size:18px; margin:0 0 4px; }
+  .dl { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .dl button { background:#fff; border:1px solid var(--panel-line); color:var(--bone);
+               border-radius:5px; padding:12px 18px; font-size:14px; font-weight:600; cursor:pointer; }
+  .dl button:hover { border-color:var(--moss); color:var(--moss-bright); }
+  .dl button:disabled { opacity:0.5; cursor:default; }
+  .dlstatus { font-size:13px; color:var(--moss-bright); min-height:18px; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -50,6 +58,17 @@
   </div>
 
   <div id="out"><div class="note">Enter your admin key to see pending tips.</div></div>
+
+  <div class="exports" id="exports" hidden>
+    <h2>Download your lists</h2>
+    <div class="sub">Saves a CSV you can open in Excel or import into a mailing service. Keep a copy somewhere off Cloudflare.</div>
+    <div class="dl">
+      <button data-type="emails">Email list</button>
+      <button data-type="journalists">Journalist roster</button>
+      <button data-type="tips">All tips</button>
+    </div>
+    <div class="dlstatus" id="dlStatus"></div>
+  </div>
 </div>
 
 <script>
@@ -80,6 +99,7 @@
       const res = await fetch("/api/tips?pending=1&admin=" + encodeURIComponent(key));
       const data = await res.json();
       if (data.error) { out.innerHTML = '<div class="err">' + esc(data.error) + '</div>'; return; }
+      document.getElementById("exports").hidden = false;
       const tips = data.pending || [];
       if (!tips.length) { out.innerHTML = '<div class="note">Queue is empty. Nothing waiting on you.</div>'; return; }
       out.innerHTML = tips.map(t => `
@@ -133,6 +153,38 @@
       buttons.forEach(b => b.disabled = false);
     }
   }
+
+  document.querySelectorAll(".dl button").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const type = btn.dataset.type;
+      const status = document.getElementById("dlStatus");
+      const key = keyInput.value.trim();
+      if (!key) { status.textContent = "Enter your admin key first."; return; }
+      btn.disabled = true;
+      status.textContent = "Building the file…";
+      try {
+        const res = await fetch("/api/export?type=" + type + "&admin=" + encodeURIComponent(key));
+        if (!res.ok) {
+          status.textContent = res.status === 401 ? "Wrong admin key." : "Export failed.";
+          btn.disabled = false;
+          return;
+        }
+        const blob = await res.blob();
+        const name = (res.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/);
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = name ? name[1] : "newsweed-" + type + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+        status.textContent = "Downloaded.";
+      } catch (err) {
+        status.textContent = "Export failed.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
 
   document.getElementById("loadBtn").addEventListener("click", load);
   keyInput.addEventListener("keydown", e => { if (e.key === "Enter") load(); });

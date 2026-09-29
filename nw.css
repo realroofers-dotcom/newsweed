@@ -1,4 +1,4 @@
-/* nw.css — BUILT 2026-09-29 · nw-css-4f
+/* nw.css — BUILT 2026-09-29 · nw-css-4g
    The Newsweed house style. Every page loads this file.
    A newspaper: white page, thin rules, serif headlines, nothing loud. */
 
@@ -296,6 +296,17 @@ footer.site p { margin: 0 0 10px; max-width: 90ch; line-height: 1.6; }
 footer.site .forsale { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; margin: 16px 0; }
 footer.site .forsale a { color: var(--navy); font-weight: 600; }
 footer.site .stamp { font: 400 11px var(--mono); color: var(--ink3); }
+
+/* ---------- contests: the trophy ---------- */
+nav.main a.contestlink { color: #8a6508; display: inline-flex; align-items: center; gap: 4px; }
+nav.main a.contestlink svg { width: 16px; height: 16px; }
+footer.site .fnav svg { width: 14px; height: 14px; vertical-align: -2px; }
+.contestbox { display: flex; gap: 12px; align-items: center; border: 2px solid #b8860b; border-radius: 8px; padding: 12px; margin: 0 0 24px; background: #fff8e6; color: var(--ink); }
+.contestbox .ic { flex: 0 0 auto; width: 46px; height: 46px; border-radius: 12px; background: #b8860b; color: #fff; display: flex; align-items: center; justify-content: center; }
+.contestbox .ic svg { width: 26px; height: 26px; }
+.contestbox b { display: block; font: 700 16px var(--serif); color: #6b4e05; }
+.contestbox span:last-child { font-size: 13px; color: var(--ink2); line-height: 1.4; }
+.contestbox:hover { border-color: var(--ink); }
 
 /* ---------- the truck is here now, open to all ---------- */
 .truckhere { background: var(--green2); color: #fff; }

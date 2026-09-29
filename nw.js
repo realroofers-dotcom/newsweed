@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4e (wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4f (phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -213,7 +213,15 @@
     });
   }
 
-  window.NW = { esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };
+  // Phones are icon driven (apps.js). The big ad boxes come off the page right now, before the
+  // AdHotBox tag loads, so nobody is counted as seeing an ad that isn't shown; small text ads replace them.
+  var phone = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+  if (phone) Array.prototype.forEach.call(document.querySelectorAll(".ad"), function (el) { el.parentNode.removeChild(el); });
+  var appsJs = document.createElement("script");
+  appsJs.src = "/apps.js?v=1a";
+  document.body.appendChild(appsJs);
+
+  window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };
   header();
   footer();
   subscribeForms();

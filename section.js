@@ -1,4 +1,4 @@
-/* section.js — BUILT 2026-09-29 · section-1c (+ Events, Travel & Nomads)
+/* section.js — BUILT 2026-09-29 · section-1d (phones: no ad boxes, no section list, no AdHotBox tag; 1c Events, Travel & Nomads)
    Fills a section page. The page says which feed group it reads and where each desk goes:
      <body data-group="farm">
        <ul class="hl" data-s="fourh"></ul>      <- filled with /api/feed?group=farm -> sections.fourh
@@ -44,12 +44,14 @@
     var el = document.getElementById("rail");
     if (!el) return;
     var here = location.pathname;
-    el.innerHTML =
-      '<form class="signup" data-subscribe="section-' + E(group || "page") + '" style="padding:14px 16px">'
+    var signup = '<form class="signup" data-subscribe="section-' + E(group || "page") + '" style="padding:14px 16px">'
       + '<h3 style="font-size:19px">The Newsweed Daily</h3><p class="sub">One email a day. Free.</p><div class="form">'
       + '<input type="email" placeholder="you@email.com" aria-label="Email address" required>'
       + '<label class="chk"><input type="checkbox" name="consent" required> Yes, email me the Newsweed Daily. Unsubscribe any time.</label>'
-      + '<button class="btn" type="submit">Sign me up</button><div class="status" role="status"></div></div></form>'
+      + '<button class="btn" type="submit">Sign me up</button><div class="status" role="status"></div></div></form>';
+    // Phones: just the sign-up. The icons replace the section list; small text ads replace the boxes.
+    if (NW.phone) { el.innerHTML = signup; NW.subscribe(); return; }
+    el.innerHTML = signup
       + '<div class="ad"><span class="adlab">Advertisement</span><div data-ad="card"></div>'
       + '<div class="adfall">This space is for your business. <a href="/advertise.html">Advertise from $20 →</a></div></div>'
       + '<div class="kicker"><h2>More sections</h2></div><div class="teasers" style="grid-template-columns:1fr 1fr;margin-bottom:24px">'
@@ -69,11 +71,13 @@
     }).catch(function () { fill({}); });
   }
 
-  // AdHotBox fills every data-ad slot on the page.
-  var ad = document.createElement("script");
-  ad.src = "https://adhotbox.com/box.js";
-  ad.async = true;
-  document.body.appendChild(ad);
+  // AdHotBox fills every data-ad slot on the page (not loaded on phones: no slots there).
+  if (!NW.phone) {
+    var ad = document.createElement("script");
+    ad.src = "https://adhotbox.com/box.js";
+    ad.async = true;
+    document.body.appendChild(ad);
+  }
 
   window.NW_SECTIONS = SECTIONS;
 })();

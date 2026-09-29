@@ -1,4 +1,4 @@
-/* nw.css — BUILT 2026-09-29 · nw-css-4c
+/* nw.css — BUILT 2026-09-29 · nw-css-4d
    The Newsweed house style. Every page loads this file.
    A newspaper: white page, thin rules, serif headlines, nothing loud. */
 
@@ -296,3 +296,34 @@ footer.site p { margin: 0 0 10px; max-width: 90ch; line-height: 1.6; }
 footer.site .forsale { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; margin: 16px 0; }
 footer.site .forsale a { color: var(--navy); font-weight: 600; }
 footer.site .stamp { font: 400 11px var(--mono); color: var(--ink3); }
+
+/* ---------- phones: icon driven (apps.js) ---------- */
+.apps, .appbar { display: none; }
+.txtad { margin: 2px 0 18px; font: 400 11px/1.45 var(--sans); color: var(--ink3); }
+.txtad span { font: 600 9.5px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid var(--line); border-radius: 2px; padding: 0 3px; margin-right: 3px; }
+.txtad a { color: var(--ink3); }
+.txtad a b { color: var(--ink2); font-weight: 600; }
+@media (max-width: 760px) {
+  nav.main { display: none; }
+  .apps { display: block; border-bottom: 3px double var(--ink); padding: 12px 0 10px; }
+  .appgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 6px; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: var(--ink); text-align: center; }
+  .app .ic, .mini .ic { display: flex; align-items: center; justify-content: center; color: #fff; border-radius: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .app .ic { width: 54px; height: 54px; }
+  .app .ic svg { width: 28px; height: 28px; }
+  .app .lb { font: 600 11px/1.2 var(--sans); max-width: 76px; }
+  .app.on .lb { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+  .app.extra { display: none; }
+  .apps.open .app.extra { display: flex; }
+  .appbar { display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 60; gap: 4px; overflow-x: auto; scrollbar-width: none; background: rgba(255,255,255,.97); border-bottom: 1px solid var(--line); padding: 6px 8px; transform: translateY(-110%); transition: transform .2s ease; }
+  .appbar::-webkit-scrollbar { display: none; }
+  .appbar.show { transform: none; }
+  .mini { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 0 0 auto; width: 58px; color: var(--ink); }
+  .mini .ic { width: 34px; height: 34px; border-radius: 9px; }
+  .mini .ic svg { width: 20px; height: 20px; }
+  .mini .lb { font: 600 9.5px/1.1 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 58px; }
+  .mini.on .lb { color: var(--navy); }
+  /* get to the news faster */
+  .edition .wrap > span:last-child { display: none; }
+  .util .wrap > span:first-child { display: none; }
+}

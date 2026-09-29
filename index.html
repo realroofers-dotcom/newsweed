@@ -1,4 +1,5 @@
-<!-- BUILT 2026-09-29 · newsweed index-2a
+<!-- BUILT 2026-09-29 · newsweed index-3a (+ crime heat map, cannabis map, 50 states, top movers, classifieds, section directory)
+     was index-2a
      Newsweed is now a news site (Mark, 29 Sep 2026). It stays for sale: the line at the
      top of every page and the block in the footer. The old for-sale landing page is in
      git history (commit d876039) if anything from it is wanted back.
@@ -22,8 +23,8 @@
 <meta property="og:url" content="https://newsweed.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=2a">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
 </head>
 <body>
 
@@ -40,6 +41,17 @@
       <div class="kicker green"><h2>Cannabis: law &amp; medicine</h2></div>
       <p class="note">Legal and medical news, reported straight. We don't promote use and we don't talk down to anyone.</p>
       <ul class="hl small" id="s-cannabis"><li class="loading">Loading…</li></ul>
+    </section>
+
+    <section class="block">
+      <div class="kicker green"><h2>Where it's legal</h2><span class="more"><a href="/states.html">All states →</a></span></div>
+      <div id="cannabisMap"></div>
+      <p class="note" id="cannabisPick" style="margin-top:6px">Tap a state.</p>
+    </section>
+
+    <section class="block">
+      <div class="kicker"><h2>Classifieds</h2><span class="more"><a href="/classifieds.html#post">Post free →</a></span></div>
+      <div id="clfLatest"><div class="loading">Loading…</div></div>
     </section>
 
     <section class="block">
@@ -79,6 +91,11 @@
       <div class="loading">Loading today's news…</div>
     </section>
 
+    <section class="block" id="states50">
+      <div class="kicker navy"><h2>Across the 50 states</h2><span class="more"><a href="/states.html">Every state →</a></span></div>
+      <div class="grid2" id="stateTops"><div class="loading">Loading…</div></div>
+    </section>
+
     <form class="signup" data-subscribe="home-daily">
       <h3>The Newsweed Daily</h3>
       <p class="sub">One email a day: the news that matters, markets, and the CorruptMen story of the day. Free.</p>
@@ -97,14 +114,21 @@
     <section class="block" id="markets">
       <div class="kicker navy"><h2>Markets &amp; money</h2><span class="more" id="mAsOf"></span></div>
       <div class="mboard" id="mboard"></div>
-      <ul class="hl" id="s-markets"><li class="loading">Loading…</li></ul>
+      <div class="kicker" style="border-top-width:1px;margin-top:4px"><h2>Top movers</h2><span class="more">Read the filings before you trade</span></div>
+      <div class="tabs2" role="tablist" id="moverTabs">
+        <button data-k="gainers" aria-selected="true">Gainers</button><button data-k="losers" aria-selected="false">Losers</button>
+        <button data-k="active" aria-selected="false">Most active</button><button data-k="micro" aria-selected="false">Microcaps</button>
+      </div>
+      <table class="movers" id="movers"><tbody><tr><td class="loading">Loading…</td></tr></tbody></table>
+      <p class="note" style="margin-top:6px">Every symbol links to its <b>8K10Q</b> room (the filings in plain English, and the talk) and its <b>Warrant Wire</b> page (warrants, reverse splits, dilution).</p>
+      <ul class="hl" id="s-markets" style="margin-top:10px"><li class="loading">Loading…</li></ul>
       <p class="note" style="margin-top:8px">Market news, not investment advice. Prices can be delayed.</p>
     </section>
 
     <section class="block" id="corruptmen">
       <div class="kicker red"><h2>CorruptMen · story of the day</h2><span class="more"><a href="/corruptmen.html">Past stories →</a></span></div>
       <div class="cm-card" id="cmToday"><div class="loading">Loading…</div></div>
-      <p class="allege">Political and business corruption in American towns, embezzlement first. Charges are allegations; everyone is presumed innocent unless proven guilty in court. We link to the original reporting.</p>
+      <p class="allege">Political and business corruption in American towns, embezzlement first, by men and women alike: corruption has no gender. Charges are allegations; everyone is presumed innocent unless proven guilty in court. We link to the original reporting.</p>
     </section>
 
     <section class="block" id="world">
@@ -129,6 +153,11 @@
       <ul class="hl" id="s-tribal"><li class="loading">Loading…</li></ul>
     </section>
 
+    <section class="block">
+      <div class="kicker"><h2>Inside today's paper</h2></div>
+      <div class="teasers" id="teasers"></div>
+    </section>
+
     <section class="block" id="chatPreview">
       <div class="kicker"><h2>From the chat room</h2><span class="more"><a href="/chat.html">Join the room →</a></span></div>
       <p class="note">Two rooms only: report important news, or comment on the news. Real names, no anonymous posts.</p>
@@ -139,6 +168,12 @@
 
   <!-- ================= RIGHT ================= -->
   <aside class="right">
+
+    <section class="block">
+      <div class="kicker red"><h2>Crime heat map</h2><span class="more"><a href="/dui.html">Crime &amp; DUI →</a></span></div>
+      <div id="crimeMap"><div class="loading">Loading…</div></div>
+      <div class="panel" id="crimePane"><p class="note" style="margin:0">Tap a state to see what's behind the color.</p></div>
+    </section>
 
     <section class="block">
       <div class="kicker red"><h2>Warrants</h2></div>
@@ -195,9 +230,10 @@
   </aside>
 </div>
 
-<div id="nw-foot" data-build="Built 2026-09-29 · index-2a"></div>
+<div id="nw-foot" data-build="Built 2026-09-29 · index-3a"></div>
 
-<script src="/nw.js?v=2a"></script>
+<script src="/nw.js?v=3a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script>
 (function () {
   var E = NW.esc, U = NW.safeUrl;
@@ -291,7 +327,66 @@
     }).catch(function () { el.innerHTML = ""; });
   }
 
-  loadFeed(); loadMarkets(); loadCorruptMen(); loadLuis(); loadChat();
+  // ---- Top movers: every symbol goes on to 8K10Q and Warrant Wire ----
+  var movers = {}, moverTab = "gainers";
+  function drawMovers() {
+    var rows = movers[moverTab] || [];
+    document.querySelector("#movers tbody").innerHTML = rows.length ? rows.map(function (x) {
+      var s = encodeURIComponent(x.symbol), up = (x.pct || 0) >= 0;
+      return '<tr><td class="sym">' + E(x.symbol) + '</td><td>' + E((x.name || "").slice(0, 26)) + '</td>'
+        + '<td class="num">' + (x.price != null ? "$" + E(x.price) : "") + '</td>'
+        + '<td class="num" style="color:' + (up ? "var(--green2)" : "var(--red)") + '">' + (x.pct != null ? (up ? "+" : "") + E(x.pct.toFixed(2)) + "%" : "") + '</td>'
+        + '<td class="num"><a class="go" href="https://8k10q.com/room.html?t=' + s + '" rel="noopener">8K10Q</a><a class="go" href="https://warrantwire.com/company?t=' + s + '" rel="noopener">Warrant Wire</a></td></tr>';
+    }).join("") : '<tr><td class="loading">No list right now. Markets may be closed.</td></tr>';
+  }
+  document.getElementById("moverTabs").addEventListener("click", function (e) {
+    var k = e.target.getAttribute("data-k"); if (!k) return;
+    moverTab = k;
+    Array.prototype.forEach.call(this.querySelectorAll("button"), function (b) { b.setAttribute("aria-selected", b === e.target ? "true" : "false"); });
+    drawMovers();
+  });
+  function loadMovers() { NW.get("/api/movers").then(function (d) { movers = d; drawMovers(); }).catch(function () { movers = {}; drawMovers(); }); }
+
+  // ---- 50 states, the crime heat map, and the cannabis map ----
+  function loadStates() {
+    NW.get("/api/states").then(function (d) {
+      var data = d.states || {};
+      var tops = Object.keys(data).map(function (k) { return data[k]; }).filter(function (s) { return s.top && s.top.story; })
+        .sort(function (a, b) { return (b.top.pubDate || "") < (a.top.pubDate || "") ? -1 : 1; }).slice(0, 6);
+      document.getElementById("stateTops").innerHTML = tops.length ? tops.map(function (s) {
+        return '<div class="statecard"><span class="st">' + E(s.name) + '</span><h3><a href="' + E(U(s.top.link)) + '" target="_blank" rel="noopener">' + E(s.top.title) + '</a></h3>'
+          + '<p>' + E(s.top.story) + '</p><span class="src">' + E(s.top.source || "") + '</span></div>';
+      }).join("") : '<p class="note">Gathering the states. <a href="/states.html" style="color:var(--navy)">See all 50 →</a></p>';
+      NWMap.heat(document.getElementById("crimeMap"), { values: NWMap.values(data, "crime"), scale: "red", label: "crime headlines",
+        note: "News heat: share of each state's recent headlines about crime.",
+        onPick: function (c) { NWMap.panel(document.getElementById("crimePane"), data[c], c, "crime", "crime headlines"); } });
+    }).catch(function () {});
+    NWMap.cannabis(document.getElementById("cannabisMap"), { onPick: function (c) {
+      var s = NW_STATES.by[c];
+      document.getElementById("cannabisPick").innerHTML = '<b>' + E(s.name) + ':</b> ' + E(NW_STATES.CANNABIS_LABELS[s.cannabis]) + (s.note ? " (" + E(s.note) + ")" : "") + '. <a href="/states.html#' + c + '" style="color:var(--navy)">' + E(s.name) + ' news →</a>';
+    } });
+  }
+
+  function loadClassifieds() {
+    NW.get("/api/classifieds").then(function (d) {
+      var a = (d.ads || []).slice(0, 4);
+      document.getElementById("clfLatest").innerHTML = a.length ? '<ul class="hl small">' + a.map(function (x) {
+        return '<li><a href="/classifieds.html?cat=' + E(x.cat) + '">' + E(x.title) + '</a><span class="src">' + E(x.catLabel) + ' · ' + E(x.state) + (x.price ? " · " + E(x.price) : "") + '</span></li>';
+      }).join("") + '</ul>' : '<p class="note">Free to post: for sale, jobs, services, housing, farm, pets, lost &amp; found. <a href="/classifieds.html#post" style="color:var(--navy)">Post the first ad →</a></p>';
+    }).catch(function () {});
+  }
+
+  document.getElementById("teasers").innerHTML = [
+    ["/family.html", "Family & Lacrosse", "Amazing kids, youth sports"], ["/farm.html", "Farm & Garden", "4-H, farms, gardens"],
+    ["/college.html", "Schools & Colleges", "Back to school, campus"], ["/books.html", "Books & Libraries", "The authors map"],
+    ["/arts.html", "Arts & Music", "With MusicIsNews.com"], ["/dui.html", "Crime & DUI", "Maps and headlines"],
+    ["/gambling.html", "Gambling", "The industry and its cost"], ["/where.html", "Where it meets", "DUI, gambling, drugs, crime"],
+    ["/classifieds.html", "Classifieds", "Free to post"], ["/dating.html", "Dating", "Voice introductions"],
+    ["/archive.html", "Archive", "Every edition"], ["/advertise.html", "Advertise", "From $20"]
+  ].map(function (s) { return '<a href="' + s[0] + '">' + E(s[1]) + '<span>' + E(s[2]) + '</span></a>'; }).join("");
+
+  loadFeed(); loadMarkets(); loadCorruptMen(); loadLuis(); loadChat(); loadMovers(); loadStates(); loadClassifieds();
+  setInterval(loadMovers, 5 * 60 * 1000);
   setInterval(loadFeed, 10 * 60 * 1000);
   setInterval(loadMarkets, 5 * 60 * 1000);
 })();

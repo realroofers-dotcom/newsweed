@@ -1,0 +1,49 @@
+<!-- BUILT 2026-09-29 · newsweed college-1a · Schools & Colleges: follow the seasons and the colleges,
+     welcome kids back to school. The seasonal desk changes by itself (spring/summer/fall/winter). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools & Colleges — Newsweed</title>
+<meta name="description" content="Colleges, schools, back to school, college sports, and the season across America.">
+<link rel="canonical" href="https://newsweed.com/college.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+</head>
+<body data-group="college">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Schools &amp; Colleges · <span data-season>This season</span></span><h1 id="welcome">Welcome back to school</h1>
+    <p id="welcomeText">To every student, teacher, bus driver and lunch-line hero: welcome back. Here is what is happening on campuses and in classrooms, and what the season is bringing to towns across America.</p></div>
+  <div class="cols2">
+    <main>
+      <section class="block"><div class="kicker green"><h2>Back to school</h2></div><ul class="hl" data-s="backtoschool"><li class="loading">Loading…</li></ul></section>
+      <div class="grid2">
+        <section class="block"><div class="kicker navy"><h2>Colleges</h2></div><ul class="hl small" data-s="college"><li class="loading">Loading…</li></ul></section>
+        <section class="block"><div class="kicker"><h2>Schools</h2></div><ul class="hl small" data-s="schools"><li class="loading">Loading…</li></ul></section>
+      </div>
+      <div class="grid2">
+        <section class="block"><div class="kicker"><h2>College sports</h2></div><ul class="hl small" data-s="campus"><li class="loading">Loading…</li></ul></section>
+        <section class="block"><div class="kicker green"><h2>The season: <span data-season>…</span></h2></div><ul class="hl small" data-s="season"><li class="loading">Loading…</li></ul></section>
+      </div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · college-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script>
+(function () {
+  // The welcome follows the calendar: back to school Aug–Sep, then the season.
+  var m = new Date().getMonth() + 1;
+  var H = document.getElementById("welcome"), P = document.getElementById("welcomeText");
+  if (m >= 10 && m <= 11) { H.textContent = "Fall on campus"; P.textContent = "Homecoming, midterms, harvest festivals and football Saturdays. Here is the season on campus and across the country."; }
+  else if (m === 12 || m <= 2) { H.textContent = "Winter term"; P.textContent = "Finals, holidays, snow days and a new semester. Here is what's happening in schools and colleges."; }
+  else if (m >= 3 && m <= 5) { H.textContent = "Spring: the home stretch"; P.textContent = "Admissions letters, spring sports, prom and graduation. Congratulations to the class of " + new Date().getFullYear() + "."; }
+  else if (m >= 6 && m <= 7) { H.textContent = "Summer break"; P.textContent = "Summer camps, jobs, internships and getting ready for fall."; }
+})();
+</script>
+</body>
+</html>

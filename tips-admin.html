@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Newsweed — Admin</title>
-<!-- BUILT 2026-09-29 · tips-admin-2a: + suggestions & members downloads, CorruptMen override, chat moderation -->
+<!-- BUILT 2026-09-29 · tips-admin-3a: + classifieds & dating queues (2a: suggestions & members downloads, CorruptMen override, chat moderation) -->
 <style>
   :root { --ink:#ffffff; --bone:#14150f; --panel:#f5f5f0; --panel-line:#e0e0d6;
           --slate:#6b6b5e; --moss:#0f9d58; --moss-bright:#0b7a43; --ember:#2e3192; }
@@ -103,6 +103,21 @@
     </div>
     <div class="dlstatus" id="chatStatus"></div>
   </div>
+
+  <!-- 2026-09-29 · admin-3a: classifieds and dating queues -->
+  <div class="exports" id="clfAdmin" hidden>
+    <h2>Classifieds waiting for approval</h2>
+    <div class="sub">Free ads. Approve honest ads; reject drugs, prostitution, weapons, alcohol, gambling, fakes, schemes, scams. Live ads run 30 days.</div>
+    <div class="dl"><button id="clfLoad">Load the queue</button></div>
+    <div id="clfOut"></div>
+  </div>
+
+  <div class="exports" id="dtAdmin" hidden>
+    <h2>Dating introductions waiting to be heard</h2>
+    <div class="sub">Listen to every recording before approving. Reject anything with contact details, money talk, sexual content, or anyone who sounds under 18.</div>
+    <div class="dl"><button id="dtLoad">Load the queue</button></div>
+    <div id="dtOut"></div>
+  </div>
 </div>
 
 <script>
@@ -136,6 +151,8 @@
       document.getElementById("exports").hidden = false;
       document.getElementById("cmAdmin").hidden = false;
       document.getElementById("chatAdmin").hidden = false;
+      document.getElementById("clfAdmin").hidden = false;
+      document.getElementById("dtAdmin").hidden = false;
       const tips = data.pending || [];
       if (!tips.length) { out.innerHTML = '<div class="note">Queue is empty. Nothing waiting on you.</div>'; return; }
       out.innerHTML = tips.map(t => `
@@ -262,6 +279,39 @@
       });
     });
   });
+
+  function queue(btnId, outId, api, render) {
+    document.getElementById(btnId).addEventListener("click", async () => {
+      const box = document.getElementById(outId);
+      box.innerHTML = '<div class="note">Loading…</div>';
+      const d = await (await fetch(api + "?pending=1&admin=" + k())).json();
+      if (d.error) { box.innerHTML = '<div class="err">' + esc(d.error) + '</div>'; return; }
+      const list = d.pending || [];
+      box.innerHTML = list.length ? list.map(render).join("") : '<div class="note">Queue is empty.</div>';
+      box.querySelectorAll(".tip").forEach(card => {
+        card.querySelectorAll("button[data-act]").forEach(b => b.addEventListener("click", async () => {
+          const r = await postJson(api + "?admin=" + k(), { action: b.dataset.act, id: card.dataset.id });
+          if (r.success) { card.style.opacity = "0.35"; card.querySelector(".acts").innerHTML = '<span class="note">' + (b.dataset.act === "approve" ? "Approved, now live." : "Rejected.") + '</span>'; }
+          else alert(r.error || "Failed.");
+        }));
+      });
+    });
+  }
+  queue("clfLoad", "clfOut", "/api/classifieds", a => `
+    <div class="tip" data-id="${esc(a.id)}">
+      <div class="stamp"><b>${esc(a.cat)}</b> · ${esc(a.town || "")} ${esc(a.state)} · ${esc(when(a.submitted))}</div>
+      <div class="headline" style="border:0;padding:0">${esc(a.title)} ${a.price ? "· " + esc(a.price) : ""}</div>
+      <div class="details">${esc(a.body)}</div>
+      <div class="meta">Contact shown: ${esc(a.contact)}<br>Poster's private email: ${esc(a.email)}</div>
+      <div class="acts"><button class="ok" data-act="approve">Approve</button><button class="no" data-act="reject">Reject</button></div>
+    </div>`);
+  queue("dtLoad", "dtOut", "/api/dating", p => `
+    <div class="tip" data-id="${esc(p.id)}">
+      <div class="stamp"><b>${esc(p.firstName)}, ${esc(p.age)}</b> · ${esc(p.area || "")} ${esc(p.state)} · ${esc(when(p.posted))}</div>
+      <div class="meta">Hoping to meet: ${esc(p.seeking || "—")}<br>Signed in as ${esc(p.name || "")} &lt;${esc(p.email || "")}&gt;</div>
+      <audio controls preload="none" style="width:100%" src="/api/dating?audio=${encodeURIComponent(p.id)}&admin=${k()}"></audio>
+      <div class="acts" style="margin-top:8px"><button class="ok" data-act="approve">Approve</button><button class="no" data-act="reject">Reject</button></div>
+    </div>`);
 
   document.getElementById("banBtn").addEventListener("click", async () => {
     const email = document.getElementById("banEmail").value.trim();

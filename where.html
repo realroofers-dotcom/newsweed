@@ -1,0 +1,118 @@
+<!-- BUILT 2026-09-29 · newsweed where-1a · "Where DUI, gambling, drug use and crime merge" (Mark, 29 Sep 2026),
+     side by side with cannabis law. News heat from /api/states; the overlap score is the average of each state's
+     share of headlines on the four subjects, scaled 0-100 against the highest state. Official data linked. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where it meets: DUI, gambling, drugs and crime — Newsweed</title>
+<meta name="description" content="Four maps side by side: where DUI, gambling, drugs and crime are in the news, compared with each state's cannabis law.">
+<link rel="canonical" href="https://newsweed.com/where.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.cmp th, .cmp td { padding: 7px 6px; border-bottom: 1px solid var(--line2); text-align: right; }
+.cmp th:first-child, .cmp td:first-child, .cmp th:nth-child(2), .cmp td:nth-child(2) { text-align: left; }
+.cmp th { font: 600 11px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); cursor: pointer; white-space: nowrap; }
+.cmp th[aria-sort] { color: var(--ink); }
+.cmp td { font-variant-numeric: tabular-nums; }
+.cmp .bar { display: inline-block; height: 8px; background: var(--red); border-radius: 2px; vertical-align: middle; margin-left: 6px; }
+.tw { overflow-x: auto; }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Where it meets</span><h1>DUI, gambling, drugs and crime</h1>
+    <p>Four maps side by side, and each state's cannabis law beside them, so you can see where these problems show up together and where they don't. Tap any state.</p></div>
+  <div class="cols2">
+    <main>
+      <p class="note"><label><input type="checkbox" id="perM"> Adjust for population (per million residents)</label></p>
+      <div class="grid2">
+        <section class="block"><div class="kicker red"><h2>Crime</h2></div><div id="m-crime"></div></section>
+        <section class="block"><div class="kicker red"><h2>DUI</h2></div><div id="m-dui"></div></section>
+        <section class="block"><div class="kicker navy"><h2>Gambling</h2></div><div id="m-gambling"></div></section>
+        <section class="block"><div class="kicker green"><h2>Drugs &amp; overdoses</h2></div><div id="m-drugs"></div></section>
+      </div>
+      <div class="panel" id="pane" style="margin-bottom:26px"><p class="note" style="margin:0">Tap a state on any map.</p></div>
+
+      <section class="block"><div class="kicker green"><h2>Cannabis law, for comparison</h2></div><div id="m-cannabis" style="max-width:520px"></div></section>
+
+      <section class="block"><div class="kicker"><h2>Every state, compared</h2><span class="more">Tap a column to sort</span></div>
+        <div class="tw"><table class="cmp" id="tbl"><thead><tr>
+          <th data-k="name">State</th><th data-k="cannabis">Cannabis</th><th data-k="crime">Crime</th><th data-k="dui">DUI</th>
+          <th data-k="gambling">Gambling</th><th data-k="drugs">Drugs</th><th data-k="score" aria-sort="descending">Overlap</th>
+        </tr></thead><tbody></tbody></table></div></section>
+
+      <div class="box">
+        <p><b>How to read this.</b> For each state we check its latest ~100 news headlines (about three days) and count how many are about crime, DUI, gambling, and drugs or overdoses. The overlap score averages the four shares and scales them 0 to 100 against the highest state. This measures what is being <i>reported</i>, which is not the same as what is happening: big news markets and one big story can move it. It is a starting point, not a verdict.</p>
+        <p>Official numbers: <a href="https://cde.ucr.cjis.gov/" rel="noopener" style="color:var(--navy)">FBI Crime Data Explorer</a> ·
+          <a href="https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars" rel="noopener" style="color:var(--navy)">NHTSA FARS (DUI deaths)</a> ·
+          <a href="https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm" rel="noopener" style="color:var(--navy)">CDC overdose deaths</a> ·
+          <a href="https://www.ncpgambling.org/" rel="noopener" style="color:var(--navy)">National Council on Problem Gambling</a>.</p>
+      </div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · where-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script>
+(function () {
+  var E = NW.esc, data = {}, rows = [], sortK = "score", dir = -1;
+  var KINDS = [["crime", "red", "crime headlines"], ["dui", "amber", "DUI headlines"], ["gambling", "navy", "gambling headlines"], ["drugs", "green", "drug and overdose headlines"]];
+  var pane = document.getElementById("pane");
+
+  function share(rec, k) { var c = (rec && rec.counts) || {}; return c.sample ? (c[k] || 0) / c.sample : null; }
+
+  function draw() {
+    var per = document.getElementById("perM").checked;
+    KINDS.forEach(function (k) {
+      NWMap.heat(document.getElementById("m-" + k[0]), { values: NWMap.values(data, k[0], per), scale: k[1], label: k[2],
+        onPick: function (c) { NWMap.panel(pane, data[c], c, k[0], k[2]); pane.scrollIntoView({ behavior: "smooth", block: "nearest" }); } });
+    });
+    NWMap.cannabis(document.getElementById("m-cannabis"), { onPick: function (c) { NWMap.panel(pane, data[c], c, null); } });
+
+    rows = NW_STATES.list.map(function (s) {
+      var r = data[s.code], v = {};
+      KINDS.forEach(function (k) { var x = share(r, k[0]); v[k[0]] = x == null ? null : (per ? (r.counts[k[0]] || 0) / s.pop : x * 100); });
+      var parts = KINDS.map(function (k) { return share(r, k[0]); }).filter(function (x) { return x != null; });
+      return { code: s.code, name: s.name, cannabis: NW_STATES.CANNABIS_LABELS[s.cannabis], raw: parts.length ? parts.reduce(function (a, b) { return a + b; }, 0) / parts.length : null, v: v };
+    });
+    var max = Math.max.apply(null, rows.map(function (r) { return r.raw || 0; })) || 1;
+    rows.forEach(function (r) { r.v.score = r.raw == null ? null : Math.round((r.raw / max) * 100); r.v.name = r.name; r.v.cannabis = r.cannabis; });
+    table();
+  }
+
+  function table() {
+    rows.sort(function (a, b) {
+      var x = a.v[sortK], y = b.v[sortK];
+      if (x == null) return 1; if (y == null) return -1;
+      return (x < y ? -1 : x > y ? 1 : 0) * dir;
+    });
+    var per = document.getElementById("perM").checked;
+    document.querySelector("#tbl tbody").innerHTML = rows.map(function (r) {
+      function n(k) { var x = r.v[k]; return x == null ? "–" : (per ? x.toFixed(1) : Math.round(x) + "%"); }
+      return '<tr><td><a href="/states.html#' + r.code + '" style="color:var(--navy)">' + E(r.name) + '</a></td><td>' + E(r.cannabis) + '</td><td>' + n("crime") + '</td><td>' + n("dui") + '</td><td>' + n("gambling") + '</td><td>' + n("drugs")
+        + '</td><td>' + (r.v.score == null ? "–" : r.v.score + '<span class="bar" style="width:' + Math.round(r.v.score * 0.5) + 'px"></span>') + '</td></tr>';
+    }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll("#tbl th"), function (th) {
+      if (th.getAttribute("data-k") === sortK) th.setAttribute("aria-sort", dir < 0 ? "descending" : "ascending"); else th.removeAttribute("aria-sort");
+    });
+  }
+
+  document.querySelector("#tbl thead").addEventListener("click", function (e) {
+    var k = e.target.getAttribute("data-k"); if (!k) return;
+    dir = sortK === k ? -dir : (k === "name" || k === "cannabis" ? 1 : -1); sortK = k; table();
+  });
+  document.getElementById("perM").addEventListener("change", draw);
+  NW.get("/api/states").then(function (d) { data = d.states || {}; draw(); });
+})();
+</script>
+</body>
+</html>

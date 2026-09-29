@@ -1,0 +1,189 @@
+<!-- BUILT 2026-09-29 · newsweed dating-1a · Dating by state: voice introductions and rough location only.
+     Sign-in required to post or write (Google). Adults 18+. Every recording is heard before it goes live
+     (tips-admin.html). No photos, no contact details in profiles or first messages. API: /api/dating -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dating by state — voice introductions — Newsweed</title>
+<meta name="description" content="Meet people in your state by voice: a first name, a rough location, and a one-minute introduction. Adults 18+.">
+<link rel="canonical" href="https://newsweed.com/dating.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.prof { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.prof h3 { font-size: 20px; }
+.prof .meta { font: 400 12px var(--mono); color: var(--ink3); margin: 2px 0 8px; }
+.prof audio { width: 100%; height: 36px; }
+.prof .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.prof .row input { flex: 1; min-width: 180px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; font: 400 14px var(--sans); }
+.prof button.flag { background: none; border: 0; color: var(--ink3); font: 400 11px var(--mono); cursor: pointer; text-decoration: underline; }
+.rec { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.rec .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); display: none; }
+.rec.on .dot { display: inline-block; animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0.2; } }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Dating</span><h1>Say hello, in your own voice</h1>
+    <p>No photos, no swiping. A first name, a rough location, and a one-minute voice introduction. Pick your state, listen, and say hello. Adults 18 and over.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="grid2">
+        <section class="block"><div class="kicker navy"><h2>Pick a state</h2></div><div id="map"></div></section>
+        <section class="block"><div class="kicker"><h2>Your profile</h2></div><div id="me" class="box"><div class="loading">Checking sign-in…</div></div></section>
+      </div>
+      <section class="block"><div class="kicker navy"><h2 id="listHead">Introductions</h2></div><div id="list"><div class="loading">Loading…</div></div></section>
+      <div class="box">
+        <h3>Stay safe</h3>
+        <p>Keep your first messages here. Meet in a public place, tell a friend where you're going, and never send money to someone you haven't met. Report anything that feels wrong; two reports take a profile down for review.</p>
+      </div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · dating-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script>
+(function () {
+  var E = NW.esc, state = (location.hash.slice(1) || "").toUpperCase(), me = null, counts = {};
+  if (!NW_STATES.by[state]) state = "";
+
+  function loadList() {
+    var name = state ? NW_STATES.by[state].name : "all states";
+    document.getElementById("listHead").textContent = "Introductions: " + name;
+    NW.get("/api/dating?state=" + state).then(function (d) {
+      var p = d.profiles || [];
+      document.getElementById("list").innerHTML = p.length ? p.map(function (x) {
+        return '<div class="prof"><h3>' + E(x.firstName) + ', ' + E(x.age) + '</h3>'
+          + '<div class="meta">' + E([x.area, NW_STATES.by[x.state] ? NW_STATES.by[x.state].name : x.state].filter(Boolean).join(", ")) + (x.seeking ? " · hoping to meet " + E(x.seeking) : "") + '</div>'
+          + '<audio controls preload="none" src="/api/dating?audio=' + encodeURIComponent(x.id) + '"></audio>'
+          + '<div class="row"><input type="text" maxlength="300" placeholder="Say hello (no phone numbers or links yet)" data-hello="' + E(x.id) + '"><button class="btn" data-send="' + E(x.id) + '">Send</button></div>'
+          + '<div class="status" data-st="' + E(x.id) + '"></div><button class="flag" data-flag="' + E(x.id) + '">Report</button></div>';
+      }).join("") : '<p class="note">No introductions from ' + E(name) + ' yet. Be the first.</p>';
+    });
+  }
+
+  function drawMap() {
+    NWMap.heat(document.getElementById("map"), { values: counts, scale: "navy", label: "introductions", lowLabel: "None", highLabel: "Most",
+      onPick: function (c) { state = c; history.replaceState(null, "", "#" + c); loadList(); } });
+  }
+
+  document.getElementById("list").addEventListener("click", function (e) {
+    var t = e.target, id;
+    if ((id = t.getAttribute("data-send"))) {
+      var inp = document.querySelector('[data-hello="' + id + '"]'), st = document.querySelector('[data-st="' + id + '"]');
+      if (!me) { st.textContent = "Sign in first (top of the page)."; st.className = "status err"; return; }
+      NW.post("/api/dating", { action: "hello", id: id, text: inp.value }).then(function (d) {
+        st.textContent = d.success ? "Sent. If they write back, it shows in your inbox." : (d.error || "Failed."); st.className = d.success ? "status" : "status err";
+        if (d.success) inp.value = "";
+      });
+    }
+    if ((id = t.getAttribute("data-flag")) && confirm("Report this profile?")) {
+      NW.post("/api/dating", { action: "report", id: id }).then(function () { t.textContent = "Reported. Thank you."; t.disabled = true; });
+    }
+  });
+
+  // ---------- my profile, the recorder, and my inbox ----------
+  var rec = null, chunks = [], blob = null, mime = "", started = 0, secs = 0, timer = null;
+
+  function renderMe(d) {
+    var el = document.getElementById("me");
+    if (!d.signedIn) {
+      el.innerHTML = '<p><b>Sign in to record your introduction and to say hello.</b> Only your first name shows; your email is never shown.</p>'
+        + '<a class="btn" href="/api/auth/google?back=' + encodeURIComponent("/dating.html") + '">Sign in with Google</a>';
+      return;
+    }
+    me = d;
+    var inbox = (d.inbox || []).map(function (m) {
+      return '<div class="msg"><span class="who">' + E(m.fromName || "Someone") + '</span><span class="when">' + E(m.fromState || "") + ' · ' + E(NW.ago(m.at)) + '</span><p>' + E(m.text) + '</p>'
+        + '<div class="row" style="display:flex;gap:6px;margin-top:4px"><input type="text" maxlength="300" placeholder="Reply" data-rin="' + E(m.id) + '" style="flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:4px"><button class="btn ghost" data-reply="' + E(m.id) + '">Reply</button></div></div>';
+    }).join("");
+    var p = d.profile;
+    el.innerHTML = (p ? '<p><b>Your introduction:</b> ' + E(p.firstName) + ', ' + E(p.age) + ' · ' + E(p.state) + ' · <b>' + (p.status === "live" ? "live" : "in review") + '</b> '
+        + '<button class="btn ghost" id="del" style="padding:4px 8px;font-size:12px">Remove</button></p>' : "")
+      + '<form class="form" id="pf">'
+      + '<div class="row2"><input type="text" id="fn" placeholder="First name" maxlength="24" required><input type="text" id="age" placeholder="Age" inputmode="numeric" maxlength="3" required></div>'
+      + '<div class="row2"><select id="pst" required><option value="">State…</option>' + NW_STATES.list.slice().sort(function (a, b) { return a.name < b.name ? -1 : 1; }).map(function (s) { return '<option value="' + s.code + '">' + E(s.name) + '</option>'; }).join("") + '</select>'
+      + '<input type="text" id="area" placeholder="Rough area, e.g. South Jersey" maxlength="40"></div>'
+      + '<input type="text" id="seek" placeholder="Hoping to meet… (e.g. a kind man 40–55)" maxlength="60">'
+      + '<div class="rec" id="recbox"><span class="dot"></span><button type="button" class="btn" id="recbtn">● Record (up to 60 s)</button><span id="rectime" class="mono" style="font-size:13px"></span></div>'
+      + '<audio id="preview" controls style="width:100%;display:none"></audio>'
+      + '<label class="chk"><input type="checkbox" id="a18" required> I am 18 or older.</label>'
+      + '<label class="chk"><input type="checkbox" id="arules" required> No contact details, money talk or anything explicit in my recording. I understand it is reviewed before it goes live.</label>'
+      + '<div><button class="btn green" type="submit" id="send">' + (p ? "Replace my introduction" : "Submit my introduction") + '</button></div><div class="status" id="pst2"></div></form>'
+      + '<div class="kicker" style="margin-top:14px;border-top-width:1px"><h2>Inbox</h2></div>' + (inbox || '<p class="note">No messages yet.</p>');
+    if (state) document.getElementById("pst").value = state;
+    document.getElementById("recbtn").addEventListener("click", toggleRec);
+    document.getElementById("pf").addEventListener("submit", submit);
+    var del = document.getElementById("del");
+    if (del) del.addEventListener("click", function () { if (confirm("Remove your introduction?")) NW.post("/api/dating", { action: "delete" }).then(refreshMe); });
+    el.onclick = function (e) {
+      var id = e.target.getAttribute("data-reply"); if (!id) return;
+      var inp = el.querySelector('[data-rin="' + id + '"]');
+      NW.post("/api/dating", { action: "reply", to: id, text: inp.value }).then(function (r) { if (r.success) { inp.value = ""; inp.placeholder = "Sent."; } else alert(r.error || "Failed."); });
+    };
+  }
+
+  function toggleRec() {
+    var btn = document.getElementById("recbtn"), box = document.getElementById("recbox");
+    if (rec && rec.state === "recording") { rec.stop(); return; }
+    if (!navigator.mediaDevices || !window.MediaRecorder) { alert("This browser can't record audio. Try Chrome, Edge, Firefox or Safari on a newer phone."); return; }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      mime = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].filter(function (t) { return MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t); })[0] || "";
+      rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 48000 } : undefined);
+      chunks = [];
+      rec.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
+      rec.onstop = function () {
+        stream.getTracks().forEach(function (t) { t.stop(); });
+        clearInterval(timer); box.classList.remove("on"); btn.textContent = "● Record again";
+        blob = new Blob(chunks, { type: rec.mimeType || mime || "audio/webm" });
+        var a = document.getElementById("preview"); a.src = URL.createObjectURL(blob); a.style.display = "block";
+      };
+      rec.start(); started = Date.now(); box.classList.add("on"); btn.textContent = "■ Stop";
+      timer = setInterval(function () {
+        secs = Math.round((Date.now() - started) / 1000);
+        document.getElementById("rectime").textContent = secs + " s";
+        if (secs >= 60) rec.stop();
+      }, 250);
+    }).catch(function () { alert("Please allow the microphone to record your introduction."); });
+  }
+
+  function submit(e) {
+    e.preventDefault();
+    var st = document.getElementById("pst2");
+    if (!blob) { st.textContent = "Record your introduction first."; st.className = "status err"; return; }
+    st.className = "status"; st.textContent = "Uploading…";
+    var fr = new FileReader();
+    fr.onload = function () {
+      NW.post("/api/dating", { action: "post", firstName: document.getElementById("fn").value, age: document.getElementById("age").value,
+        state: document.getElementById("pst").value, area: document.getElementById("area").value, seeking: document.getElementById("seek").value,
+        agree18: document.getElementById("a18").checked, agreeRules: document.getElementById("arules").checked,
+        mime: blob.type, seconds: secs, audio: String(fr.result).split(",")[1] })
+        .then(function (d) {
+          if (d.success) { st.textContent = "Thank you. Your introduction is in review and goes live once it's been heard."; blob = null; refreshMe(); }
+          else { st.textContent = d.error || "Failed."; st.className = "status err"; }
+        }).catch(function () { st.textContent = "Upload failed."; st.className = "status err"; });
+    };
+    fr.readAsDataURL(blob);
+  }
+
+  function refreshMe() { NW.get("/api/dating?mine=1").then(renderMe).catch(function () { renderMe({ signedIn: false }); }); }
+
+  NW.get("/api/dating").then(function (d) {
+    counts = {};
+    (d.profiles || []).forEach(function (p) { counts[p.state] = (counts[p.state] || 0) + 1; });
+    drawMap();
+  }).catch(drawMap);
+  loadList();
+  refreshMe();
+})();
+</script>
+</body>
+</html>

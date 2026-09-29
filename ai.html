@@ -1,0 +1,47 @@
+<!-- BUILT 2026-09-29 · newsweed ai-1a · The AI glossary behind the "AI term of the day" ear. Terms live in ai-terms.js. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI term of the day — the Newsweed AI glossary</title>
+<meta name="description" content="Artificial intelligence in plain English: one term a day, and the full glossary.">
+<link rel="canonical" href="https://newsweed.com/ai.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+<style>
+.term { padding: 14px 0; border-bottom: 1px solid var(--line2); scroll-margin-top: 20px; }
+.term h3 { font-size: 20px; }
+.term p { margin: 4px 0 0; color: var(--ink2); max-width: 70ch; }
+.term p.short { color: var(--ink); font-weight: 500; }
+.term:target, .term.today { background: #fffbe6; outline: 2px solid var(--green); outline-offset: 6px; }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">AI term of the day</span><h1>Artificial intelligence, in plain English</h1>
+    <p>AI is changing work, news, farming, school and the courts. One term a day, explained without the hype. Here is the whole glossary.</p></div>
+  <div class="cols2">
+    <main id="terms"></main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · ai-1a"></div>
+<script src="/ai-terms.js?v=1a"></script>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script>
+(function () {
+  var E = NW.esc, t = NW_AI.today();
+  document.getElementById("terms").innerHTML = '<div class="kicker green"><h2>Today</h2></div>'
+    + '<div class="term today" id="today"><h3>' + E(t.term) + '</h3><p class="short">' + E(t.short) + '</p><p>' + E(t.more) + '</p></div>'
+    + '<div class="kicker" style="margin-top:22px"><h2>The glossary</h2></div>'
+    + NW_AI.terms.slice().sort(function (a, b) { return a.term < b.term ? -1 : 1; }).map(function (x) {
+      return '<div class="term" id="' + E(x.slug) + '"><h3>' + E(x.term) + '</h3><p class="short">' + E(x.short) + '</p><p>' + E(x.more) + '</p></div>';
+    }).join("");
+  if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) setTimeout(function () { el.scrollIntoView({ block: "start" }); }, 50); }
+})();
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@ export async function onRequestPost(context) {
     const record = {
       email,
       subscribedAt: new Date().toISOString(),
-      source: SOURCES.includes(body.source) ? body.source : "newsweed.com",
+      source: SOURCES.includes(body.source) || /^section-[a-z]{2,20}$/.test(body.source || "") ? body.source : "newsweed.com",
       consent: "Opted in on newsweed.com to receive the Newsweed daily email",
       country: request.headers.get("CF-IPCountry") || ""
     };

@@ -1,0 +1,57 @@
+<!-- BUILT 2026-09-29 · newsweed books-1a · Books & Libraries, and the map of where America's authors are
+     in the news (local-author / new-book stories per state, 30 days, from /api/states). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Books & Libraries — Newsweed</title>
+<meta name="description" content="Books, libraries, and a map of where in America new authors are coming from.">
+<link rel="canonical" href="https://newsweed.com/books.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+</head>
+<body data-group="books">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Books &amp; Libraries</span><h1>Where America's authors are coming from</h1>
+    <p>New books, the libraries that lend them, and the hometown writers every local paper is proud of. Tap a state to see its authors in the news.</p></div>
+  <div class="cols2">
+    <main>
+      <section class="block"><div class="kicker navy"><h2>The authors map</h2><span class="more">Local-author and new-book stories, last 30 days</span></div>
+        <div id="map"><div class="loading">Loading the map…</div></div>
+        <div class="panel" id="pane"><p class="note" style="margin:0">Tap a state.</p></div></section>
+      <section class="block"><div class="kicker"><h2>Local authors</h2></div><ul class="hl" data-s="authors"><li class="loading">Loading…</li></ul></section>
+      <div class="grid2">
+        <section class="block"><div class="kicker"><h2>Books</h2></div><ul class="hl small" data-s="books"><li class="loading">Loading…</li></ul></section>
+        <section class="block"><div class="kicker green"><h2>Libraries</h2></div><ul class="hl small" data-s="library"><li class="loading">Loading…</li></ul></section>
+      </div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · books-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl, data = {};
+  function pick(code) {
+    var s = data[code], name = NW_STATES.by[code].name, p = document.getElementById("pane");
+    if (!s || !s.authors || !s.authors.length) { p.innerHTML = '<h4>' + E(name) + '</h4><p class="note" style="margin:0">No author stories found for ' + E(name) + ' yet.</p>'; return; }
+    p.innerHTML = '<h4>' + E(name) + ' authors in the news</h4><ul class="hl small">' + s.authors.map(function (a) {
+      return '<li><a href="' + E(U(a.link)) + '" target="_blank" rel="noopener">' + E(a.title) + '</a><span class="src">' + E(a.source) + '</span></li>';
+    }).join("") + '</ul>';
+  }
+  NW.get("/api/states").then(function (d) {
+    data = d.states || {};
+    var v = {};
+    Object.keys(data).forEach(function (k) { v[k] = (data[k].counts || {}).authors || 0; });
+    NWMap.heat(document.getElementById("map"), { values: v, scale: "navy", label: "author stories", lowLabel: "Fewer", highLabel: "More", onPick: pick,
+      note: "Counts local-author and new-book news stories per state. Gray: not gathered yet. States refresh through the day." });
+  });
+})();
+</script>
+</body>
+</html>

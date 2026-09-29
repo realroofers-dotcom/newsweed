@@ -1,0 +1,47 @@
+<!-- BUILT 2026-09-29 · newsweed gambling-1a · Gambling: the industry, the law, and the cost. We report it; we never
+     promote betting (no odds, no promo codes; /api/feed drops them). Problem-gambling help is always on the page. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gambling — Newsweed</title>
+<meta name="description" content="Gambling news, the law, problem gambling, and a map of where gambling is in the news.">
+<link rel="canonical" href="https://newsweed.com/gambling.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+</head>
+<body data-group="gambling">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Gambling</span><h1>The house, the law, and the cost</h1>
+    <p>Sports betting, casinos and lotteries are now a big business in most states. We cover the money, the law and the people it hurts. We never publish odds, tips or promo codes.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="help"><b>Gambling problem?</b> Call or text <b>1-800-GAMBLER</b>, free and confidential, 24 hours a day. National Council on Problem Gambling: <a href="https://www.ncpgambling.org/help-treatment/" rel="noopener" style="color:var(--navy)">ncpgambling.org</a>.</div>
+      <section class="block"><div class="kicker navy"><h2>Where gambling is in the news</h2></div>
+        <div id="map"><div class="loading">Loading…</div></div>
+        <div class="panel" id="pane"><p class="note" style="margin:0">Tap a state.</p></div>
+        <p class="note" style="margin-top:8px">Share of each state's latest headlines (about 3 days) about gambling, betting, casinos or lotteries. What's being reported, not official figures. <a href="/where.html" style="color:var(--navy)">Compare with DUI, drugs and crime →</a></p></section>
+      <section class="block"><div class="kicker"><h2>Gambling news</h2></div><ul class="hl" data-s="gambling"><li class="loading">Loading…</li></ul></section>
+      <div class="grid2">
+        <section class="block"><div class="kicker navy"><h2>Problem gambling</h2></div><ul class="hl small" data-s="problem"><li class="loading">Loading…</li></ul></section>
+        <section class="block"><div class="kicker red"><h2>Gambling &amp; crime</h2></div><ul class="hl small" data-s="crimeg"><li class="loading">Loading…</li></ul></section>
+      </div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · gambling-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script>
+NW.get("/api/states").then(function (d) {
+  var data = d.states || {};
+  NWMap.heat(document.getElementById("map"), { values: NWMap.values(data, "gambling"), scale: "navy", label: "gambling headlines",
+    onPick: function (c) { NWMap.panel(document.getElementById("pane"), data[c], c, "gambling", "gambling headlines"); } });
+});
+</script>
+</body>
+</html>

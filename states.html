@@ -1,0 +1,81 @@
+<!-- BUILT 2026-09-29 · newsweed states-1a · The 50 states: the top story from every state (the publisher's own
+     summary, 300 characters max, linked), and the cannabis-law map. Data: /api/states (refreshes a few states per visit). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 50 States — Newsweed</title>
+<meta name="description" content="The top story from every state, and where cannabis is legal, medical only, or not legal.">
+<link rel="canonical" href="https://newsweed.com/states.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+<style>.statecard.hit { background: #fffbe6; outline: 2px solid var(--green); outline-offset: 4px; }</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">The 50 States</span><h1>Top news from every state</h1>
+    <p>One story from each state and Washington, D.C., in 300 characters or less, linked to the paper that reported it. Tap the map to jump to a state.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="grid2">
+        <section class="block"><div class="kicker green"><h2>Cannabis law by state</h2></div><div id="cmap"></div>
+          <p class="note" style="margin-top:6px"><span id="ccount"></span> Laws change: <a id="csrc" style="color:var(--navy)" rel="noopener">source</a>.</p></section>
+        <section class="block"><div class="kicker red"><h2>Crime heat map</h2><span class="more"><a href="/dui.html">Crime &amp; DUI →</a></span></div><div id="hmap"></div>
+          <div class="panel" id="pane"><p class="note" style="margin:0">Tap a state.</p></div></section>
+      </div>
+      <section class="block"><div class="kicker"><h2>State by state</h2><span class="more" id="fresh"></span></div>
+        <div class="grid2" id="cards"><div class="loading">Loading…</div></div></section>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · states-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl, data = {};
+  document.getElementById("csrc").href = NW_STATES.CANNABIS_SOURCE.url;
+  document.getElementById("csrc").textContent = NW_STATES.CANNABIS_SOURCE.name + ", " + NW_STATES.CANNABIS_AS_OF;
+  var n = { adult: 0, medical: 0, cbd: 0, none: 0 };
+  NW_STATES.list.forEach(function (s) { if (s.code !== "DC") n[s.cannabis]++; });
+  document.getElementById("ccount").textContent = "Legal for adults in " + n.adult + " states and D.C.; medical only in " + n.medical
+    + "; CBD or low-THC only in " + n.cbd + "; not legal in " + n.none + ".";
+
+  function jump(code) {
+    var el = document.getElementById("st-" + code);
+    if (!el) return;
+    Array.prototype.forEach.call(document.querySelectorAll(".statecard.hit"), function (x) { x.classList.remove("hit"); });
+    el.classList.add("hit");
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    history.replaceState(null, "", "#" + code);
+  }
+
+  function cards() {
+    document.getElementById("cards").innerHTML = NW_STATES.list.slice().sort(function (a, b) { return a.name < b.name ? -1 : 1; }).map(function (s) {
+      var r = data[s.code], t = r && r.top;
+      return '<div class="statecard" id="st-' + s.code + '"><span class="st">' + E(s.name) + ' · ' + E(NW_STATES.CANNABIS_LABELS[s.cannabis]) + '</span>'
+        + (t ? '<h3><a href="' + E(U(t.link)) + '" target="_blank" rel="noopener">' + E(t.title) + '</a></h3>'
+             + (t.story ? '<p>' + E(t.story) + '</p>' : "") + '<span class="src">' + E(t.source || "") + (t.pubDate ? " · " + E(NW.ago(t.pubDate)) : "") + '</span>'
+           : '<p class="note">Gathering ' + E(s.name) + '\'s news. States refresh through the day.</p>')
+        + '</div>';
+    }).join("");
+  }
+
+  NWMap.cannabis(document.getElementById("cmap"), { onPick: jump });
+  NW.get("/api/states").then(function (d) {
+    data = d.states || {};
+    cards();
+    NWMap.heat(document.getElementById("hmap"), { values: NWMap.values(data, "crime"), scale: "red", label: "crime headlines",
+      onPick: function (c) { NWMap.panel(document.getElementById("pane"), data[c], c, "crime", "crime headlines"); } });
+    var n = Object.keys(data).length;
+    document.getElementById("fresh").textContent = n + " of 51 gathered" + (d.staleLeft ? " · refreshing" : "");
+    if (location.hash.length === 3) setTimeout(function () { jump(location.hash.slice(1).toUpperCase()); }, 200);
+  }).catch(function () { cards(); });
+})();
+</script>
+</body>
+</html>

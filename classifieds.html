@@ -1,0 +1,133 @@
+<!-- BUILT 2026-09-29 · newsweed classifieds-1a · Free classifieds (Mark's favorite part of a newspaper).
+     "Free to post as long as it's not drugs, prostitution or other." Ads go live after approval in tips-admin.html;
+     30 days each; readers can flag. API: /api/classifieds -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classifieds — free to post — Newsweed</title>
+<meta name="description" content="Newsweed classifieds: free to post. For sale, jobs, services, housing, autos, farm and garden, pets, community, lost and found.">
+<link rel="canonical" href="https://newsweed.com/classifieds.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.ads { columns: 2 280px; column-gap: 22px; }
+.clf { break-inside: avoid; border-top: 2px solid var(--ink); padding: 8px 0 14px; margin-bottom: 6px; }
+.clf .c { font: 600 10.5px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--green2); }
+.clf h3 { font: 700 17px/1.2 var(--serif); margin: 3px 0 4px; }
+.clf .price { font: 700 14px var(--mono); color: var(--ink); }
+.clf p { margin: 4px 0; font-size: 14px; color: var(--ink2); white-space: pre-line; }
+.clf .meta { font: 400 11.5px var(--mono); color: var(--ink3); }
+.clf .contact { font-size: 13.5px; margin-top: 4px; }
+.clf button.flag { background: none; border: 0; color: var(--ink3); font: 400 11px var(--mono); cursor: pointer; padding: 0; margin-top: 4px; text-decoration: underline; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.filters select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; font: 400 14px var(--sans); }
+.rules li { margin-bottom: 4px; }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Classifieds</span><h1>Classifieds. Free to post.</h1>
+    <p>The best part of any newspaper. Sell it, find it, hire, rent, swap, announce. Posting is free.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="filters">
+        <label class="vh" for="fcat">Category</label><select id="fcat"><option value="">All categories</option></select>
+        <label class="vh" for="fstate">State</label><select id="fstate"><option value="">All states</option></select>
+        <a class="btn" href="#post">Post a free ad</a>
+      </div>
+      <div class="ads" id="ads"><div class="loading">Loading…</div></div>
+
+      <section class="block" id="post" style="margin-top:30px">
+        <div class="kicker green"><h2>Post a free ad</h2></div>
+        <div class="box" style="margin-bottom:14px">
+          <p><b>Free, with a few rules.</b> Your ad appears after a quick review, and runs 30 days.</p>
+          <ul class="rules" style="font-size:13.5px;color:var(--ink2);margin:6px 0 0;padding-left:18px">
+            <li>No drugs of any kind, no prostitution or "adult services", no weapons or ammunition, no alcohol or tobacco sales, no gambling, no fake documents, no get-rich-quick schemes.</li>
+            <li>Only honest ads for real things. No discrimination in housing or job ads.</li>
+            <li>Meet in public places, never send money to strangers, and trust your instincts.</li>
+          </ul>
+        </div>
+        <form class="form" id="f">
+          <div class="row2">
+            <select id="cat" required><option value="">Category…</option></select>
+            <select id="state" required><option value="">State…</option></select>
+          </div>
+          <div class="row2"><input type="text" id="town" placeholder="Town (optional)" maxlength="60"><input type="text" id="price" placeholder="Price (optional)" maxlength="30"></div>
+          <input type="text" id="title" placeholder="Headline, e.g. Oak dining table, seats 6" maxlength="80" required>
+          <textarea id="body" placeholder="Describe it" maxlength="800" required></textarea>
+          <input type="text" id="contact" placeholder="How people reach you (shown in the ad), e.g. call or text 555-123-4567" maxlength="120" required>
+          <input type="email" id="email" placeholder="Your email (private, never shown)" required>
+          <input type="text" id="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="chk"><input type="checkbox" id="agree" required> My ad follows the rules above, and I'm responsible for it.</label>
+          <div><button class="btn" type="submit" id="go">Submit my free ad</button></div>
+          <div class="status" id="st" role="status"></div>
+        </form>
+      </section>
+      <div class="box navy" style="margin-top:20px"><h3>Want more eyes on it?</h3><p>Display advertising across Newsweed starts at $20. <a href="/advertise.html">See advertising →</a></p></div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · classifieds-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script>
+<script>
+(function () {
+  var E = NW.esc, CATS = {};
+  var q = new URLSearchParams(location.search);
+  var states = NW_STATES.list.slice().sort(function (a, b) { return a.name < b.name ? -1 : 1; });
+  ["fstate", "state"].forEach(function (id) {
+    document.getElementById(id).insertAdjacentHTML("beforeend", states.map(function (s) { return '<option value="' + s.code + '">' + E(s.name) + '</option>'; }).join(""));
+  });
+
+  function load() {
+    var cat = document.getElementById("fcat").value, st = document.getElementById("fstate").value;
+    NW.get("/api/classifieds?cat=" + encodeURIComponent(cat) + "&state=" + encodeURIComponent(st)).then(function (d) {
+      if (!Object.keys(CATS).length) {
+        CATS = d.cats || {};
+        var opts = Object.keys(CATS).map(function (k) { return '<option value="' + k + '">' + E(CATS[k]) + '</option>'; }).join("");
+        document.getElementById("fcat").insertAdjacentHTML("beforeend", opts);
+        document.getElementById("cat").insertAdjacentHTML("beforeend", opts);
+        if (q.get("cat")) { document.getElementById("fcat").value = q.get("cat"); document.getElementById("cat").value = q.get("cat"); if (q.get("cat")) return load(); }
+      }
+      var ads = d.ads || [];
+      document.getElementById("ads").innerHTML = ads.length ? ads.map(function (a) {
+        var where = [a.town, (NW_STATES.by[a.state] || {}).name].filter(Boolean).join(", ");
+        return '<div class="clf"><span class="c">' + E(a.catLabel) + '</span><h3>' + E(a.title) + '</h3>'
+          + (a.price ? '<div class="price">' + E(a.price) + '</div>' : "") + '<p>' + E(a.body) + '</p>'
+          + '<div class="contact"><b>Contact:</b> ' + E(a.contact) + '</div><div class="meta">' + E(where) + ' · ' + E(NW.ago(a.posted)) + '</div>'
+          + '<button class="flag" data-id="' + E(a.id) + '">Report this ad</button></div>';
+      }).join("") : '<p class="note">No ads here yet. <a href="#post" style="color:var(--navy)">Be the first to post, free.</a></p>';
+    });
+  }
+  document.getElementById("fcat").addEventListener("change", load);
+  document.getElementById("fstate").addEventListener("change", load);
+  document.getElementById("ads").addEventListener("click", function (e) {
+    var id = e.target.getAttribute && e.target.getAttribute("data-id");
+    if (!id || !confirm("Report this ad as breaking the rules?")) return;
+    NW.post("/api/classifieds", { action: "report", id: id }).then(function () { e.target.textContent = "Reported. Thank you."; e.target.disabled = true; });
+  });
+
+  function v(id) { return document.getElementById(id).value; }
+  document.getElementById("f").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = document.getElementById("st"), btn = document.getElementById("go");
+    btn.disabled = true; st.className = "status"; st.textContent = "Sending…";
+    NW.post("/api/classifieds", { cat: v("cat"), state: v("state"), town: v("town"), price: v("price"), title: v("title"), body: v("body"),
+      contact: v("contact"), email: v("email"), website: v("website"), agree: document.getElementById("agree").checked })
+      .then(function (d) {
+        if (d.success) { st.textContent = "Thank you. Your ad is in review and goes up once it's approved."; document.getElementById("f").reset(); }
+        else { st.textContent = d.error || "Something went wrong."; st.className = "status err"; }
+      }).catch(function () { st.textContent = "Something went wrong."; st.className = "status err"; })
+      .then(function () { btn.disabled = false; });
+  });
+  load();
+})();
+</script>
+</body>
+</html>

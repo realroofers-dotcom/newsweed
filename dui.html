@@ -1,0 +1,71 @@
+<!-- BUILT 2026-09-29 · newsweed dui-1a · Crime & DUI.
+     Mark, 29 Sep 2026: "a heat map for the crime showing where it's happening most, easy click" and
+     "we will highlight with disgust DUI accidents and show a map." The maps are NEWS HEAT from /api/states
+     (share of each state's recent headlines about crime / DUI), labeled as such, with the official data linked. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crime & DUI — Newsweed</title>
+<meta name="description" content="Crime and DUI across America: tap-a-state heat maps, the latest DUI crashes and arrests, and where to find the official numbers.">
+<link rel="canonical" href="https://newsweed.com/dui.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+</head>
+<body data-group="dui">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k" style="color:var(--red)">Crime &amp; DUI</span><h1>Where it's happening</h1>
+    <p>Tap any state on either map to see what is behind the color. Darker means more of that state's recent headlines are about it.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="disgust">
+        <h2>Drunk and drugged driving is a choice. The people it kills didn't get one.</h2>
+        <p>Every crash on this page was preventable. We report them plainly, with disgust for the choice and respect for the people hurt. Charges are allegations until proven in court.</p>
+      </div>
+
+      <div class="grid2">
+        <section class="block"><div class="kicker red"><h2>Crime heat map</h2></div>
+          <div id="crimeMap"><div class="loading">Loading…</div></div>
+          <div class="panel" id="crimePane"><p class="note" style="margin:0">Tap a state.</p></div></section>
+        <section class="block"><div class="kicker red"><h2>DUI heat map</h2></div>
+          <div id="duiMap"><div class="loading">Loading…</div></div>
+          <div class="panel" id="duiPane"><p class="note" style="margin:0">Tap a state.</p></div></section>
+      </div>
+      <p class="note"><label><input type="checkbox" id="perM"> Adjust for population (per million residents)</label> ·
+        What the maps measure: of each state's latest ~100 news headlines (about 3 days), how many are about crime, and how many about DUI. That is what is being reported, not official crime rates.
+        Official numbers: <a href="https://cde.ucr.cjis.gov/" rel="noopener" style="color:var(--navy)">FBI Crime Data Explorer</a> ·
+        <a href="https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars" rel="noopener" style="color:var(--navy)">NHTSA crash deaths (FARS)</a>.
+        See also <a href="/where.html" style="color:var(--navy)">where DUI, gambling, drugs and crime meet</a>.</p>
+
+      <section class="block"><div class="kicker red"><h2>DUI crashes</h2></div><ul class="hl" data-s="dui"><li class="loading">Loading…</li></ul></section>
+      <div class="grid2">
+        <section class="block"><div class="kicker"><h2>Arrests &amp; sentences</h2></div><ul class="hl small" data-s="arrests"><li class="loading">Loading…</li></ul></section>
+        <section class="block"><div class="kicker green"><h2>Prevention</h2></div><ul class="hl small" data-s="madd"><li class="loading">Loading…</li></ul>
+          <p class="note" style="margin-top:8px">Plan a sober ride. If you see a driver who may be impaired, pull over safely and call 911.</p></section>
+      </div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · dui-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script>
+(function () {
+  var data = {};
+  function draw() {
+    var per = document.getElementById("perM").checked;
+    NWMap.heat(document.getElementById("crimeMap"), { values: NWMap.values(data, "crime", per), scale: "red", label: per ? "crime headlines per million" : "crime headlines",
+      onPick: function (c) { NWMap.panel(document.getElementById("crimePane"), data[c], c, "crime", "crime headlines"); } });
+    NWMap.heat(document.getElementById("duiMap"), { values: NWMap.values(data, "dui", per), scale: "amber", label: per ? "DUI headlines per million" : "DUI headlines",
+      onPick: function (c) { NWMap.panel(document.getElementById("duiPane"), data[c], c, "dui", "DUI headlines"); } });
+  }
+  document.getElementById("perM").addEventListener("change", draw);
+  NW.get("/api/states").then(function (d) { data = d.states || {}; draw(); });
+})();
+</script>
+</body>
+</html>

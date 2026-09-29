@@ -1,0 +1,71 @@
+<!-- BUILT 2026-09-29 · newsweed archive-1a · Every edition, kept. Reads /api/archive. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archive — every edition — Newsweed</title>
+<meta name="description" content="Every Newsweed edition, archived by date.">
+<link rel="canonical" href="https://newsweed.com/archive.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=3a">
+<style>.days { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; } .days a { border: 1px solid var(--line); border-radius: 4px; padding: 5px 9px; font: 500 12.5px var(--mono); } .days a.on { background: var(--ink); color: #fff; border-color: var(--ink); }</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Archive</span><h1>Every edition, kept</h1>
+    <p>Each day's Newsweed is saved: every headline on every desk, linked to the publisher, plus the CorruptMen story of the day. Pick a date.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="days" id="days"><div class="loading">Loading dates…</div></div>
+      <div id="ed"></div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · archive-1a"></div>
+<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+  var GROUP_NAMES = { home: "Front page", farm: "Farm & Garden", family: "Family & Lacrosse", books: "Books & Libraries", college: "Schools & Colleges", arts: "Arts & Music", gambling: "Gambling", dui: "Crime & DUI" };
+  var ORDER = ["home", "family", "farm", "college", "books", "arts", "dui", "gambling"];
+
+  function show(date) {
+    history.replaceState(null, "", "#" + date);
+    Array.prototype.forEach.call(document.querySelectorAll(".days a"), function (a) { a.classList.toggle("on", a.getAttribute("data-d") === date); });
+    var ed = document.getElementById("ed");
+    ed.innerHTML = '<div class="loading">Loading…</div>';
+    NW.get("/api/archive?date=" + date).then(function (d) {
+      var nice = new Date(date + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+      var h = '<h2 style="font:800 30px var(--serif);margin-bottom:4px">' + E(nice) + '</h2><p class="note">Volume ' + E(d.volume) + '</p>';
+      if (d.corruptmen) h += '<div class="kicker red"><h2>CorruptMen</h2></div><div class="cm-card" style="margin-bottom:22px"><h3><a href="' + E(U(d.corruptmen.link)) + '" target="_blank" rel="noopener">' + E(d.corruptmen.title) + '</a></h3><div class="src">' + E(d.corruptmen.source || "") + '</div></div>';
+      var groups = d.groups || {};
+      ORDER.concat(Object.keys(groups).filter(function (g) { return ORDER.indexOf(g) < 0; })).forEach(function (g) {
+        var secs = groups[g]; if (!secs) return;
+        h += '<div class="kicker navy" style="margin-top:14px"><h2>' + E(GROUP_NAMES[g] || g) + '</h2></div><div class="grid2">';
+        Object.keys(secs).forEach(function (k) {
+          var list = secs[k] || []; if (!list.length) return;
+          h += '<section class="block"><h3 style="font:700 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">' + E(list[0].label || k) + '</h3><ul class="hl small">'
+            + list.map(function (it) { return '<li><a href="' + E(U(it.link)) + '" target="_blank" rel="noopener">' + E(it.title) + '</a><span class="src">' + E(it.source || "") + '</span></li>'; }).join("") + '</ul></section>';
+        });
+        h += '</div>';
+      });
+      if (!Object.keys(groups).length) h += '<p class="note">Nothing saved for this date.</p>';
+      ed.innerHTML = h;
+    });
+  }
+
+  NW.get("/api/archive").then(function (d) {
+    var days = d.days || [];
+    document.getElementById("days").innerHTML = days.length ? days.map(function (x) { return '<a href="#' + x + '" data-d="' + x + '">' + x + '</a>'; }).join("") : '<p class="note">The first edition is being saved today.</p>';
+    document.getElementById("days").addEventListener("click", function (e) { var dd = e.target.getAttribute("data-d"); if (dd) { e.preventDefault(); show(dd); } });
+    var want = location.hash.slice(1);
+    if (days.length) show(days.indexOf(want) > -1 ? want : days[0]);
+  });
+})();
+</script>
+</body>
+</html>

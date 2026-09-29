@@ -1,4 +1,4 @@
-<!-- BUILT 2026-09-29 · newsweed arts-1a · Arts & Entertainment, featuring MusicIsNews.com.
+<!-- BUILT 2026-09-29 · newsweed arts-1b (Selected new music = accepted Music Is News contest entries) · Arts & Entertainment, featuring MusicIsNews.com.
      Mark, 29 Sep 2026: new music is uploaded on a separate site (MusicIsNews.com) and selected for this page;
      "we may have a radio station from all this." The "Selected new music" box reads /api/picks when that
      exists; until then it points artists to MusicIsNews.com. -->
@@ -29,7 +29,7 @@
 <!-- meta:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=4e">
+<link rel="stylesheet" href="/nw.css?v=4f">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 </head>
 <body data-group="arts">
@@ -49,8 +49,9 @@
         </ul>
         <span class="btn green">Go to MusicIsNews.com</span>
       </a>
-      <section class="block"><div class="kicker green"><h2>Selected new music</h2><span class="more">Picked from MusicIsNews.com uploads</span></div>
-        <p class="note">The first picks will appear here once uploads open at MusicIsNews.com.</p></section>
+      <section class="block" id="selected"><div class="kicker green"><h2>Selected new music</h2><span class="more"><a href="/contests.html#music">Music Is News Contest →</a></span></div>
+        <p class="note">New songs entered in the Music Is News Contest, featured here as soon as our staff have listened and accepted them. No violence, no slurs.</p>
+        <div id="picks"><p class="note">The first accepted songs will appear here. <a href="/contests.html#music" style="color:var(--navy)">Enter yours →</a></p></div></section>
       <section class="block"><div class="kicker navy"><h2>Music</h2></div><ul class="hl" data-s="music"><li class="loading">Loading…</li></ul></section>
       <div class="grid2">
         <section class="block"><div class="kicker"><h2>Arts</h2></div><ul class="hl small" data-s="arts"><li class="loading">Loading…</li></ul></section>
@@ -62,6 +63,20 @@
   </div>
 </div>
 <div id="nw-foot" data-build="Built 2026-09-29 · arts-1a"></div>
-<script src="/nw.js?v=4i"></script><script src="/section.js?v=1d"></script>
+<script src="/nw.js?v=4k"></script><script src="/section.js?v=1e"></script>
+<script>
+// Accepted Music Is News entries (contests-1b), newest first.
+NW.get("/api/contests?featured=music").then(function (d) {
+  var E = NW.esc, U = NW.safeUrl, f = d.featured || [];
+  if (!f.length) return;
+  function yt(l) { var m = String(l).match(/(?:youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]{6,20})/); return m ? m[1] : ""; }
+  document.getElementById("picks").innerHTML = '<div class="grid2">' + f.map(function (e) {
+    var id = yt(e.link);
+    return '<div style="margin-bottom:18px">' + (id ? '<div class="vid"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + id + '?rel=0" title="' + E(e.title) + '" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>' : "")
+      + '<b style="font:700 16px var(--serif)">' + E(e.title) + '</b><div class="src" style="font:400 12px var(--mono);color:var(--ink3)">by ' + E(e.name) + (e.credit ? " · " + E(e.credit) : "") + '</div>'
+      + (id ? "" : '<a href="' + E(U(e.link)) + '" rel="noopener" style="color:var(--navy)">Listen →</a>') + ' · <a href="/contests.html#music" style="color:var(--navy);font-size:13px">Vote for it →</a></div>';
+  }).join("") + '</div>';
+}).catch(function () {});
+</script>
 </body>
 </html>

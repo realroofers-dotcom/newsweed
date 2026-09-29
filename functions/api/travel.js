@@ -1,4 +1,4 @@
-// functions/api/travel.js — BUILT 2026-09-29 · travel-1a
+// functions/api/travel.js — BUILT 2026-09-29 · travel-1b (+ "Truck is here now, open to all": set by hand, expires itself)
 //
 // Where the Newsweed truck has been. Mark, 29 Sep 2026: "show where it has been based on my GPS,
 // always lagging behind at least a week."
@@ -38,9 +38,16 @@ function addStop(days, date, stop) {
   days[date] = list;
 }
 
+// "Truck is here now" (Mark, 29 Sep 2026: "the site should show where the truck is and say open to all").
+// NOT the GPS: a stop Mark switches on by hand, for the hours he chooses; it switches itself off. KV trk:now.
+async function readNow(kv) {
+  try { const n = JSON.parse((await kv.get("trk:now")) || "null"); return n && Date.parse(n.until) > Date.now() ? n : null; } catch (e) { return null; }
+}
+
 export async function onRequestGet(context) {
   const kv = context.env.EMAIL_LIST;
   if (!kv) return ok({ stops: [], states: [], lagDays: LAG_DAYS });
+  if (new URL(context.request.url).searchParams.has("now")) return ok({ now: await readNow(kv) }, "public, max-age=60");
   const days = await readDays(kv);
   const cutoff = nyDate(new Date(Date.now() - LAG_DAYS * 86400000));
   const stops = [];
@@ -49,7 +56,7 @@ export async function onRequestGet(context) {
   });
   const recent = stops.slice(-400);
   const states = Array.from(new Set(recent.map(s => s.state).filter(Boolean)));
-  return ok({ stops: recent, states, lastSeen: recent[recent.length - 1] || null, lagDays: LAG_DAYS }, "public, max-age=900");
+  return ok({ stops: recent, states, lastSeen: recent[recent.length - 1] || null, lagDays: LAG_DAYS, now: await readNow(kv) }, "public, max-age=300");
 }
 
 export async function onRequestPost(context) {
@@ -79,6 +86,16 @@ export async function onRequestPost(context) {
       await kv.put("trk:days", JSON.stringify(days));
       return ok({ success: true });
     }
+    if (b.action === "here") {
+      const place = clean(b.place, 60), state = clean(b.state, 2).toUpperCase();
+      if (!place || !/^[A-Z]{2}$/.test(state)) return ok({ success: false, error: "Town and state, please." });
+      const hours = Math.max(1, Math.min(72, parseInt(b.hours, 10) || 8));
+      const now = { place, state, spot: clean(b.spot, 100), note: clean(b.note, 160) || "Open to all. Come say hello.",
+        since: new Date().toISOString(), until: new Date(Date.now() + hours * 3600000).toISOString() };
+      await kv.put("trk:now", JSON.stringify(now), { expirationTtl: hours * 3600 + 60 });
+      return ok({ success: true, now });
+    }
+    if (b.action === "gone") { await kv.delete("trk:now"); return ok({ success: true }); }
     // Admin view of everything, including the last week (never public)
     if (b.action === "list") return ok({ success: true, days });
     return ok({ success: false, error: "Unknown action." });

@@ -1,4 +1,4 @@
-/* apps.js — BUILT 2026-09-29 · apps-1c (video icon for any contributor who files one; 1b Luis video icon)
+/* apps.js — BUILT 2026-09-29 · apps-1e (+ Contests tile; 1c video icon for any contributor who files one; 1b Luis video icon)
    Newsweed on the phone is icon driven (Mark, 29 Sep 2026): "icons for every section: news, then dating,
    then classifieds, then all other sections. When a user scrolls they should get what they want fast.
    Squeeze ads in between on the scroll, in text form, small letters only, so as not to interfere."
@@ -41,6 +41,7 @@
     suggestions: '<path d="M9 17.5h6M10 20.5h4"/><path d="M12 3.5a6 6 0 0 0-3.6 10.8c.6.5.9 1.2.9 1.9v1.3h5.4v-1.3c0-.7.3-1.4.9-1.9A6 6 0 0 0 12 3.5z"/>',
     about: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5h.01"/>',
     more: '<circle cx="5.5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18.5" cy="12" r="1.4"/>',
+    trophy: '<path d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 6H4.5a3 3 0 0 0 3 4M16.5 6h3a3 3 0 0 1-3 4M12 13.5V17M8.5 20.5h7M9.5 17h5v3.5h-5z"/>',
     video: '<rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/>'
   };
 
@@ -54,6 +55,7 @@
     ["/corruptmen.html", "CorruptMen", "corrupt", "#b3261e"],
     ["/dui.html", "Crime & DUI", "dui", "#7a1f16"],
     ["/events.html", "Events", "events", "#c77f1c"],
+    ["/contests.html", "Contests", "trophy", "#b8860b"],
     ["/chat.html", "Chat", "chat", "#4145b0"],
     ["/travel.html", "Travel", "travel", "#058a44"],
     ["/family.html", "Family", "family", "#2e3192"],

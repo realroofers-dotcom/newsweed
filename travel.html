@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="/nw.css?v=4e">
+<link rel="stylesheet" href="/nw.css?v=4f">
 <style>
 /* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
 .truckhead { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 22px; align-items: center; margin: 0 0 26px; }
@@ -68,6 +68,7 @@
     <p>More Americans than ever live on the road: in RVs, vans, trucks and campers, working from wherever the day ends. This is their section, and the Newsweed truck's.</p></div>
   <div class="cols2">
     <main>
+      <div id="here"></div>
       <div class="truckhead">
         <div>
           <img class="outline" src="/truck-outline.svg?v=1" alt="Outline drawing of the green Newsweed truck" width="640" height="300">
@@ -128,7 +129,7 @@
   </div>
 </div>
 <div id="nw-foot" data-build="Built 2026-09-29 · travel-2a"></div>
-<script src="/nw.js?v=4i"></script><script src="/section.js?v=1d"></script>
+<script src="/nw.js?v=4k"></script><script src="/section.js?v=1e"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -139,6 +140,14 @@
 
   NW.get("/api/travel").then(function (d) {
     var stops = d.stops || [];
+    if (d.now) {
+      var n = d.now, q = encodeURIComponent((n.spot ? n.spot + ", " : "") + n.place + ", " + n.state);
+      document.getElementById("here").innerHTML = '<div class="box" style="border:3px solid var(--green2);background:#e8f5ed;margin-bottom:22px">'
+        + '<h2 style="font:400 24px \'Archivo Black\',sans-serif;color:var(--green2);margin:0 0 4px">The truck is here now: open to all</h2>'
+        + '<p style="font-size:17px;margin:0 0 6px"><b>' + E(n.place) + ', ' + E(n.state) + '</b>' + (n.spot ? ' · ' + E(n.spot) : '') + '</p>'
+        + '<p style="margin:0 0 8px">' + E(n.note) + ' Until ' + E(new Date(n.until).toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" })) + '.</p>'
+        + '<a class="btn green" href="https://www.google.com/maps/search/?api=1&query=' + q + '" rel="noopener">Directions</a></div>';
+    }
     document.getElementById("lagNote").textContent = "Shown at least " + (d.lagDays || 7) + " days late";
     var towns = {}, days = {};
     stops.forEach(function (s) { towns[s.place + "|" + s.state] = s; days[s.date] = 1; });

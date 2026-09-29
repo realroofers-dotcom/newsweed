@@ -1,4 +1,4 @@
-<!-- BUILT 2026-09-29 · newsweed desk-2a · PRIVATE. The desk for every Newsweed contributor (Luis Orozco was the first).
+<!-- BUILT 2026-09-29 · newsweed desk-2b (+ contest judging) · PRIVATE. The desk for every Newsweed contributor (Luis Orozco was the first).
      Each writer files with their own desk key (made in tips-admin.html → Contributors; only its hash is stored).
      A key can only publish under its owner's name. Includes the video procedure (English/Spanish) and the profile editor.
      was desk-1b (Luis only) -->
@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=4e">
+<link rel="stylesheet" href="/nw.css?v=4f">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
@@ -83,10 +83,14 @@
 
   <div class="kicker" style="margin-top:28px"><h2>Your dispatches</h2></div>
   <div id="mine"><div class="loading">Loading…</div></div>
+
+  <div class="kicker green" style="margin-top:28px"><h2>Judge the contests</h2><span class="more">As Newsweed staff</span></div>
+  <div id="judge" class="box" style="padding:14px"></div>
+  <div id="mineEnd" hidden>
   </div>
 </main>
 
-<script src="/nw.js?v=4i"></script>
+<script src="/nw.js?v=4k"></script><script src="/judge.js?v=1a"></script>
 <script>
 (function () {
   var E = NW.esc, list = [], me = null;
@@ -113,6 +117,7 @@
       (me.links || []).forEach(function (l, i) { if (i < LINK_ROWS) { document.getElementById("lL" + i).value = l.label; document.getElementById("lU" + i).value = l.url; } });
       if (!v("place")) document.getElementById("place").value = me.location || "";
       load();
+      var j = document.getElementById("judge"); if (window.NWJudge && !j.dataset.on) { j.dataset.on = "1"; NWJudge.mount(j, function () { return "key=" + key(); }); }
     }).catch(function () { who.className = "status err"; who.textContent = "Couldn't reach the site."; });
   }
   document.getElementById("unlock").addEventListener("click", unlock);

@@ -1,4 +1,4 @@
-/* nw.css — BUILT 2026-09-29 · nw-css-4e
+/* nw.css — BUILT 2026-09-29 · nw-css-4f
    The Newsweed house style. Every page loads this file.
    A newspaper: white page, thin rules, serif headlines, nothing loud. */
 
@@ -296,6 +296,12 @@ footer.site p { margin: 0 0 10px; max-width: 90ch; line-height: 1.6; }
 footer.site .forsale { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; margin: 16px 0; }
 footer.site .forsale a { color: var(--navy); font-weight: 600; }
 footer.site .stamp { font: 400 11px var(--mono); color: var(--ink3); }
+
+/* ---------- the truck is here now, open to all ---------- */
+.truckhere { background: var(--green2); color: #fff; }
+.truckhere .wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding-top: 9px; padding-bottom: 9px; font: 500 15px var(--sans); }
+.truckhere b { font: 800 12px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; background: #fff; color: var(--green2); padding: 2px 7px; border-radius: 2px; }
+.truckhere a { color: #fff; font-weight: 700; text-decoration: underline; }
 
 /* ---------- Luis's videos ---------- */
 .vid { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; margin: 0 0 18px; }

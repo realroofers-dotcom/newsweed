@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4i (apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4k ("truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -18,6 +18,7 @@
     ["/dui.html", "Crime & DUI"],
     ["/classifieds.html", "Classifieds"],
     ["/events.html", "Events"],
+    ["/contests.html", "Contests"],
     ["/chat.html", "Chat room"]
   ];
   var NAV2 = [
@@ -125,6 +126,17 @@
       + '<div id="nwAnnounce"></div>'
       + '<nav class="main" aria-label="Sections"><div class="wrap">' + links(NAV) + '</div><div class="wrap navrow2">' + links(NAV2) + "</div></nav>";
 
+    // "The Newsweed truck is here now, open to all": only when Mark switches it on (tips-admin), until it expires.
+    get("/api/travel?now=1").then(function (d) {
+      var n = d && d.now;
+      if (!n) return;
+      var bar = document.createElement("div");
+      bar.className = "truckhere";
+      bar.innerHTML = '<div class="wrap"><b>The Newsweed truck is here</b><span>' + esc(n.place) + ", " + esc(n.state) + (n.spot ? " · " + esc(n.spot) : "")
+        + " · until " + esc(new Date(n.until).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })) + " · " + esc(n.note) + '</span><a href="/travel.html#here">Details →</a></div>';
+      var a = document.getElementById("nwAnnounce"); if (a) a.parentNode.insertBefore(bar, a);
+    }).catch(function () {});
+
     // The special announcement, set from tips-admin.html. Hidden when there is none.
     get("/api/announce").then(function (d) {
       var a = d && d.announcement;
@@ -219,7 +231,7 @@
   var phone = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   if (phone) Array.prototype.forEach.call(document.querySelectorAll(".ad"), function (el) { el.parentNode.removeChild(el); });
   var appsJs = document.createElement("script");
-  appsJs.src = "/apps.js?v=1d";
+  appsJs.src = "/apps.js?v=1e";
   document.body.appendChild(appsJs);
 
   window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };

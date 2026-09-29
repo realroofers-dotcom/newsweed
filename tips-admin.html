@@ -9,7 +9,8 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1d2470">
 <!-- meta:end -->
-<!-- BUILT 2026-09-29 · tips-admin-5a: + Contributors (approve, make key, new key, deactivate)
+<!-- BUILT 2026-09-29 · tips-admin-6a: + contest judging (judge.js)
+     was tips-admin-5a: + Contributors (approve, make key, new key, deactivate)
      was tips-admin-4a: + special announcement, events (+RSVP lists), truck travel log
      was tips-admin-3a: + classifieds & dating queues (2a: suggestions & members downloads, CorruptMen override, chat moderation) -->
 <style>
@@ -111,6 +112,12 @@
     <div class="dlstatus" id="chatStatus"></div>
   </div>
 
+  <!-- 2026-09-29 · admin-6a: contest judging (also on every contributor's desk, so judging goes on without the editor) -->
+  <div class="exports" id="jAdmin" hidden>
+    <h2>Contests: judge, accept music</h2>
+    <div id="judge"></div>
+  </div>
+
   <!-- 2026-09-29 · admin-5a: contributors (approve a journalist = create them here and send them their key) -->
   <div class="exports" id="cbAdmin" hidden>
     <h2>Contributors</h2>
@@ -168,7 +175,18 @@
       <input class="headline" id="trPlace" placeholder="Town" style="flex:2;min-width:160px">
       <input class="headline" id="trState" maxlength="2" placeholder="NJ" style="flex:1;min-width:70px">
     </div>
-    <div class="acts"><button class="ok" id="trSave">Add stop</button><button class="no" id="trList" style="color:var(--bone)">Show the full log (private)</button></div>
+    <h2 style="margin-top:16px">The truck is here now: open to all</h2>
+    <div class="sub">Shows a green bar on every page and a banner on the travel page, with directions, for the hours you choose; then it switches itself off. This tells the public where you are right now: use it only when you want visitors.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input class="headline" id="hrPlace" placeholder="Town" style="flex:2;min-width:140px">
+      <input class="headline" id="hrState" maxlength="2" placeholder="SD" style="flex:1;min-width:60px">
+      <input class="headline" id="hrSpot" placeholder="Spot (optional), e.g. Falls Park lot" style="flex:3;min-width:180px">
+      <select class="headline" id="hrHours" style="flex:1;min-width:110px"><option value="2">2 hours</option><option value="4">4 hours</option><option value="8" selected>8 hours</option><option value="24">24 hours</option><option value="48">2 days</option></select>
+    </div>
+    <input class="headline" id="hrNote" maxlength="160" placeholder="Note (optional). Default: Open to all. Come say hello.">
+    <div class="acts"><button class="ok" id="hrOn">Show it now</button><button class="no" id="hrOff">Take it down</button></div>
+    <div class="dlstatus" id="hrStatus"></div>
+    <div class="acts" style="margin-top:14px"><button class="ok" id="trSave">Add past stop (above)</button><button class="no" id="trList" style="color:var(--bone)">Show the full log (private)</button></div>
     <div class="dlstatus" id="trStatus"></div>
     <div id="trOut"></div>
   </div>
@@ -221,7 +239,8 @@
       document.getElementById("cmAdmin").hidden = false;
       document.getElementById("chatAdmin").hidden = false;
       document.getElementById("clfAdmin").hidden = false;
-      ["annAdmin", "evAdmin", "trAdmin", "cbAdmin"].forEach(id => document.getElementById(id).hidden = false);
+      ["annAdmin", "evAdmin", "trAdmin", "cbAdmin", "jAdmin"].forEach(id => document.getElementById(id).hidden = false);
+      if (window.NWJudge && !document.getElementById("judge").dataset.on) { document.getElementById("judge").dataset.on = "1"; NWJudge.mount(document.getElementById("judge"), () => "admin=" + k()); }
       loadEvents();
       document.getElementById("dtAdmin").hidden = false;
       const tips = data.pending || [];
@@ -429,6 +448,16 @@
     if (r.success) { ["evTitle", "evPlace", "evLink", "evDesc", "evTime"].forEach(id => document.getElementById(id).value = ""); loadEvents(); }
   });
 
+  // ---- The truck is here now ----
+  document.getElementById("hrOn").addEventListener("click", async () => {
+    const r = await postJson("/api/travel?admin=" + k(), { action: "here", place: v2("hrPlace"), state: v2("hrState"), spot: v2("hrSpot"), hours: v2("hrHours"), note: v2("hrNote") });
+    document.getElementById("hrStatus").textContent = r.success ? "Showing on every page until " + new Date(r.now.until).toLocaleString() + "." : (r.error || "Failed.");
+  });
+  document.getElementById("hrOff").addEventListener("click", async () => {
+    const r = await postJson("/api/travel?admin=" + k(), { action: "gone" });
+    document.getElementById("hrStatus").textContent = r.success ? "Taken down (within a minute)." : (r.error || "Failed.");
+  });
+
   // ---- Truck travel ----
   document.getElementById("trSave").addEventListener("click", async () => {
     const r = await postJson("/api/travel?admin=" + k(), { action: "stop", date: v2("trDate"), place: v2("trPlace"), state: v2("trState") });
@@ -486,5 +515,6 @@
   keyInput.addEventListener("keydown", e => { if (e.key === "Enter") load(); });
   if (saved) load();
 </script>
+<script src="/judge.js?v=1a"></script>
 </body>
 </html>

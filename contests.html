@@ -1,0 +1,228 @@
+<!-- BUILT 2026-09-29 · newsweed contests-1b (no violence / N-word; music accepted by staff, featured on Arts) · The contests painted on the truck: Cartoon/Comic, Music Is News, Photography,
+     Poetry, Tattoo. Staff scores + audience votes; no cash prize, the prize is the title and the spotlight.
+     Finals one year out, one contest a day (2027-09-29 → 2027-10-03), then every year on the same days.
+     Fully automatic: /api/contests closes each round and publishes the winner by itself. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contests: cartoon, music, photography, poetry and tattoo — Newsweed</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Enter the Newsweed contests painted on our truck: cartoon and comic, Music Is News, photography, poetry and tattoo. Readers vote, staff score; the prize is the title.">
+<link rel="canonical" href="https://newsweed.com/contests">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contests: cartoon, music, photography, poetry and tattoo — Newsweed">
+<meta property="og:description" content="Enter the Newsweed contests painted on our truck: cartoon and comic, Music Is News, photography, poetry and tattoo. Readers vote, staff score; the prize is the title.">
+<meta property="og:url" content="https://newsweed.com/contests">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contests: cartoon, music, photography, poetry and tattoo — Newsweed">
+<meta name="twitter:description" content="Enter the Newsweed contests painted on our truck: cartoon and comic, Music Is News, photography, poetry and tattoo. Readers vote, staff score; the prize is the title.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4f">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.sched { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0 0 24px; }
+@media (max-width: 760px) { .sched { grid-template-columns: 1fr 1fr; } }
+.sched a { border: 1px solid var(--line); border-top: 4px solid var(--truth); border-radius: 6px; padding: 10px; display: block; background: #fff; }
+.sched a.on { border-color: var(--ink); border-top-color: var(--green2); background: var(--panel); }
+.sched b { display: block; font: 700 14px/1.2 var(--sans); }
+.sched .d { font: 600 11.5px var(--mono); color: var(--red); margin-top: 4px; }
+.sched .n { font: 400 11px var(--mono); color: var(--ink3); }
+.spot { border: 3px solid var(--truth); border-radius: 10px; padding: 18px; margin: 0 0 24px; display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 18px; align-items: center; }
+.spot img { width: 100%; border-radius: 6px; }
+.spot .k { font: 700 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.spot h2 { font: 400 26px/1.1 "Archivo Black", sans-serif; color: var(--truth); margin: 4px 0; }
+@media (max-width: 700px) { .spot { grid-template-columns: 1fr; } }
+.entries { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.entry { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+.entry img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--panel); display: block; }
+.entry .in { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.entry h3 { font-size: 17px; }
+.entry .by { font: 400 12px var(--mono); color: var(--ink3); }
+.entry .poem { font: 400 14.5px/1.55 var(--serif); white-space: pre-line; max-height: 9.5em; overflow: hidden; }
+.entry .poem.open { max-height: none; }
+.entry .row { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 6px; }
+.entry .votes { font: 700 13px var(--mono); }
+.entry .btn.voted { background: var(--green2); }
+.entry button.flag { background: none; border: 0; color: var(--ink3); font: 400 11px var(--mono); cursor: pointer; text-decoration: underline; margin-left: auto; }
+.hall li { padding: 8px 0; border-bottom: 1px solid var(--line2); }
+.cd { font: 700 13px var(--mono); color: var(--red); }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Contests</span><h1>The prize is the title</h1>
+    <p>The contests on the side of the Newsweed truck, open to everyone. Enter your best work, get your friends to vote, and win the title and our spotlight. There is no cash prize: the winner is named and promoted on Newsweed.</p></div>
+  <div class="cols2">
+    <main>
+      <div id="spot"></div>
+      <div class="sched" id="sched"><div class="loading">Loading…</div></div>
+
+      <section class="block" id="contest">
+        <div class="kicker navy"><h2 id="cName">…</h2><span class="more" id="cWhen"></span></div>
+        <p class="note" id="cBlurb"></p>
+        <div class="entries" id="entries"><div class="loading">Loading…</div></div>
+      </section>
+
+      <section class="block" id="enter">
+        <div class="kicker green"><h2>Enter <span id="eName"></span></h2></div>
+        <div id="enterBox" class="box"><div class="loading">Checking sign-in…</div></div>
+      </section>
+
+      <section class="block">
+        <div class="kicker"><h2>How the winner is chosen</h2></div>
+        <div class="box">
+          <p><b>Half the audience, half the staff.</b> Readers vote (sign in, one vote per contest, change it any time before the close). Newsweed staff score entries from 1 to 10. At the close, each entry's score is half its share of the votes (against the most-voted entry) and half its average staff score. If the staff haven't scored, the audience decides alone.</p>
+          <p><b>It runs itself.</b> Each contest closes at midnight New York time at the end of its final day, and the site names the winner automatically, then opens the next year's round the same day.</p>
+          <p><b>The rules.</b> Your own original work only; credit anyone who helped (and the tattoo artist). Up to 3 entries per contest. Ages 13 and up; under 18 with a parent's permission. No violence, no nudity, no hate, no N-word or other slurs (refused automatically, in any spelling), and no promotion of alcohol or drug use. <b>Music Is News entries appear after our staff have listened and accepted them</b>, and accepted songs are featured in <a href="/arts.html#selected" style="color:var(--navy)">Arts &amp; Music</a>. Entries that break the rules are removed; three reader reports hide an entry until the staff review it. By entering, you let Newsweed show your entry and promote the winner, with credit to you. You keep your rights. No purchase, no fee, no cash prize.</p>
+        </div>
+      </section>
+
+      <section class="block"><div class="kicker navy"><h2>Hall of Winners</h2></div><ul class="hl hall" id="hall"><li class="note">The first winners will be named on September 29, 2027.</li></ul></section>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · contests-1a"></div>
+<script src="/nw.js?v=4k"></script><script src="/section.js?v=1e"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+  var cur = (location.hash.slice(1) || "cartoon"), info = null, all = [];
+
+  function nice(ymd) { return new Date(ymd + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }); }
+  function daysTo(ymd) { var t = Date.parse(ymd + "T23:59:59-04:00"); return Math.max(0, Math.ceil((t - Date.now()) / 86400000)); }
+  function yt(link) { var m = String(link).match(/(?:youtu\.be\/|v=|shorts\/)([A-Za-z0-9_-]{6,20})/); return m ? m[1] : ""; }
+
+  function spotlight(w) {
+    if (!w) return "";
+    var body = w.hasImage ? '<img src="/api/contests?img=' + encodeURIComponent(w.id) + '" alt="' + E(w.title) + '">' : (w.text ? '<div class="box" style="font:400 15px/1.55 var(--serif);white-space:pre-line">' + E(w.text.slice(0, 500)) + '</div>' : "");
+    return '<div class="spot">' + (body ? '<div>' + body + '</div>' : "") + '<div><span class="k">Winner · ' + E(w.contestName) + ' · ' + E(nice(w.final)) + '</span>'
+      + '<h2>' + E(w.name) + '</h2><p style="margin:0 0 6px;font:600 17px var(--serif)">"' + E(w.title) + '"</p>'
+      + (w.credit ? '<p class="note" style="margin:0">' + E(w.credit) + '</p>' : "")
+      + (w.link ? '<p style="margin:6px 0 0"><a href="' + E(U(w.link)) + '" rel="noopener" style="color:var(--navy)">Listen →</a></p>' : "")
+      + '<p class="note" style="margin:8px 0 0">' + E(w.votes) + ' votes' + (w.staff != null ? ' · staff score ' + E(w.staff) + '/10' : "") + ' · chosen by ' + E(w.method) + '</p></div></div>';
+  }
+
+  function loadAll() {
+    NW.get("/api/contests").then(function (d) {
+      all = d.contests || [];
+      document.getElementById("sched").innerHTML = all.map(function (c) {
+        return '<a href="#' + c.slug + '" data-c="' + c.slug + '" class="' + (c.slug === cur ? "on" : "") + '"><b>' + E(c.name.replace(" Contest", "")) + '</b>'
+          + '<div class="d">Final: ' + E(nice(c.final)) + '</div><div class="n">' + E(c.entries) + ' entries · ' + daysTo(c.final) + ' days left</div></a>';
+      }).join("");
+      var recent = (d.winners || []).filter(function (w) { return Date.now() - Date.parse(w.final) < 60 * 86400000; })[0];
+      document.getElementById("spot").innerHTML = spotlight(recent);
+      if ((d.winners || []).length) document.getElementById("hall").innerHTML = d.winners.map(function (w) {
+        return '<li><b>' + E(w.name) + '</b>, "' + E(w.title) + '" · <span class="note">' + E(w.contestName) + ', ' + E(nice(w.final)) + '</span></li>';
+      }).join("");
+      loadOne();
+    });
+  }
+
+  function loadOne() {
+    Array.prototype.forEach.call(document.querySelectorAll(".sched a"), function (a) { a.classList.toggle("on", a.getAttribute("data-c") === cur); });
+    NW.get("/api/contests?c=" + encodeURIComponent(cur)).then(function (d) {
+      info = d;
+      var c = d.contest;
+      document.getElementById("cName").textContent = c.name;
+      document.getElementById("eName").textContent = "the " + c.name;
+      document.getElementById("cWhen").innerHTML = 'Voting closes ' + E(nice(c.final)) + ' · <span class="cd">' + daysTo(c.final) + ' days</span>';
+      document.getElementById("cBlurb").textContent = c.blurb;
+      var es = d.entries || [];
+      document.getElementById("entries").innerHTML = es.length ? es.map(function (e) {
+        var voted = d.myVote === e.id, media = "";
+        if (e.hasImage) media = '<img loading="lazy" src="/api/contests?img=' + encodeURIComponent(e.id) + '" alt="' + E(e.title) + '">';
+        else if (e.link && yt(e.link)) media = '<div class="vid" style="margin:0;border-radius:0"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + yt(e.link) + '?rel=0" title="' + E(e.title) + '" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>';
+        return '<div class="entry">' + media + '<div class="in"><h3>' + E(e.title) + '</h3><div class="by">by ' + E(e.name) + (e.credit ? " · " + E(e.credit) : "") + '</div>'
+          + (e.text ? '<div class="poem" data-poem>' + E(e.text) + '</div>' : "")
+          + (e.link && !yt(e.link) ? '<a href="' + E(U(e.link)) + '" rel="noopener" style="color:var(--navy)">Listen →</a>' : "")
+          + '<div class="row"><span class="votes">' + E(e.votes) + '</span><button class="btn' + (voted ? " voted" : "") + '" data-vote="' + E(e.id) + '">' + (voted ? "✓ Your vote" : "Vote") + '</button>'
+          + '<button class="flag" data-flag="' + E(e.id) + '">Report</button></div><div class="status" data-st="' + E(e.id) + '"></div></div></div>';
+      }).join("") : '<p class="note">No entries yet. Be the first.</p>';
+      enterForm(c, d.signedIn);
+    });
+  }
+
+  document.getElementById("entries").addEventListener("click", function (e) {
+    var t = e.target, id;
+    if (t.hasAttribute && t.hasAttribute("data-poem")) t.classList.toggle("open");
+    if ((id = t.getAttribute && t.getAttribute("data-vote"))) {
+      if (!info.signedIn) { location.href = "/api/auth/google?back=" + encodeURIComponent("/contests.html#" + cur); return; }
+      NW.post("/api/contests", { action: "vote", c: cur, id: id }).then(function (r) {
+        if (r.success) loadOne(); else { var s = document.querySelector('[data-st="' + id + '"]'); s.textContent = r.error || "Failed."; s.className = "status err"; }
+      });
+    }
+    if ((id = t.getAttribute && t.getAttribute("data-flag")) && confirm("Report this entry as breaking the rules?")) {
+      NW.post("/api/contests", { action: "report", c: cur, id: id }).then(function () { t.textContent = "Reported. Thank you."; t.disabled = true; });
+    }
+  });
+
+  function enterForm(c, signedIn) {
+    var box = document.getElementById("enterBox");
+    if (!signedIn) {
+      box.innerHTML = '<p><b>Sign in to enter or vote.</b> One person, one vote. Your email is never shown.</p><a class="btn" href="/api/auth/google?back=' + encodeURIComponent("/contests.html#" + cur) + '">Sign in with Google</a>';
+      return;
+    }
+    var field = c.kind === "text" ? '<textarea id="eText" maxlength="3000" placeholder="Your poem" style="min-height:200px" required></textarea>'
+      : c.kind === "link" ? '<input type="url" id="eLink" placeholder="Link to your song on YouTube, SoundCloud or MusicIsNews.com" required>'
+      : '<label class="note" style="margin:0">Your picture (a photo or a scan; it is resized for you):</label><input type="file" id="eFile" accept="image/*" required>';
+    box.innerHTML = '<form class="form" id="ef">'
+      + '<div class="row2"><input type="text" id="eTitle" maxlength="90" placeholder="Title" required><input type="text" id="eNameIn" maxlength="60" placeholder="Name to show (default: your name)"></div>'
+      + field + '<input type="text" id="eCredit" maxlength="120" placeholder="' + (c.slug === "tattoo" ? "Tattoo artist and shop (credit them)" : "Credits: who helped, where, when (optional)") + '">'
+      + '<label class="chk"><input type="checkbox" id="eAgree" required> It is my own original work, it follows the rules, and Newsweed may show it and promote it with credit to me.</label>'
+      + '<label class="chk"><input type="checkbox" id="eAge" required> I am 13 or older (and have a parent\'s permission if I am under 18).</label>'
+      + '<div><button class="btn green" type="submit" id="eGo">Enter the contest</button></div><div class="status" id="eSt"></div></form>';
+    document.getElementById("ef").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var st = document.getElementById("eSt"), btn = document.getElementById("eGo");
+      st.className = "status"; st.textContent = "Sending…"; btn.disabled = true;
+      var body = { action: "enter", c: cur, title: document.getElementById("eTitle").value, name: document.getElementById("eNameIn").value,
+        credit: document.getElementById("eCredit").value, agree: document.getElementById("eAgree").checked, ageOk: document.getElementById("eAge").checked };
+      function send() {
+        NW.post("/api/contests", body).then(function (r) {
+          btn.disabled = false;
+          if (r.success) { st.textContent = c.kind === "link" ? "Received! Our staff will listen; once accepted, your song goes up here and on Arts & Music." : "You're in! Now get your friends to vote."; document.getElementById("ef").reset(); loadOne(); }
+          else { st.textContent = r.error || "Failed."; st.className = "status err"; }
+        }).catch(function () { btn.disabled = false; st.textContent = "Upload failed."; st.className = "status err"; });
+      }
+      if (c.kind === "text") { body.text = document.getElementById("eText").value; return send(); }
+      if (c.kind === "link") { body.link = document.getElementById("eLink").value; return send(); }
+      var file = document.getElementById("eFile").files[0];
+      if (!file) { st.textContent = "Choose a picture."; st.className = "status err"; btn.disabled = false; return; }
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var max = 1600, s = Math.min(1, max / Math.max(img.width, img.height));
+        var cv = document.createElement("canvas"); cv.width = Math.round(img.width * s); cv.height = Math.round(img.height * s);
+        var cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0, cv.width, cv.height);
+        body.image = cv.toDataURL("image/jpeg", 0.82).split(",")[1];
+        URL.revokeObjectURL(url); send();
+      };
+      img.onerror = function () { st.textContent = "That picture couldn't be read. Try a JPG or PNG."; st.className = "status err"; btn.disabled = false; };
+      img.src = url;
+    });
+  }
+
+  document.getElementById("sched").addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("[data-c]"); if (!a) return;
+    e.preventDefault(); cur = a.getAttribute("data-c"); history.replaceState(null, "", "#" + cur); loadOne();
+    document.getElementById("contest").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  loadAll();
+})();
+</script>
+</body>
+</html>

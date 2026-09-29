@@ -10,6 +10,7 @@
   var group = document.body.getAttribute("data-group");
 
   var SECTIONS = [
+    ["/contests.html", "Contests", "The prize is the title"],
     ["/events.html", "Events", "Authors, hikes, roofing"],
     ["/travel.html", "Travel & Nomads", "South Dakota, the truck"],
     ["/family.html", "Family & Lacrosse", "Amazing kids, youth sports"],

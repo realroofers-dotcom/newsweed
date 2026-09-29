@@ -1,4 +1,4 @@
-// functions/api/corruptmen.js — BUILT 2026-09-29 · corruptmen-1a
+// functions/api/corruptmen.js — BUILT 2026-09-29 · corruptmen-1b (retry + Bing News backup)
 //
 // CorruptMen: one story a day on political and business corruption in a US town,
 // embezzlement first.
@@ -87,19 +87,28 @@ async function readArchive(kv) {
   return recs.map(r => { try { return JSON.parse(r); } catch (e) { return null; } }).filter(Boolean);
 }
 
+// Google News refuses Cloudflare now and then (HTTP 503), so each query is tried
+// on Google, once more on Google, then on Bing News.
+function sourcesFor(q) {
+  const g = "https://news.google.com/rss/search?q=" + encodeURIComponent(q + " when:3d") + "&" + GN;
+  const b = "https://www.bing.com/news/search?format=rss&q=" + encodeURIComponent(q.replace(/ OR /g, " "));
+  return [g, g, b];
+}
+
 async function pick(archive) {
   const used = new Set(archive.map(a => fp(a.title)));
   for (const q of QUERIES) {
-    try {
-      const res = await fetch("https://news.google.com/rss/search?q=" + encodeURIComponent(q + " when:3d") + "&" + GN, {
-        headers: { "User-Agent": UA, "Accept": "application/rss+xml, text/xml, */*" }
-      });
-      if (!res.ok) continue;
-      const items = parse(await res.text())
-        .filter(it => !used.has(fp(it.title)))
-        .sort((a, b) => Date.parse(b.pubDate || 0) - Date.parse(a.pubDate || 0));
-      if (items.length) return items[0];
-    } catch (e) {}
+    for (const src of sourcesFor(q)) {
+      try {
+        const res = await fetch(src, { headers: { "User-Agent": UA, "Accept": "application/rss+xml, text/xml, */*" } });
+        if (!res.ok) continue;
+        const items = parse(await res.text())
+          .filter(it => !used.has(fp(it.title)))
+          .sort((a, b) => Date.parse(b.pubDate || 0) - Date.parse(a.pubDate || 0));
+        if (items.length) return items[0];
+        break; // the source answered; this query simply has nothing new
+      } catch (e) {}
+    }
   }
   return null;
 }
@@ -109,10 +118,15 @@ function parse(xml) {
   for (const part of String(xml).split("<item").slice(1)) {
     const chunk = part.split("</item>")[0];
     let title = tag(chunk, "title");
-    const link = tag(chunk, "link");
-    let source = tag(chunk, "source");
+    let link = tag(chunk, "link");
+    let source = tag(chunk, "source") || tag(chunk, "News:Source");
     if (!title || !/^https?:\/\//.test(link)) continue;
     if (source && title.endsWith(" - " + source)) title = title.slice(0, -(source.length + 3)).trim();
+    // Bing wraps the publisher's link in a click-tracker; keep the publisher's own link.
+    if (/bing\.com\/news\/apiclick/.test(link)) {
+      try { link = new URL(link).searchParams.get("url") || link; } catch (e) {}
+    }
+    source = source.replace(/ on MSN$/, "");
     out.push({ title: title.slice(0, 200), link, source, place: "", summary: "", pubDate: tag(chunk, "pubDate") });
   }
   return out;

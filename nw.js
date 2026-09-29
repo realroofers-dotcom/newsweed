@@ -150,7 +150,7 @@
       '<footer class="site"><div class="wrap">'
       + '<div class="fnav">' + NAV.concat(NAV2).map(function (n) { return '<a href="' + n[0] + '">' + n[1] + "</a>"; }).join("")
       + '<a href="/newsroom.html">Newsroom &amp; tips</a><a href="/ai.html">AI glossary</a>'
-      + '<a href="/editor.html">About the editor</a></div>'
+      + '<a href="/editor.html">About &amp; contact</a></div>'
       + "<p><b>How we report.</b> Newsweed serves the cannabis-aware audience and the general public with respect. "
       + "We do not promote or put down anyone who uses cannabis, and we never promote the use of alcohol or any drug. "
       + "On health we report published results, medical and holistic, not hype. Headlines from other outlets link to "

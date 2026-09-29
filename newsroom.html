@@ -1,4 +1,4 @@
-<!-- BUILT 2026-09-29 · newsweed newsroom-1a
+<!-- BUILT 2026-09-29 · newsweed newsroom-1b
      The tip line and the journalist roster, moved here from the old home page (same APIs:
      /api/tips and /api/journalists, same KV records). Tips are moderated in tips-admin.html. -->
 <!DOCTYPE html>
@@ -6,9 +6,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Newsroom — tips and the reporter roster — Newsweed</title>
-<meta name="description" content="Send Newsweed a tip, or join the roster of journalists who write for Newsweed.">
-<link rel="canonical" href="https://newsweed.com/newsroom.html">
+<title>Report for Newsweed: send a tip or get known as a contributor</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Journalists and students: get known. Report for Newsweed on video or in writing, under your own name, with your own page and links. Subject to approval.">
+<link rel="canonical" href="https://newsweed.com/newsroom">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Report for Newsweed: send a tip or get known as a contributor">
+<meta property="og:description" content="Journalists and students: get known. Report for Newsweed on video or in writing, under your own name, with your own page and links. Subject to approval.">
+<meta property="og:url" content="https://newsweed.com/newsroom">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Report for Newsweed: send a tip or get known as a contributor">
+<meta name="twitter:description" content="Journalists and students: get known. Report for Newsweed on video or in writing, under your own name, with your own page and links. Subject to approval.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -60,11 +77,13 @@
   </section>
 
   <section id="roster">
-    <div class="kicker"><h2>Write for Newsweed</h2><span class="more">Reporters · columnists · photographers · stringers</span></div>
+    <div class="kicker green"><h2>Get known: report for Newsweed</h2><span class="more">Reporters · columnists · videographers · stringers</span></div>
     <div class="two">
       <div>
-        <p style="font-size:15px;color:var(--ink2)">Newsweed is building a roster of working journalists wherever the news is: statehouses, courtrooms, town halls, and abroad. Our world news already comes from Luis Orozco in Medellín.</p>
-        <p style="font-size:15px;color:var(--ink2)">Tell us your beat and where you are. This is a roster, not a job offer, but assignments go to people on it.</p>
+        <p style="font-size:17px;color:var(--ink);font-family:var(--serif);font-weight:600;margin-bottom:8px">A great way to get known. Students welcome.</p>
+        <p style="font-size:15px;color:var(--ink2)">For journalism students, and for any journalist with a passion for their story and the nerve to tell it on camera. Record on your phone, post to YouTube, file it here: your video runs on Newsweed under your name.</p>
+        <p style="font-size:15px;color:var(--ink2)">Report for Newsweed and your work runs under your own name, in front of our readers, with your own page: your bio, your beat, and up to five links to your website, channel or portfolio. File stories and videos from your phone, from anywhere. Our world news already comes from <a href="/writer.html?w=luis-orozco" style="color:var(--navy)">Luis Orozco</a> in Medellín.</p>
+        <p style="font-size:15px;color:var(--ink2)">Tell us your beat and where you are. <b>Every contributor is subject to approval by the editor.</b> Once approved, you get your own desk key. This is an unpaid opportunity to build your name and your audience, not a job offer. <a href="/writer.html" style="color:var(--navy)">Meet our contributors →</a></p>
         <p class="note" id="rosterCount"></p>
       </div>
       <form class="form box" id="jForm" style="padding:20px">
@@ -87,8 +106,8 @@
   </section>
 </main>
 
-<div id="nw-foot" data-build="Built 2026-09-29 · newsroom-1a"></div>
-<script src="/nw.js?v=4g"></script>
+<div id="nw-foot" data-build="Built 2026-09-29 · newsroom-1b"></div>
+<script src="/nw.js?v=4i"></script>
 <script>
 (function () {
   var E = NW.esc, U = NW.safeUrl;

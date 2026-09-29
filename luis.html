@@ -1,76 +1,24 @@
-<!-- BUILT 2026-09-29 · newsweed luis-1a
-     The Medellín desk: Luis Orozco's dispatches, public. He files from /desk.html with his own key.
-     Nothing appears here under his name that he did not file. -->
+<!-- BUILT 2026-09-29 · newsweed luis-2a · The Medellín desk now lives at /writer.html?w=luis-orozco (every contributor
+     has a writer page). This file only forwards old links, keeping ?id= so a shared dispatch link still opens. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Medellín desk — Luis Orozco — Newsweed</title>
-<meta name="description" content="World news from Luis Orozco, reporting for Newsweed from Medellín, Colombia.">
-<link rel="canonical" href="https://newsweed.com/luis.html">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=4e">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
-</head>
-<body>
-<div id="nw-top"></div>
-
-<main class="page">
-  <div class="desk" style="margin-bottom:22px">
-    <div class="mono-av" aria-hidden="true">LO</div>
-    <div>
-      <h1 style="font-size:30px;margin:0">The Medellín desk</h1>
-      <div class="by">Luis Orozco</div>
-      <div class="bio" id="bio">Journalist · Medellín, Colombia</div>
-    </div>
-  </div>
-
-  <article id="one" hidden></article>
-
-  <div class="kicker navy" id="listHead"><h2>Dispatches</h2></div>
-  <div id="list"><div class="loading">Loading…</div></div>
-</main>
-
-<div id="nw-foot" data-build="Built 2026-09-29 · luis-1a"></div>
-<script src="/nw.js?v=4g"></script>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="World news from Luis Orozco in Medellín, Colombia.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="canonical" href="https://newsweed.com/writer.html?w=luis-orozco">
+<meta http-equiv="refresh" content="0; url=/writer.html?w=luis-orozco">
 <script>
-(function () {
-  var E = NW.esc;
-  var id = new URLSearchParams(location.search).get("id");
-
-  function paras(body) {
-    return String(body || "").split(/\n\n+/).map(function (p) { return "<p>" + E(p).replace(/\n/g, "<br>") + "</p>"; }).join("");
-  }
-
-  NW.get("/api/dispatch").then(function (d) {
-    if (d.bio) document.getElementById("bio").textContent = d.bio;
-    var all = d.dispatches || [];
-    var list = document.getElementById("list");
-    list.innerHTML = all.length ? '<ul class="hl">' + all.map(function (x) {
-      return '<li><a href="/luis.html?id=' + encodeURIComponent(x.id) + '">' + (x.video ? "▶ Video: " : "") + E(x.title) + '</a><span class="src">' + E(x.place || "") + " · " + E(NW.stamp(x.published)) + '</span></li>';
-    }).join("") + "</ul>" : '<p class="note">Luis Orozco\'s first dispatch is coming soon. Sign up for the <a href="/#main" style="color:var(--navy)">Newsweed Daily</a> to get it by email.</p>';
-
-    var x = id ? all.filter(function (a) { return a.id === id; })[0] : null;
-    if (id && !x) {
-      NW.get("/api/dispatch?id=" + encodeURIComponent(id)).then(function (r) { if (r.dispatch) show(r.dispatch, d.bio); }).catch(function () {});
-    } else if (x) { show(x, d.bio); }
-  }).catch(function () { document.getElementById("list").innerHTML = '<p class="note">Unavailable right now.</p>'; });
-
-  function show(x, bio) {
-    var el = document.getElementById("one");
-    el.hidden = false;
-    el.innerHTML = '<div class="kicker navy"><h2>Dispatch</h2><span class="more">' + E(x.place || "") + " · " + E(NW.stamp(x.published)) + (x.edited ? " · updated " + E(NW.stamp(x.edited)) : "") + '</span></div>'
-      + '<h1 style="font-size:clamp(26px,3.6vw,36px);margin:4px 0 6px">' + E(x.title) + '</h1>'
-      + '<p class="note" style="margin:0 0 18px">By ' + E(x.author || "Luis Orozco") + (bio ? " · " + E(bio) : "") + '</p>'
-      + (x.video && /^[A-Za-z0-9_-]{6,20}$/.test(x.video.id) ? '<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/' + x.video.id + '?rel=0" title="' + E(x.title) + '" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>' : "")
-      + '<div class="dispatch-body">' + paras(x.body) + '</div>';
-    document.title = x.title + " — Luis Orozco — Newsweed";
-    document.getElementById("listHead").querySelector("h2").textContent = "More dispatches";
-  }
-})();
+  (function () {
+    var id = new URLSearchParams(location.search).get("id");
+    location.replace(id ? "/writer.html?id=" + encodeURIComponent(id) : "/writer.html?w=luis-orozco");
+  })();
 </script>
-</body>
+</head>
+<body><p><a href="/writer.html?w=luis-orozco">The Medellín desk: Luis Orozco →</a></p></body>
 </html>

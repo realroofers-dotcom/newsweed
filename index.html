@@ -16,11 +16,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Newsweed — News reported with respect for the weed audience, and for all</title>
-<meta name="description" content="Daily news for everyone: top stories, markets, world news from our Medellín desk, tribal nations, crime and warrants, medical and holistic research, sports, legal cannabis news, and CorruptMen, a story a day on corruption and embezzlement in American towns.">
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Daily news for everyone: top stories, markets and top movers, all 50 states, world news from Medellín, CorruptMen, crime maps, cannabis law and free classifieds.">
 <link rel="canonical" href="https://newsweed.com/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="website">
 <meta property="og:title" content="Newsweed — News reported with respect for the weed audience, and for all">
-<meta property="og:description" content="Top stories, markets, world, tribal nations, CorruptMen and more. Reported with respect.">
+<meta property="og:description" content="Daily news for everyone: top stories, markets and top movers, all 50 states, world news from Medellín, CorruptMen, crime maps, cannabis law and free classifieds.">
 <meta property="og:url" content="https://newsweed.com/">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Newsweed — News reported with respect for the weed audience, and for all">
+<meta name="twitter:description" content="Daily news for everyone: top stories, markets and top movers, all 50 states, world news from Medellín, CorruptMen, crime maps, cannabis law and free classifieds.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsMediaOrganization","name":"Newsweed","alternateName":"Newsweed.com","url":"https://newsweed.com/","logo":"https://newsweed.com/icon-512.png","slogan":"News reported with respect for the weed audience, and for all.","foundingDate":"2010","founder":{"@type":"Person","name":"Mark Nejmeh"},"address":{"@type":"PostalAddress","streetAddress":"401 E. 8th St., PMB 1075","addressLocality":"Sioux Falls","addressRegion":"SD","postalCode":"57103-7049","addressCountry":"US"},"telephone":"+1-732-995-3914","email":"realroofers@gmail.com","sameAs":["https://newsweedcom.substack.com"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Newsweed","url":"https://newsweed.com/"}</script>
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -133,7 +149,7 @@
     </section>
 
     <section class="block" id="world">
-      <div class="kicker navy"><h2>The Medellín desk · world news</h2><span class="more"><a href="/luis.html">All dispatches →</a></span></div>
+      <div class="kicker navy"><h2>The Medellín desk · world news</h2><span class="more"><a href="/writer.html?w=luis-orozco">All dispatches →</a> · <a href="/writer.html">All writers →</a></span></div>
       <div class="desk" id="luisLatest">
         <div class="mono-av" aria-hidden="true">LO</div>
         <div>
@@ -142,6 +158,7 @@
           <p style="margin-top:8px">Daily world news from Luis Orozco, reporting from Medellín. His first dispatch is coming soon.</p>
         </div>
       </div>
+      <div class="box navy" style="margin-top:16px"><h3>Journalists and students: get known.</h3><p>Have a passion for your story? Tell it on video. Report for Newsweed under your own name, with your own page and links, in front of our readers. File from your phone, anywhere. Subject to approval. <a href="/newsroom.html#roster">Apply to report →</a></p></div>
       <div class="kicker" style="margin-top:20px;border-top-width:1px"><h2>World wire</h2></div>
       <ul class="hl" id="s-world"><li class="loading">Loading…</li></ul>
       <div class="kicker" style="margin-top:14px;border-top-width:1px"><h2>Latin America</h2></div>
@@ -233,7 +250,7 @@
 
 <div id="nw-foot" data-build="Built 2026-09-29 · index-3a"></div>
 
-<script src="/nw.js?v=4g"></script>
+<script src="/nw.js?v=4i"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script>
 (function () {
@@ -300,7 +317,7 @@
   }
 
   function loadLuis() {
-    NW.get("/api/dispatch").then(function (d) {
+    NW.get("/api/dispatch?by=luis-orozco").then(function (d) {
       var x = (d.dispatches || [])[0];
       if (!x) {
         if (d.bio) document.querySelector("#luisLatest .bio").textContent = d.bio;
@@ -310,9 +327,9 @@
       if (first.length > 360) first = first.slice(0, 360).trim() + "…";
       document.getElementById("luisLatest").innerHTML = '<div class="mono-av" aria-hidden="true">LO</div><div>'
         + '<div class="by">' + E(x.author || "Luis Orozco") + '</div><div class="bio">' + E(d.bio || "") + ' · ' + E(x.place || "") + ' · ' + E(NW.stamp(x.published)) + '</div>'
-        + '<h3><a href="/luis.html?id=' + encodeURIComponent(x.id) + '">' + (x.video ? "▶ " : "") + E(x.title) + '</a></h3>'
+        + '<h3><a href="/writer.html?id=' + encodeURIComponent(x.id) + '">' + (x.video ? "▶ " : "") + E(x.title) + '</a></h3>'
         + (x.video && /^[A-Za-z0-9_-]{6,20}$/.test(x.video.id) ? '<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/' + x.video.id + '?rel=0" title="' + E(x.title) + '" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>' : "")
-        + '<p>' + E(first) + '</p><a class="btn ghost" href="/luis.html?id=' + encodeURIComponent(x.id) + '">Read the dispatch</a></div>';
+        + '<p>' + E(first) + '</p><a class="btn ghost" href="/writer.html?id=' + encodeURIComponent(x.id) + '">Read the dispatch</a></div>';
     }).catch(function () {});
   }
 

@@ -1,14 +1,18 @@
-<!-- BUILT 2026-09-29 · newsweed desk-1b (+ video link box and the video procedure, English/Spanish)
-     was desk-1a
-     PRIVATE. Luis Orozco files his dispatches here with his own key (env var LUIS_KEY).
-     Only his key can publish under his name. Mark's TIP_ADMIN_KEY can delete, not write. -->
+<!-- BUILT 2026-09-29 · newsweed desk-2a · PRIVATE. The desk for every Newsweed contributor (Luis Orozco was the first).
+     Each writer files with their own desk key (made in tips-admin.html → Contributors; only its hash is stored).
+     A key can only publish under its owner's name. Includes the video procedure (English/Spanish) and the profile editor.
+     was desk-1b (Luis only) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your desk — Newsweed</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Private: the contributor desk.">
 <meta name="robots" content="noindex, nofollow">
-<title>Desk — Newsweed</title>
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,18 +21,20 @@
 </head>
 <body>
 <main class="page">
-  <h1>The Medellín desk</h1>
-  <p class="lede">File a dispatch / Enviar una nota. It goes live on newsweed.com as soon as you publish, under the byline <b>Luis Orozco</b>.</p>
+  <h1>Your Newsweed desk</h1>
+  <p class="lede">File a dispatch / Enviar una nota. It goes live on newsweed.com as soon as you publish, under your own byline, with your profile and links beside it.</p>
 
-  <div class="form" style="margin-bottom:20px">
+  <div class="form" style="margin-bottom:8px">
     <label for="key" class="vh">Desk key</label>
-    <input type="text" id="key" placeholder="Desk key / clave" autocomplete="off" style="-webkit-text-security:disc">
+    <div class="row2"><input type="text" id="key" placeholder="Your desk key / su clave" autocomplete="off" style="-webkit-text-security:disc"><button class="btn" type="button" id="unlock">Open my desk</button></div>
   </div>
+  <p class="status" id="who" style="margin:0 0 18px"></p>
 
+  <div id="deskBody" hidden>
   <form class="form box" id="f" style="padding:20px">
     <input type="hidden" id="editId">
     <input type="text" id="title" placeholder="Headline / Titular" maxlength="160" required>
-    <input type="text" id="place" placeholder="Dateline, e.g. Medellín / Bogotá / Caracas" maxlength="80">
+    <input type="text" id="place" placeholder="Dateline, e.g. Medellín / Sioux Falls / Caracas" maxlength="80">
     <input type="url" id="video" placeholder="Video: paste the YouTube link here (optional) / Video: pegue el enlace de YouTube (opcional)">
     <textarea id="body" placeholder="Dispatch text. Leave a blank line between paragraphs. (With a video, a line or two is enough.)" style="min-height:260px" required></textarea>
     <div class="row2" style="align-items:center">
@@ -37,7 +43,6 @@
     <div class="status" id="st" role="status"></div>
     <div class="fine">Tips: say where and when, and how you know. Name your sources or say why you can't. Report with respect; no promotion of alcohol or drugs.</div>
   </form>
-
   <div class="kicker green" style="margin-top:28px" id="video-procedure"><h2>Posting a video / Cómo publicar un video</h2></div>
   <div class="grid2">
     <div class="box">
@@ -66,33 +71,59 @@
     </div>
   </div>
 
-  <div class="kicker" style="margin-top:28px"><h2>Byline line</h2></div>
-  <form class="form" id="bioForm">
-    <input type="text" id="bio" maxlength="160" placeholder="Journalist · Medellín, Colombia">
-    <div><button class="btn ghost" type="submit">Save byline</button></div>
-    <div class="status" id="bioSt"></div>
+  <div class="kicker navy" style="margin-top:28px"><h2>Your profile / Su perfil</h2><span class="more"><a id="myPage" href="/writer.html" target="_blank">See your page →</a></span></div>
+  <p class="note">This is what readers see beside your work: promote yourself. Links must start with https://.</p>
+  <form class="form box" id="pf" style="padding:18px">
+    <div class="row2"><input type="text" id="pBeat" maxlength="60" placeholder="Beat, e.g. World news, Courts, Lacrosse"><input type="text" id="pLoc" maxlength="60" placeholder="City, e.g. Medellín, Colombia"></div>
+    <textarea id="pBio" maxlength="800" placeholder="A few lines about you: your experience, what you cover, how to hire you." style="min-height:110px"></textarea>
+    <div id="pLinks"></div>
+    <div><button class="btn ghost" type="submit">Save my profile</button></div>
+    <div class="status" id="pSt"></div>
   </form>
 
   <div class="kicker" style="margin-top:28px"><h2>Your dispatches</h2></div>
   <div id="mine"><div class="loading">Loading…</div></div>
+  </div>
 </main>
 
-<script src="/nw.js?v=4g"></script>
+<script src="/nw.js?v=4i"></script>
 <script>
 (function () {
-  var E = NW.esc, list = [];
+  var E = NW.esc, list = [], me = null;
   var keyEl = document.getElementById("key");
   try { keyEl.value = sessionStorage.getItem("nwDeskKey") || ""; } catch (e) {}
   function key() { var k = keyEl.value.trim(); try { sessionStorage.setItem("nwDeskKey", k); } catch (e) {} return encodeURIComponent(k); }
   function v(id) { return document.getElementById(id).value; }
 
+  var LINK_ROWS = 5;
+  document.getElementById("pLinks").innerHTML = Array.apply(null, Array(LINK_ROWS)).map(function (_, i) {
+    return '<div class="row2"><input type="text" id="lL' + i + '" maxlength="40" placeholder="Link name, e.g. My website, YouTube"><input type="url" id="lU' + i + '" placeholder="https://…"></div>';
+  }).join("");
+
+  function unlock() {
+    var who = document.getElementById("who");
+    who.className = "status"; who.textContent = "Checking…";
+    NW.post("/api/contributors?key=" + key(), { action: "me" }).then(function (r) {
+      if (!r.success) { who.className = "status err"; who.textContent = r.error || "That key isn't recognized."; document.getElementById("deskBody").hidden = true; return; }
+      me = r.contributor;
+      who.innerHTML = "Filing as <b>" + E(me.name) + "</b>";
+      document.getElementById("deskBody").hidden = false;
+      document.getElementById("myPage").href = "/writer.html?w=" + encodeURIComponent(me.slug);
+      document.getElementById("pBeat").value = me.beat || ""; document.getElementById("pLoc").value = me.location || ""; document.getElementById("pBio").value = me.bio || "";
+      (me.links || []).forEach(function (l, i) { if (i < LINK_ROWS) { document.getElementById("lL" + i).value = l.label; document.getElementById("lU" + i).value = l.url; } });
+      if (!v("place")) document.getElementById("place").value = me.location || "";
+      load();
+    }).catch(function () { who.className = "status err"; who.textContent = "Couldn't reach the site."; });
+  }
+  document.getElementById("unlock").addEventListener("click", unlock);
+  keyEl.addEventListener("keydown", function (e) { if (e.key === "Enter") unlock(); });
+
   function load() {
-    NW.get("/api/dispatch").then(function (d) {
+    NW.get("/api/dispatch?by=" + encodeURIComponent(me.slug)).then(function (d) {
       list = d.dispatches || [];
-      if (d.bio) document.getElementById("bio").value = d.bio;
       document.getElementById("mine").innerHTML = list.length ? list.map(function (x, i) {
         return '<div class="msg"><span class="who">' + (x.video ? "▶ " : "") + E(x.title) + '</span><span class="when">' + E(NW.stamp(x.published)) + '</span>'
-          + '<p><a href="/luis.html?id=' + encodeURIComponent(x.id) + '" target="_blank">view</a> · <a href="#" data-edit="' + i + '">edit</a> · <a href="#" data-del="' + i + '">delete</a></p></div>';
+          + '<p><a href="/writer.html?id=' + encodeURIComponent(x.id) + '" target="_blank">view</a> · <a href="#" data-edit="' + i + '">edit</a> · <a href="#" data-del="' + i + '">delete</a></p></div>';
       }).join("") : '<p class="note">Nothing filed yet.</p>';
     });
   }
@@ -120,6 +151,7 @@
 
   document.getElementById("clear").addEventListener("click", function () {
     document.getElementById("f").reset(); document.getElementById("editId").value = ""; document.getElementById("go").textContent = "Publish";
+    if (me) document.getElementById("place").value = me.location || "";
   });
 
   document.getElementById("f").addEventListener("submit", function (e) {
@@ -134,15 +166,18 @@
     }).catch(function () { st.textContent = "Failed."; st.className = "status err"; });
   });
 
-  document.getElementById("bioForm").addEventListener("submit", function (e) {
+  document.getElementById("pf").addEventListener("submit", function (e) {
     e.preventDefault();
-    var st = document.getElementById("bioSt");
-    NW.post("/api/dispatch?key=" + key(), { action: "bio", bio: v("bio") }).then(function (r) {
-      st.textContent = r.success ? "Saved." : (r.error || "Failed.");
+    var st = document.getElementById("pSt"), links = [];
+    for (var i = 0; i < LINK_ROWS; i++) { if (v("lU" + i).trim()) links.push({ label: v("lL" + i), url: v("lU" + i).trim() }); }
+    NW.post("/api/contributors?key=" + key(), { action: "profile", beat: v("pBeat"), location: v("pLoc"), bio: v("pBio"), links: links }).then(function (r) {
+      st.className = r.success ? "status" : "status err";
+      st.textContent = r.success ? "Saved. Links that don't start with https:// were left out." : (r.error || "Failed.");
+      if (r.success) me = r.contributor;
     });
   });
 
-  load();
+  if (keyEl.value) unlock();
 })();
 </script>
 </body>

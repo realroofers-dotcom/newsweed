@@ -1,0 +1,131 @@
+<!-- BUILT 2026-09-29 · newsweed writer-1a · A contributor's public page: their profile (bio, beat, city, their own links:
+     this is how unpaid writers promote themselves) and their dispatches.
+       /writer.html?w=luis-orozco      the profile and every dispatch
+       /writer.html?id=dispatch:…      one dispatch (video on top if there is one), with the byline card
+     Data: /api/contributors, /api/dispatch. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newsweed contributors: journalists getting known</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Reporting from Newsweed's contributor journalists, starting with Luis Orozco in Medellín. Journalists: get known by reporting for Newsweed.">
+<!-- no canonical: one page per writer -->
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Newsweed contributors: journalists getting known">
+<meta property="og:description" content="Reporting from Newsweed's contributor journalists, starting with Luis Orozco in Medellín. Journalists: get known by reporting for Newsweed.">
+<meta property="og:url" content="https://newsweed.com/writer">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Newsweed contributors: journalists getting known">
+<meta name="twitter:description" content="Reporting from Newsweed's contributor journalists, starting with Luis Orozco in Medellín. Journalists: get known by reporting for Newsweed.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4e">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.card { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 0 0 22px; }
+.card .av { width: 64px; height: 64px; border-radius: 50%; background: var(--truth); color: #fff; display: flex; align-items: center; justify-content: center; font: 400 22px "Archivo Black", sans-serif; }
+.card h1, .card h2 { font-size: 24px; margin: 0; }
+.card .meta { font: 400 12.5px var(--mono); color: var(--ink3); margin: 2px 0 8px; }
+.card p { margin: 0 0 8px; color: var(--ink2); white-space: pre-line; }
+.card .links { display: flex; flex-wrap: wrap; gap: 6px; }
+.card .links a { border: 1px solid var(--line); border-radius: 14px; padding: 4px 10px; font: 600 12.5px var(--sans); color: var(--navy); }
+.card .links a:hover { border-color: var(--navy); }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="cols2" style="padding-top:26px">
+    <main>
+      <article id="one" hidden></article>
+      <div id="card"></div>
+      <div class="kicker navy" id="listHead"><h2>Dispatches</h2></div>
+      <div id="list"><div class="loading">Loading…</div></div>
+      <div class="box" style="margin-top:24px"><p><b>Journalists: get known. Report for Newsweed.</b> Your work, your name, your links, in front of our readers. Subject to approval. <a href="/newsroom.html#roster" style="color:var(--navy)">Apply →</a></p></div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · writer-1a"></div>
+<script src="/nw.js?v=4i"></script><script src="/section.js?v=1d"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl, q = new URLSearchParams(location.search);
+  var id = q.get("id"), slug = q.get("w");
+
+  function initials(n) { return String(n || "").split(/\s+/).map(function (w) { return w[0] || ""; }).join("").slice(0, 2).toUpperCase(); }
+  function card(c, bio, asH1) {
+    if (!c) return "";
+    var h = asH1 ? "h1" : "h2";
+    return '<div class="card"><div class="av" aria-hidden="true">' + E(initials(c.name)) + '</div><div>'
+      + '<' + h + '><a href="/writer.html?w=' + encodeURIComponent(c.slug) + '">' + E(c.name) + '</a></' + h + '>'
+      + '<div class="meta">' + E(bio || ["Journalist", c.beat, c.location].filter(Boolean).join(" · ")) + '</div>'
+      + (c.bio ? '<p>' + E(c.bio) + '</p>' : "")
+      + (c.links && c.links.length ? '<div class="links">' + c.links.map(function (l) { return '<a href="' + E(U(l.url)) + '" rel="noopener me" target="_blank">' + E(l.label) + '</a>'; }).join("") + '</div>' : "")
+      + '</div></div>';
+  }
+  function paras(body) { return String(body || "").split(/\n\n+/).map(function (p) { return "<p>" + E(p).replace(/\n/g, "<br>") + "</p>"; }).join(""); }
+  function player(x) {
+    return x.video && /^[A-Za-z0-9_-]{6,20}$/.test(x.video.id)
+      ? '<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/' + x.video.id + '?rel=0" title="' + E(x.title) + '" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>' : "";
+  }
+  function list(items) {
+    document.getElementById("list").innerHTML = items.length ? '<ul class="hl">' + items.map(function (x) {
+      return '<li><a href="/writer.html?id=' + encodeURIComponent(x.id) + '">' + (x.video ? "▶ Video: " : "") + E(x.title) + '</a><span class="src">' + E(x.place || "") + " · " + E(NW.stamp(x.published)) + '</span></li>';
+    }).join("") + "</ul>" : '<p class="note">The first dispatch is coming soon.</p>';
+  }
+
+  function showWriter(s, oneId) {
+    NW.get("/api/dispatch?by=" + encodeURIComponent(s)).then(function (d) {
+      var c = d.contributor;
+      if (!oneId) {
+        document.getElementById("card").innerHTML = card(c, d.bio, true);
+        if (c) document.title = c.name + " — Newsweed contributor";
+      }
+      list((d.dispatches || []).filter(function (x) { return x.id !== oneId; }));
+      if (oneId) {
+        document.getElementById("listHead").querySelector("h2").textContent = "More from " + (c ? c.name : "this writer");
+        document.getElementById("card").innerHTML = card(c, d.bio, false);
+      }
+    });
+  }
+
+  if (id) {
+    NW.get("/api/dispatch?id=" + encodeURIComponent(id)).then(function (r) {
+      var x = r.dispatch;
+      if (!x) { document.getElementById("list").innerHTML = '<p class="note">That dispatch is no longer available.</p>'; return; }
+      var el = document.getElementById("one");
+      el.hidden = false;
+      el.innerHTML = '<div class="kicker navy"><h2>Dispatch</h2><span class="more">' + E(x.place || "") + " · " + E(NW.stamp(x.published)) + (x.edited ? " · updated " + E(NW.stamp(x.edited)) : "") + '</span></div>'
+        + '<h1 style="font-size:clamp(26px,3.6vw,36px);margin:4px 0 6px">' + E(x.title) + '</h1>'
+        + '<p class="note" style="margin:0 0 18px">By <a href="/writer.html?w=' + encodeURIComponent(x.by) + '" style="color:var(--navy)">' + E(x.author) + '</a></p>'
+        + player(x) + '<div class="dispatch-body" style="margin-bottom:24px">' + paras(x.body) + '</div>';
+      document.title = x.title + " — " + x.author + " — Newsweed";
+      showWriter(x.by, x.id);
+    });
+  } else if (slug) {
+    showWriter(slug, null);
+  } else {
+    // No writer named: everyone
+    NW.get("/api/contributors").then(function (d) {
+      document.getElementById("listHead").querySelector("h2").textContent = "Our contributors";
+      document.getElementById("list").innerHTML = (d.contributors || []).map(function (c) { return card(c, "", false); }).join("") || '<p class="note">Coming soon.</p>';
+      document.title = "Contributors — Newsweed";
+    });
+  }
+})();
+</script>
+</body>
+</html>

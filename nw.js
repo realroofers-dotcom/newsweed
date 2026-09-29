@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4g (apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4i (apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -30,7 +30,8 @@
     ["/gambling.html", "Gambling"],
     ["/where.html", "Where it meets"],
     ["/dating.html", "Dating"],
-    ["/luis.html", "Medellín desk"],
+    ["/writer.html?w=luis-orozco", "Medellín desk"],
+    ["/writer.html", "Contributors"],
     ["/#tribal", "Tribal nations"],
     ["/archive.html", "Archive"],
     ["/advertise.html", "Advertise"],
@@ -218,7 +219,7 @@
   var phone = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   if (phone) Array.prototype.forEach.call(document.querySelectorAll(".ad"), function (el) { el.parentNode.removeChild(el); });
   var appsJs = document.createElement("script");
-  appsJs.src = "/apps.js?v=1b";
+  appsJs.src = "/apps.js?v=1d";
   document.body.appendChild(appsJs);
 
   window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };

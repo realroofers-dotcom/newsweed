@@ -3,9 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
 <title>Newsweed — Admin</title>
-<!-- BUILT 2026-09-29 · tips-admin-4a: + special announcement, events (+RSVP lists), truck travel log
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Private.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<!-- BUILT 2026-09-29 · tips-admin-5a: + Contributors (approve, make key, new key, deactivate)
+     was tips-admin-4a: + special announcement, events (+RSVP lists), truck travel log
      was tips-admin-3a: + classifieds & dating queues (2a: suggestions & members downloads, CorruptMen override, chat moderation) -->
 <style>
   :root { --ink:#ffffff; --bone:#14150f; --panel:#f5f5f0; --panel-line:#e0e0d6;
@@ -106,6 +111,21 @@
     <div class="dlstatus" id="chatStatus"></div>
   </div>
 
+  <!-- 2026-09-29 · admin-5a: contributors (approve a journalist = create them here and send them their key) -->
+  <div class="exports" id="cbAdmin" hidden>
+    <h2>Contributors</h2>
+    <div class="sub">Approving a journalist means adding them here. The site makes their desk key and shows it <b>once</b>: send it to them privately with the link newsweed.com/desk.html. Lost key? Click "New key" (the old one stops working). The roster sign-ups are in the "Journalist roster" download above.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input class="headline" id="cbName" placeholder="Full name" style="flex:2;min-width:180px">
+      <input class="headline" id="cbBeat" placeholder="Beat" style="flex:1;min-width:120px">
+      <input class="headline" id="cbLoc" placeholder="City, country" style="flex:1;min-width:140px">
+    </div>
+    <textarea class="headline" id="cbBio" rows="2" placeholder="Short bio (optional; they can edit it themselves)"></textarea>
+    <div class="acts"><button class="ok" id="cbAdd">Add contributor &amp; make key</button><button class="no" id="cbLoad" style="color:var(--bone)">Show all</button></div>
+    <div class="dlstatus" id="cbStatus"></div>
+    <div id="cbOut"></div>
+  </div>
+
   <!-- 2026-09-29 · admin-4a: special announcement, events, truck stops -->
   <div class="exports" id="annAdmin" hidden>
     <h2>Special announcement (header of every page)</h2>
@@ -201,7 +221,7 @@
       document.getElementById("cmAdmin").hidden = false;
       document.getElementById("chatAdmin").hidden = false;
       document.getElementById("clfAdmin").hidden = false;
-      ["annAdmin", "evAdmin", "trAdmin"].forEach(id => document.getElementById(id).hidden = false);
+      ["annAdmin", "evAdmin", "trAdmin", "cbAdmin"].forEach(id => document.getElementById(id).hidden = false);
       loadEvents();
       document.getElementById("dtAdmin").hidden = false;
       const tips = data.pending || [];
@@ -329,6 +349,44 @@
         });
       });
     });
+  });
+
+  // ---- Contributors ----
+  function showKey(name, key) {
+    document.getElementById("cbStatus").innerHTML = 'Desk key for <b>' + esc(name) + '</b> (shown once, copy it now): '
+      + '<code style="font-size:15px;background:#fff;border:1px solid var(--panel-line);padding:3px 6px">' + esc(key) + '</code>'
+      + '<br>Send them: newsweed.com/desk.html + this key, privately.';
+  }
+  async function loadContribs() {
+    const r = await postJson("/api/contributors?admin=" + k(), { action: "list" });
+    const box = document.getElementById("cbOut");
+    box.innerHTML = (r.contributors || []).map(c => `
+      <div class="tip" data-slug="${esc(c.slug)}">
+        <div class="stamp"><b>${esc(c.name)}</b> · ${esc(c.beat || "")} · ${esc(c.location || "")} · ${c.active === false ? "INACTIVE" : "active"}</div>
+        <div class="meta"><a href="/writer.html?w=${encodeURIComponent(c.slug)}" target="_blank">Their page</a> · since ${esc(when(c.created))}</div>
+        <div class="acts"><button class="ok" data-rekey>New key</button><button class="no" data-act>${c.active === false ? "Reactivate" : "Deactivate"}</button></div>
+      </div>`).join("") || '<div class="note">No contributors yet.</div>';
+    box.querySelectorAll(".tip").forEach(card => {
+      const slug = card.dataset.slug, name = card.querySelector("b").textContent;
+      card.querySelector("[data-rekey]").addEventListener("click", async () => {
+        if (!confirm("Make a new key for " + name + "? Their old key stops working.")) return;
+        const r = await postJson("/api/contributors?admin=" + k(), { action: "rekey", slug });
+        if (r.success) showKey(name, r.key); else alert(r.error || "Failed.");
+      });
+      card.querySelector("[data-act]").addEventListener("click", async (e) => {
+        const on = e.target.textContent === "Reactivate";
+        await postJson("/api/contributors?admin=" + k(), { action: "active", slug, active: on }); loadContribs();
+      });
+    });
+  }
+  document.getElementById("cbLoad").addEventListener("click", loadContribs);
+  document.getElementById("cbAdd").addEventListener("click", async () => {
+    const r = await postJson("/api/contributors?admin=" + k(), { action: "create", name: document.getElementById("cbName").value,
+      beat: document.getElementById("cbBeat").value, location: document.getElementById("cbLoc").value, bio: document.getElementById("cbBio").value });
+    if (!r.success) { document.getElementById("cbStatus").textContent = r.error || "Failed."; return; }
+    showKey(r.contributor.name, r.key);
+    ["cbName", "cbBeat", "cbLoc", "cbBio"].forEach(id => document.getElementById(id).value = "");
+    loadContribs();
   });
 
   // ---- Special announcement ----

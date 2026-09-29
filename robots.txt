@@ -1,0 +1,10 @@
+# robots.txt — BUILT 2026-09-29 · robots-1a
+User-agent: *
+Disallow: /desk
+Disallow: /desk.html
+Disallow: /tips-admin
+Disallow: /tips-admin.html
+Disallow: /api/
+Allow: /api/feed
+
+Sitemap: https://newsweed.com/sitemap.xml

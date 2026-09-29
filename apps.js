@@ -1,4 +1,4 @@
-/* apps.js — BUILT 2026-09-29 · apps-1b (+ Luis video icon: only when he files a video, for 7 days)
+/* apps.js — BUILT 2026-09-29 · apps-1c (video icon for any contributor who files one; 1b Luis video icon)
    Newsweed on the phone is icon driven (Mark, 29 Sep 2026): "icons for every section: news, then dating,
    then classifieds, then all other sections. When a user scrolls they should get what they want fast.
    Squeeze ads in between on the scroll, in text form, small letters only, so as not to interfere."
@@ -62,7 +62,8 @@
     ["/books.html", "Books", "books", "#6b4f2a"],
     ["/arts.html", "Music & Arts", "arts", "#8e24aa"],
     ["/#world", "World", "world", "#00796b"],
-    ["/luis.html", "Medellín", "luis", "#c77f1c"],
+    ["/writer.html?w=luis-orozco", "Medellín", "luis", "#c77f1c"],
+    ["/writer.html", "Writers", "news", "#4145b0"],
     ["/#tribal", "Tribal", "tribal", "#8d5524"],
     ["/gambling.html", "Gambling", "gambling", "#37474f"],
     ["/where.html", "Where it meets", "where", "#b3261e"],
@@ -86,6 +87,8 @@
     ["https://trailshrinks.com", "TrailShrinks.com", "Walk it off, talk it out. Group hikes."],
     ["https://lovappy.news", "Lovappy.news", "Compatibility? Voice introductions by state."],
     ["/classifieds.html#post", "Newsweed Classifieds", "Post a free ad today."],
+    ["/newsroom.html#roster", "Report for Newsweed", "Journalists: get known. Your name, your page, our readers. Subject to approval."],
+    ["/newsroom.html#roster", "Students: be on video", "Passion for your story? Tell it on camera for Newsweed readers. Subject to approval."],
     ["https://jobcreation.us", "JobCreation.us", "Where federal contract money lands, and the jobs it pays for."]
   ];
 
@@ -143,18 +146,20 @@
 
   window.NW_APPS = { list: APPS, isPhone: function () { return window.matchMedia && window.matchMedia(PHONE).matches; } };
 
-  // Luis's video icon. It appears ONLY when Luis has filed a dispatch with a video, with his own desk key
-  // (only his key can publish under his name), within the last VIDEO_DAYS days. Delete the dispatch and it's gone.
+  // The NEW video icon. It appears ONLY when a contributor (Luis Orozco first) has filed a dispatch with a video,
+  // with their own desk key (only their key can publish under their name), within the last VIDEO_DAYS days.
+  // Delete the dispatch and it's gone.
   // Phones: a "NEW" tile right after Classifieds, in the grid and the icon bar. Computers: a red link in the menu.
   var VIDEO_DAYS = 7;
   function videoIcon() {
     fetch("/api/dispatch", { credentials: "same-origin" }).then(function (r) { return r.json(); }).then(function (d) {
       var v = (d.dispatches || []).filter(function (x) {
-        return x.video && x.video.id && x.author === "Luis Orozco" && Date.now() - Date.parse(x.published) < VIDEO_DAYS * 86400000;
+        return x.video && x.video.id && x.by && Date.now() - Date.parse(x.published) < VIDEO_DAYS * 86400000;
       })[0];
       if (!v) return;
-      var href = "/luis.html?id=" + encodeURIComponent(v.id);
-      var a = [href, "Luis video", "video", "#b3261e"];
+      var href = "/writer.html?id=" + encodeURIComponent(v.id);
+      var first = String(v.author || "New").split(" ")[0].replace(/[<>&"']/g, "").slice(0, 14);
+      var a = [href, first + " video", "video", "#b3261e"];
       var badge = '<span class="badge">NEW</span>';
       var grid = document.querySelector(".appgrid"), bar = document.querySelector(".appbar");
       if (grid) {
@@ -171,7 +176,7 @@
         bar.insertBefore(me, bar.children[3] || null);
       }
       var nav = document.querySelector("nav.main .wrap");
-      if (nav && !grid) nav.insertAdjacentHTML("afterbegin", '<a class="newvid" href="' + href + '">▶ New video from Medellín</a>');
+      if (nav && !grid) nav.insertAdjacentHTML("afterbegin", '<a class="newvid" href="' + href + '">▶ New video: ' + String(v.author || "").replace(/[<>&"]/g, "") + '</a>');
     }).catch(function () {});
   }
 

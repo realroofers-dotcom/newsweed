@@ -1,4 +1,4 @@
-/* apps.js — BUILT 2026-09-29 · apps-1a
+/* apps.js — BUILT 2026-09-29 · apps-1b (+ Luis video icon: only when he files a video, for 7 days)
    Newsweed on the phone is icon driven (Mark, 29 Sep 2026): "icons for every section: news, then dating,
    then classifieds, then all other sections. When a user scrolls they should get what they want fast.
    Squeeze ads in between on the scroll, in text form, small letters only, so as not to interfere."
@@ -40,7 +40,8 @@
     advertise: '<path d="M4 10v4h3l7 4.5v-13L7 10z"/><path d="M17.5 9a4 4 0 0 1 0 6M7 14l1.5 5.5h2.5L10 15.5"/>',
     suggestions: '<path d="M9 17.5h6M10 20.5h4"/><path d="M12 3.5a6 6 0 0 0-3.6 10.8c.6.5.9 1.2.9 1.9v1.3h5.4v-1.3c0-.7.3-1.4.9-1.9A6 6 0 0 0 12 3.5z"/>',
     about: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5h.01"/>',
-    more: '<circle cx="5.5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18.5" cy="12" r="1.4"/>'
+    more: '<circle cx="5.5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18.5" cy="12" r="1.4"/>',
+    video: '<rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/>'
   };
 
   // [href, label, icon, tile color]. News, Dating, Classifieds first (Mark's order), then the rest.
@@ -142,10 +143,44 @@
 
   window.NW_APPS = { list: APPS, isPhone: function () { return window.matchMedia && window.matchMedia(PHONE).matches; } };
 
+  // Luis's video icon. It appears ONLY when Luis has filed a dispatch with a video, with his own desk key
+  // (only his key can publish under his name), within the last VIDEO_DAYS days. Delete the dispatch and it's gone.
+  // Phones: a "NEW" tile right after Classifieds, in the grid and the icon bar. Computers: a red link in the menu.
+  var VIDEO_DAYS = 7;
+  function videoIcon() {
+    fetch("/api/dispatch", { credentials: "same-origin" }).then(function (r) { return r.json(); }).then(function (d) {
+      var v = (d.dispatches || []).filter(function (x) {
+        return x.video && x.video.id && x.author === "Luis Orozco" && Date.now() - Date.parse(x.published) < VIDEO_DAYS * 86400000;
+      })[0];
+      if (!v) return;
+      var href = "/luis.html?id=" + encodeURIComponent(v.id);
+      var a = [href, "Luis video", "video", "#b3261e"];
+      var badge = '<span class="badge">NEW</span>';
+      var grid = document.querySelector(".appgrid"), bar = document.querySelector(".appbar");
+      if (grid) {
+        var t = document.createElement("div"); t.innerHTML = tile(a, "app vidtile");
+        var el = t.firstChild; el.querySelector(".ic").insertAdjacentHTML("beforeend", badge);
+        grid.insertBefore(el, grid.children[3] || null);
+        // keep 12 tiles above "More": the last visible one moves behind it
+        var visible = grid.querySelectorAll(".app:not(.extra):not(.more)");
+        if (visible.length > FIRST) visible[visible.length - 1].classList.add("extra");
+      }
+      if (bar) {
+        var m = document.createElement("div"); m.innerHTML = tile(a, "mini");
+        var me = m.firstChild; me.querySelector(".ic").insertAdjacentHTML("beforeend", badge);
+        bar.insertBefore(me, bar.children[3] || null);
+      }
+      var nav = document.querySelector("nav.main .wrap");
+      if (nav && !grid) nav.insertAdjacentHTML("afterbegin", '<a class="newvid" href="' + href + '">▶ New video from Medellín</a>');
+    }).catch(function () {});
+  }
+
   function start() {
     var nav = document.querySelector("nav.main");
-    if (!nav || !window.NW_APPS.isPhone()) return;
+    if (!nav) return;
+    if (!window.NW_APPS.isPhone()) { videoIcon(); return; }
     render(nav);
+    videoIcon();
     // Lists fill in after the news loads; give them a moment, then place the text ads.
     setTimeout(sprinkleAds, 1500);
   }

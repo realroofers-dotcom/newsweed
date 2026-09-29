@@ -1,4 +1,4 @@
-/* nw.css — BUILT 2026-09-29 · nw-css-4d
+/* nw.css — BUILT 2026-09-29 · nw-css-4e
    The Newsweed house style. Every page loads this file.
    A newspaper: white page, thin rules, serif headlines, nothing loud. */
 
@@ -296,6 +296,13 @@ footer.site p { margin: 0 0 10px; max-width: 90ch; line-height: 1.6; }
 footer.site .forsale { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; margin: 16px 0; }
 footer.site .forsale a { color: var(--navy); font-weight: 600; }
 footer.site .stamp { font: 400 11px var(--mono); color: var(--ink3); }
+
+/* ---------- Luis's videos ---------- */
+.vid { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; overflow: hidden; margin: 0 0 18px; }
+.vid iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+nav.main a.newvid { color: var(--red); }
+.app .badge, .mini .badge { position: absolute; top: -5px; right: -7px; background: var(--red); color: #fff; font: 700 9px/1 var(--mono); letter-spacing: .04em; padding: 3px 4px; border-radius: 6px; border: 2px solid #fff; }
+.app .ic, .mini .ic { position: relative; }
 
 /* ---------- phones: icon driven (apps.js) ---------- */
 .apps, .appbar { display: none; }

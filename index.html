@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=4d">
+<link rel="stylesheet" href="/nw.css?v=4e">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
@@ -233,7 +233,7 @@
 
 <div id="nw-foot" data-build="Built 2026-09-29 · index-3a"></div>
 
-<script src="/nw.js?v=4f"></script>
+<script src="/nw.js?v=4g"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script>
 (function () {
@@ -310,7 +310,8 @@
       if (first.length > 360) first = first.slice(0, 360).trim() + "…";
       document.getElementById("luisLatest").innerHTML = '<div class="mono-av" aria-hidden="true">LO</div><div>'
         + '<div class="by">' + E(x.author || "Luis Orozco") + '</div><div class="bio">' + E(d.bio || "") + ' · ' + E(x.place || "") + ' · ' + E(NW.stamp(x.published)) + '</div>'
-        + '<h3><a href="/luis.html?id=' + encodeURIComponent(x.id) + '">' + E(x.title) + '</a></h3>'
+        + '<h3><a href="/luis.html?id=' + encodeURIComponent(x.id) + '">' + (x.video ? "▶ " : "") + E(x.title) + '</a></h3>'
+        + (x.video && /^[A-Za-z0-9_-]{6,20}$/.test(x.video.id) ? '<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/' + x.video.id + '?rel=0" title="' + E(x.title) + '" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>' : "")
         + '<p>' + E(first) + '</p><a class="btn ghost" href="/luis.html?id=' + encodeURIComponent(x.id) + '">Read the dispatch</a></div>';
     }).catch(function () {});
   }

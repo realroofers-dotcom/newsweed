@@ -1,4 +1,5 @@
-<!-- BUILT 2026-09-29 · newsweed desk-1a
+<!-- BUILT 2026-09-29 · newsweed desk-1b (+ video link box and the video procedure, English/Spanish)
+     was desk-1a
      PRIVATE. Luis Orozco files his dispatches here with his own key (env var LUIS_KEY).
      Only his key can publish under his name. Mark's TIP_ADMIN_KEY can delete, not write. -->
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=4d">
+<link rel="stylesheet" href="/nw.css?v=4e">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
@@ -28,13 +29,42 @@
     <input type="hidden" id="editId">
     <input type="text" id="title" placeholder="Headline / Titular" maxlength="160" required>
     <input type="text" id="place" placeholder="Dateline, e.g. Medellín / Bogotá / Caracas" maxlength="80">
-    <textarea id="body" placeholder="Dispatch text. Leave a blank line between paragraphs." style="min-height:320px" required></textarea>
+    <input type="url" id="video" placeholder="Video: paste the YouTube link here (optional) / Video: pegue el enlace de YouTube (opcional)">
+    <textarea id="body" placeholder="Dispatch text. Leave a blank line between paragraphs. (With a video, a line or two is enough.)" style="min-height:260px" required></textarea>
     <div class="row2" style="align-items:center">
       <div><button class="btn" type="submit" id="go">Publish</button> <button class="btn ghost" type="button" id="clear">New</button></div>
     </div>
     <div class="status" id="st" role="status"></div>
     <div class="fine">Tips: say where and when, and how you know. Name your sources or say why you can't. Report with respect; no promotion of alcohol or drugs.</div>
   </form>
+
+  <div class="kicker green" style="margin-top:28px" id="video-procedure"><h2>Posting a video / Cómo publicar un video</h2></div>
+  <div class="grid2">
+    <div class="box">
+      <h3>English</h3>
+      <ol style="margin:0;padding-left:18px;font-size:14.5px;color:var(--ink2)">
+        <li><b>Record</b> on your phone. Hold it sideways for news, upright for short clips. Keep it under 10 minutes.</li>
+        <li><b>Open the YouTube app</b> → tap <b>+</b> → <b>Upload a video</b> → pick the clip.</li>
+        <li>Title it the way you'll title the dispatch. Visibility: <b>Public</b> or <b>Unlisted</b> (never Private: nobody could watch it). Audience: <b>No, it's not made for kids</b>.</li>
+        <li>When it finishes processing, tap <b>Share → Copy link</b>.</li>
+        <li>Come back here: enter your desk key, write the headline and dateline, <b>paste the link in the Video box</b>, add a line or two about it, and press <b>Publish</b>.</li>
+        <li>Check it: tap <b>view</b> next to it under "Your dispatches". The video plays at the top.</li>
+      </ol>
+      <p class="note" style="margin:10px 0 0">Once you publish, a <b>NEW video</b> icon appears on newsweed.com for 7 days: on phones right after Classifieds, on computers in the top menu. It only appears for videos you file here with your own key. To take a video down, press delete below; the icon goes with it.</p>
+    </div>
+    <div class="box">
+      <h3>Español</h3>
+      <ol style="margin:0;padding-left:18px;font-size:14.5px;color:var(--ink2)">
+        <li><b>Grabe</b> con su teléfono. Horizontal para noticias, vertical para clips cortos. Menos de 10 minutos.</li>
+        <li><b>Abra la app de YouTube</b> → toque <b>+</b> → <b>Subir un video</b> → elija el clip.</li>
+        <li>Póngale el mismo título que a la nota. Visibilidad: <b>Pública</b> o <b>No listada</b> (nunca Privada: nadie podría verlo). Público: <b>No, no es contenido para niños</b>.</li>
+        <li>Cuando termine de procesarse, toque <b>Compartir → Copiar enlace</b>.</li>
+        <li>Vuelva aquí: ponga su clave, escriba el titular y el lugar, <b>pegue el enlace en la casilla Video</b>, agregue una o dos líneas y toque <b>Publish</b>.</li>
+        <li>Revíselo: toque <b>view</b> junto a la nota en "Your dispatches". El video se ve arriba.</li>
+      </ol>
+      <p class="note" style="margin:10px 0 0">Al publicar, aparece en newsweed.com el ícono <b>NEW video</b> durante 7 días: en teléfonos después de Classifieds, en computadoras en el menú de arriba. Solo aparece con los videos que usted publica aquí con su propia clave. Para quitar un video, toque delete abajo; el ícono se va con él.</p>
+    </div>
+  </div>
 
   <div class="kicker" style="margin-top:28px"><h2>Byline line</h2></div>
   <form class="form" id="bioForm">
@@ -47,7 +77,7 @@
   <div id="mine"><div class="loading">Loading…</div></div>
 </main>
 
-<script src="/nw.js?v=4f"></script>
+<script src="/nw.js?v=4g"></script>
 <script>
 (function () {
   var E = NW.esc, list = [];
@@ -61,7 +91,7 @@
       list = d.dispatches || [];
       if (d.bio) document.getElementById("bio").value = d.bio;
       document.getElementById("mine").innerHTML = list.length ? list.map(function (x, i) {
-        return '<div class="msg"><span class="who">' + E(x.title) + '</span><span class="when">' + E(NW.stamp(x.published)) + '</span>'
+        return '<div class="msg"><span class="who">' + (x.video ? "▶ " : "") + E(x.title) + '</span><span class="when">' + E(NW.stamp(x.published)) + '</span>'
           + '<p><a href="/luis.html?id=' + encodeURIComponent(x.id) + '" target="_blank">view</a> · <a href="#" data-edit="' + i + '">edit</a> · <a href="#" data-del="' + i + '">delete</a></p></div>';
       }).join("") : '<p class="note">Nothing filed yet.</p>';
     });
@@ -76,6 +106,7 @@
       document.getElementById("title").value = x.title;
       document.getElementById("place").value = x.place || "";
       document.getElementById("body").value = x.body;
+      document.getElementById("video").value = x.video ? x.video.url : "";
       document.getElementById("go").textContent = "Save changes";
       window.scrollTo(0, 0);
     }
@@ -95,7 +126,7 @@
     e.preventDefault();
     var st = document.getElementById("st"), editId = v("editId");
     st.className = "status"; st.textContent = "Sending…";
-    var body = { title: v("title"), place: v("place"), body: v("body") };
+    var body = { title: v("title"), place: v("place"), body: v("body"), video: v("video") };
     if (editId) { body.action = "edit"; body.id = editId; }
     NW.post("/api/dispatch?key=" + key(), body).then(function (r) {
       if (r.success) { st.textContent = editId ? "Saved." : "Published."; document.getElementById("clear").click(); load(); }

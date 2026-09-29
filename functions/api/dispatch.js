@@ -1,10 +1,10 @@
-// functions/api/dispatch.js — BUILT 2026-09-29 · dispatch-1a
+// functions/api/dispatch.js — BUILT 2026-09-29 · dispatch-1b (+ video: a YouTube link Luis pastes; only his key can file it)
 //
 // The Medellín desk: Luis Orozco's daily dispatches.
 //
 // GET                    -> { bio, dispatches: [latest 20] }
 // GET  ?id=ID            -> { dispatch }
-// POST ?key=LUIS_KEY  { title, body, place }          -> file a dispatch
+// POST ?key=LUIS_KEY  { title, body, place, video? } -> file a dispatch (video = YouTube share link)
 // POST ?key=LUIS_KEY  { action:"edit", id, title, body, place }
 // POST ?key=LUIS_KEY  { action:"bio", bio }           -> update his byline line
 // POST ?key=LUIS_KEY|TIP_ADMIN_KEY { action:"delete", id }
@@ -19,6 +19,23 @@ const AUTHOR = "Luis Orozco";
 const DEFAULT_BIO = "Journalist · Medellín, Colombia";
 const JSON_HEADERS = { "Content-Type": "application/json", "Cache-Control": "no-store" };
 function ok(obj, status) { return new Response(JSON.stringify(obj), { status: status || 200, headers: JSON_HEADERS }); }
+// Luis's videos: he uploads to YouTube from his phone and pastes the share link. We keep only the video id,
+// and the pages play it with youtube-nocookie.com. Accepts youtube.com/watch?v=, youtu.be/, /shorts/, /live/.
+function parseVideo(v) {
+  const s = String(v || "").trim();
+  if (!s) return null;
+  let u;
+  try { u = new URL(s); } catch (e) { return null; }
+  const host = u.hostname.replace(/^(www\.|m\.)/, "");
+  let id = "";
+  if (host === "youtu.be") id = u.pathname.slice(1);
+  else if (host === "youtube.com" || host === "youtube-nocookie.com") {
+    id = u.searchParams.get("v") || (u.pathname.match(/^\/(?:shorts|live|embed)\/([^/?#]+)/) || [])[1] || "";
+  }
+  id = id.split("/")[0];
+  return /^[A-Za-z0-9_-]{6,20}$/.test(id) ? { kind: "youtube", id, url: "https://www.youtube.com/watch?v=" + id } : null;
+}
+
 function clean(s, max) { return String(s || "").replace(/\r\n/g, "\n").replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim().slice(0, max); }
 
 export async function onRequestGet(context) {
@@ -71,22 +88,25 @@ export async function onRequestPost(context) {
     const title = clean(b.title, 160);
     const body = clean(b.body, 8000);
     const place = clean(b.place, 80) || "Medellín";
+    const video = parseVideo(b.video);
+    if (b.video && String(b.video).trim() && !video) return ok({ success: false, error: "That video link didn't work. Paste the YouTube share link (youtube.com or youtu.be)." });
     if (title.length < 6) return ok({ success: false, error: "Add a headline." });
-    if (body.length < 40) return ok({ success: false, error: "Add the dispatch text." });
+    // A video dispatch needs only a short caption; a written one needs the full text.
+    if (body.length < (video ? 10 : 40)) return ok({ success: false, error: video ? "Add a line or two about the video." : "Add the dispatch text." });
 
     if (b.action === "edit") {
       if (!String(b.id || "").startsWith("dispatch:")) return ok({ success: false, error: "Bad id." });
       const raw = await env.EMAIL_LIST.get(b.id);
       if (!raw) return ok({ success: false, error: "Not found." });
       const rec = JSON.parse(raw);
-      Object.assign(rec, { title, body, place, edited: new Date().toISOString() });
+      Object.assign(rec, { title, body, place, video, edited: new Date().toISOString() });
       await env.EMAIL_LIST.put(b.id, JSON.stringify(rec));
       return ok({ success: true, id: b.id });
     }
 
     const now = new Date().toISOString();
     const id = "dispatch:" + now + ":" + Math.random().toString(36).slice(2, 7);
-    await env.EMAIL_LIST.put(id, JSON.stringify({ author: AUTHOR, title, body, place, published: now }));
+    await env.EMAIL_LIST.put(id, JSON.stringify({ author: AUTHOR, title, body, place, video, published: now }));
     return ok({ success: true, id });
   } catch (err) {
     return ok({ success: false, error: "Something went wrong." });

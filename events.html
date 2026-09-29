@@ -1,0 +1,100 @@
+<!-- BUILT 2026-09-29 · newsweed events-1a · Events: Mark traveling to meet authors, hikes through TrailShrinks.com,
+     roofing classes through RooferSchool.com. Events are added in tips-admin.html; readers RSVP here. API: /api/events -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Events — authors, hikes, roofing classes — Newsweed</title>
+<meta name="description" content="Meet the authors, hike with TrailShrinks.com, learn roofing with RooferSchool.com: Newsweed events on the road across America.">
+<link rel="canonical" href="https://newsweed.com/events.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 26px; }
+@media (max-width: 760px) { .three { grid-template-columns: 1fr; } }
+.kind { border: 1px solid var(--line); border-top: 4px solid var(--green2); border-radius: 6px; padding: 14px; }
+.kind.hike { border-top-color: var(--navy); } .kind.roofing { border-top-color: var(--red); }
+.kind h3 { font-size: 19px; margin-bottom: 4px; } .kind p { margin: 0 0 8px; font-size: 14px; color: var(--ink2); }
+.kind a { color: var(--navy); font-weight: 600; font-size: 13.5px; }
+.ev { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line2); scroll-margin-top: 20px; }
+.ev:target { background: #fffbe6; }
+.ev .cal { border: 2px solid var(--ink); border-radius: 6px; text-align: center; padding: 4px 0; height: fit-content; }
+.ev .cal .m { font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
+.ev .cal .d { font: 800 30px/1 var(--serif); }
+.ev .cal .w { font: 400 10.5px var(--mono); color: var(--ink3); }
+.ev .kl { font: 700 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--green2); }
+.ev h3 { font-size: 20px; margin: 2px 0 4px; }
+.ev .where { font: 400 12.5px var(--mono); color: var(--ink3); }
+.ev p { margin: 6px 0; font-size: 14.5px; color: var(--ink2); white-space: pre-line; }
+.ev form { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.ev form input { padding: 7px 9px; border: 1px solid var(--line); border-radius: 4px; font: 400 14px var(--sans); }
+.ev form input[type=email], .ev form input[name=n] { flex: 1; min-width: 150px; }
+.ev form input[type=number] { width: 64px; }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Events</span><h1>Meet us on the road</h1>
+    <p>The Newsweed truck travels America. Come meet local authors, walk a trail, or learn a trade. Every event is free to RSVP.</p></div>
+  <div class="cols2">
+    <main>
+      <div class="three">
+        <div class="kind"><h3>Meet the authors</h3><p>Hometown writers, readings and signings, stop by stop. They feed the <a href="/books.html">authors map</a>.</p></div>
+        <div class="kind hike"><h3>Hikes</h3><p>Group hikes with TrailShrinks: walk it off, talk it out.</p><a href="https://trailshrinks.com" rel="noopener">TrailShrinks.com →</a></div>
+        <div class="kind roofing"><h3>Roofing classes</h3><p>Learn the trade from a roofer who built a company. Hands-on, practical.</p><a href="https://rooferschool.com" rel="noopener">RooferSchool.com →</a></div>
+      </div>
+
+      <section class="block"><div class="kicker green"><h2>Coming up</h2><span class="more"><a href="/travel.html">Where the truck has been →</a></span></div>
+        <div id="up"><div class="loading">Loading…</div></div></section>
+      <section class="block"><div class="kicker"><h2>Past events</h2></div><div id="past"></div></section>
+
+      <div class="box"><p><b>Want the truck in your town?</b> Authors, libraries, schools, hiking clubs and trade programs: <a href="mailto:realroofers@gmail.com?subject=Newsweed%20truck%20visit" style="color:var(--navy)">invite us</a>.</p></div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · events-1a"></div>
+<script src="/nw.js?v=4a"></script><script src="/section.js?v=1b"></script>
+<script src="/states-data.js?v=1a"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+  function card(e, rsvp) {
+    var d = new Date(e.date + "T12:00:00Z");
+    var where = [e.place, NW_STATES.by[e.state] ? NW_STATES.by[e.state].name : e.state].filter(Boolean).join(", ");
+    return '<div class="ev" id="' + E(e.id) + '"><div class="cal"><div class="m">' + d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }) + '</div>'
+      + '<div class="d">' + d.getUTCDate() + '</div><div class="w">' + d.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" }) + '</div></div><div>'
+      + '<span class="kl">' + E(e.kindLabel) + '</span><h3>' + E(e.title) + '</h3>'
+      + '<div class="where">' + E(where) + (e.time ? " · " + E(e.time) : "") + (e.going ? " · " + E(e.going) + " going" : "") + '</div>'
+      + (e.description ? '<p>' + E(e.description) + '</p>' : "")
+      + (e.link ? '<a href="' + E(U(e.link)) + '" rel="noopener" style="color:var(--navy);font-size:13.5px">More details →</a>' : "")
+      + (rsvp ? '<form data-id="' + E(e.id) + '"><input name="n" placeholder="Your name" required><input type="email" name="e" placeholder="Email" required>'
+        + '<input type="number" name="c" min="1" max="10" value="1" aria-label="How many"><input name="w" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">'
+        + '<button class="btn" type="submit">RSVP</button><div class="status" style="flex-basis:100%"></div></form>' : "")
+      + '</div></div>';
+  }
+  NW.get("/api/events").then(function (d) {
+    var up = d.upcoming || [], past = d.past || [];
+    document.getElementById("up").innerHTML = up.length ? up.map(function (e) { return card(e, true); }).join("")
+      : '<p class="note">New dates are coming. Sign up for the Newsweed Daily to hear first.</p>';
+    document.getElementById("past").innerHTML = past.length ? past.map(function (e) { return card(e, false); }).join("") : '<p class="note">The first events are being scheduled.</p>';
+    if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ block: "start" }); }
+  });
+  document.getElementById("up").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var f = ev.target, st = f.querySelector(".status");
+    NW.post("/api/events", { action: "rsvp", id: f.getAttribute("data-id"), name: f.n.value, email: f.e.value, count: f.c.value, website: f.w.value })
+      .then(function (r) {
+        st.className = r.success ? "status" : "status err";
+        st.textContent = r.success ? (r.already ? "You're already on the list. See you there." : "You're on the list. See you there.") : (r.error || "Failed.");
+        if (r.success) f.reset();
+      });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,6 @@
-<!-- BUILT 2026-09-29 · newsweed dating-1a · Dating by state: voice introductions and rough location only.
+<!-- BUILT 2026-09-29 · newsweed dating-1b (+ truck-back "Compatibility?" art → Lovappy.news; alcohol/weed/drugs/none question + filter)
+     Mark gave up the old Lovappy app domain; link Lovappy.news only.
+     was dating-1a · Dating by state: voice introductions and rough location only.
      Sign-in required to post or write (Google). Adults 18+. Every recording is heard before it goes live
      (tips-admin.html). No photos, no contact details in profiles or first messages. API: /api/dating -->
 <!DOCTYPE html>
@@ -11,7 +13,7 @@
 <link rel="canonical" href="https://newsweed.com/dating.html">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=3a">
+<link rel="stylesheet" href="/nw.css?v=4a">
 <style>
 /* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
 .prof { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
@@ -24,6 +26,17 @@
 .rec { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .rec .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); display: none; }
 .rec.on .dot { display: inline-block; animation: blink 1s infinite; }
+.truckback { margin: 0 0 24px; display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 16px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.truckback img { width: 100%; height: auto; border-radius: 5px; display: block; }
+.truckback figcaption { font-size: 14.5px; color: var(--ink2); }
+.truckback figcaption b { display: block; font: 800 24px var(--serif); color: var(--ink); margin-bottom: 4px; }
+.truckback a { color: var(--navy); font-weight: 600; }
+@media (max-width: 620px) { .truckback { grid-template-columns: 1fr; } }
+.uses { display: inline-block; font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; background: var(--panel); border: 1px solid var(--line); color: var(--ink2); margin-bottom: 8px; }
+.uses.none { background: #e8f5ed; border-color: #9fd2b0; color: var(--green2); }
+fieldset.q { border: 1px solid var(--line); border-radius: 5px; padding: 8px 12px; margin: 0; }
+fieldset.q legend { font: 600 13px var(--sans); padding: 0 4px; }
+fieldset.q label { display: inline-flex; gap: 5px; align-items: center; margin: 4px 14px 4px 0; font-size: 14px; }
 @keyframes blink { 50% { opacity: 0.2; } }
 </style>
 </head>
@@ -34,11 +47,21 @@
     <p>No photos, no swiping. A first name, a rough location, and a one-minute voice introduction. Pick your state, listen, and say hello. Adults 18 and over.</p></div>
   <div class="cols2">
     <main>
+      <figure class="truckback">
+        <img src="/truck-back.jpg?v=2" alt="The back of the Newsweed truck: two figures under the word Compatibility, with icons for drinking, cannabis, nicotine and none" width="480" height="640" loading="lazy">
+        <figcaption><b>Compatibility?</b> It's painted on the back of the Newsweed truck, and it's the first question here: does the person you're meeting drink, use weed, use drugs, or none of it? Everyone answers, and you can filter by it.
+          More on love and compatibility at <a href="https://lovappy.news" rel="noopener">Lovappy.news</a>.</figcaption>
+      </figure>
       <div class="grid2">
         <section class="block"><div class="kicker navy"><h2>Pick a state</h2></div><div id="map"></div></section>
         <section class="block"><div class="kicker"><h2>Your profile</h2></div><div id="me" class="box"><div class="loading">Checking sign-in…</div></div></section>
       </div>
-      <section class="block"><div class="kicker navy"><h2 id="listHead">Introductions</h2></div><div id="list"><div class="loading">Loading…</div></div></section>
+      <section class="block"><div class="kicker navy"><h2 id="listHead">Introductions</h2></div>
+        <div class="tabs2" id="useFilter" role="tablist" aria-label="Filter by alcohol, weed, drugs or none">
+          <button data-u="" aria-selected="true">Everyone</button><button data-u="none" aria-selected="false">None of it</button>
+          <button data-u="alcohol" aria-selected="false">Drinks</button><button data-u="weed" aria-selected="false">Weed</button><button data-u="drugs" aria-selected="false">Drugs</button>
+        </div>
+        <div id="list"><div class="loading">Loading…</div></div></section>
       <div class="box">
         <h3>Stay safe</h3>
         <p>Keep your first messages here. Meet in a public place, tell a friend where you're going, and never send money to someone you haven't met. Report anything that feels wrong; two reports take a profile down for review.</p>
@@ -48,21 +71,30 @@
   </div>
 </div>
 <div id="nw-foot" data-build="Built 2026-09-29 · dating-1a"></div>
-<script src="/nw.js?v=3a"></script><script src="/section.js?v=1a"></script>
+<script src="/nw.js?v=4a"></script><script src="/section.js?v=1b"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script>
 (function () {
-  var E = NW.esc, state = (location.hash.slice(1) || "").toUpperCase(), me = null, counts = {};
+  var E = NW.esc, state = (location.hash.slice(1) || "").toUpperCase(), me = null, counts = {}, useFilter = "";
+  document.getElementById("useFilter").addEventListener("click", function (e) {
+    var u = e.target.getAttribute("data-u"); if (u == null) return;
+    useFilter = u;
+    Array.prototype.forEach.call(this.querySelectorAll("button"), function (b) { b.setAttribute("aria-selected", b === e.target ? "true" : "false"); });
+    loadList();
+  });
   if (!NW_STATES.by[state]) state = "";
 
   function loadList() {
     var name = state ? NW_STATES.by[state].name : "all states";
     document.getElementById("listHead").textContent = "Introductions: " + name;
     NW.get("/api/dating?state=" + state).then(function (d) {
-      var p = d.profiles || [];
+      var p = (d.profiles || []).filter(function (x) { return !useFilter || (x.uses || []).indexOf(useFilter) > -1; });
       document.getElementById("list").innerHTML = p.length ? p.map(function (x) {
+        var u = x.uses || [], none = u.indexOf("none") > -1;
+        var usesTxt = !u.length ? "" : none ? "None: no alcohol, weed or drugs" : "Uses: " + u.map(function (k) { return { alcohol: "alcohol", weed: "weed", drugs: "drugs" }[k]; }).join(", ");
         return '<div class="prof"><h3>' + E(x.firstName) + ', ' + E(x.age) + '</h3>'
           + '<div class="meta">' + E([x.area, NW_STATES.by[x.state] ? NW_STATES.by[x.state].name : x.state].filter(Boolean).join(", ")) + (x.seeking ? " · hoping to meet " + E(x.seeking) : "") + '</div>'
+          + (usesTxt ? '<span class="uses' + (none ? " none" : "") + '">' + E(usesTxt) + '</span>' : "")'
           + '<audio controls preload="none" src="/api/dating?audio=' + encodeURIComponent(x.id) + '"></audio>'
           + '<div class="row"><input type="text" maxlength="300" placeholder="Say hello (no phone numbers or links yet)" data-hello="' + E(x.id) + '"><button class="btn" data-send="' + E(x.id) + '">Send</button></div>'
           + '<div class="status" data-st="' + E(x.id) + '"></div><button class="flag" data-flag="' + E(x.id) + '">Report</button></div>';
@@ -113,6 +145,9 @@
       + '<div class="row2"><select id="pst" required><option value="">State…</option>' + NW_STATES.list.slice().sort(function (a, b) { return a.name < b.name ? -1 : 1; }).map(function (s) { return '<option value="' + s.code + '">' + E(s.name) + '</option>'; }).join("") + '</select>'
       + '<input type="text" id="area" placeholder="Rough area, e.g. South Jersey" maxlength="40"></div>'
       + '<input type="text" id="seek" placeholder="Hoping to meet… (e.g. a kind man 40–55)" maxlength="60">'
+      + '<fieldset class="q" id="usesQ"><legend>Compatibility: do you use… (shown on your profile)</legend>'
+      +   '<label><input type="checkbox" value="alcohol"> Alcohol</label><label><input type="checkbox" value="weed"> Weed</label>'
+      +   '<label><input type="checkbox" value="drugs"> Drugs</label><label><input type="checkbox" value="none"> None</label></fieldset>'
       + '<div class="rec" id="recbox"><span class="dot"></span><button type="button" class="btn" id="recbtn">● Record (up to 60 s)</button><span id="rectime" class="mono" style="font-size:13px"></span></div>'
       + '<audio id="preview" controls style="width:100%;display:none"></audio>'
       + '<label class="chk"><input type="checkbox" id="a18" required> I am 18 or older.</label>'
@@ -159,13 +194,16 @@
     e.preventDefault();
     var st = document.getElementById("pst2");
     if (!blob) { st.textContent = "Record your introduction first."; st.className = "status err"; return; }
+    var uses = Array.prototype.map.call(document.querySelectorAll("#usesQ input:checked"), function (c) { return c.value; });
+    if (!uses.length) { st.textContent = "Please answer: alcohol, weed, drugs, or none?"; st.className = "status err"; return; }
+    if (uses.indexOf("none") > -1 && uses.length > 1) { st.textContent = "\"None\" can't go with the others. Pick none, or what you use."; st.className = "status err"; return; }
     st.className = "status"; st.textContent = "Uploading…";
     var fr = new FileReader();
     fr.onload = function () {
       NW.post("/api/dating", { action: "post", firstName: document.getElementById("fn").value, age: document.getElementById("age").value,
         state: document.getElementById("pst").value, area: document.getElementById("area").value, seeking: document.getElementById("seek").value,
         agree18: document.getElementById("a18").checked, agreeRules: document.getElementById("arules").checked,
-        mime: blob.type, seconds: secs, audio: String(fr.result).split(",")[1] })
+        uses: uses, mime: blob.type, seconds: secs, audio: String(fr.result).split(",")[1] })
         .then(function (d) {
           if (d.success) { st.textContent = "Thank you. Your introduction is in review and goes live once it's been heard."; blob = null; refreshMe(); }
           else { st.textContent = d.error || "Failed."; st.className = "status err"; }

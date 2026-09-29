@@ -1,4 +1,4 @@
-/* section.js — BUILT 2026-09-29 · section-1a
+/* section.js — BUILT 2026-09-29 · section-1b (+ Events, The truck)
    Fills a section page. The page says which feed group it reads and where each desk goes:
      <body data-group="farm">
        <ul class="hl" data-s="fourh"></ul>      <- filled with /api/feed?group=farm -> sections.fourh
@@ -10,6 +10,8 @@
   var group = document.body.getAttribute("data-group");
 
   var SECTIONS = [
+    ["/events.html", "Events", "Authors, hikes, roofing"],
+    ["/travel.html", "The truck", "Where it has been"],
     ["/family.html", "Family & Lacrosse", "Amazing kids, youth sports"],
     ["/farm.html", "Farm & Garden", "4-H, farm news, gardening"],
     ["/college.html", "Schools & Colleges", "Campus, seasons, back to school"],

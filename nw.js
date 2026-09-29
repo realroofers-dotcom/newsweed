@@ -1,4 +1,5 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
+/* nw.js — BUILT 2026-09-29 · nw-js-4a (truck ear → travel page; Volume + live clock in the edition bar; special-announcement bar; Events)
+   was nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
      - the masthead, nav and footer (one copy here, so every page matches)
      - small helpers (NW.esc, NW.ago, NW.get)
@@ -15,9 +16,11 @@
     ["/corruptmen.html", "CorruptMen", "cm"],
     ["/dui.html", "Crime & DUI"],
     ["/classifieds.html", "Classifieds"],
+    ["/events.html", "Events"],
     ["/chat.html", "Chat room"]
   ];
   var NAV2 = [
+    ["/travel.html", "The truck"],
     ["/family.html", "Family & Lacrosse"],
     ["/farm.html", "Farm & Garden"],
     ["/college.html", "Schools & Colleges"],
@@ -94,11 +97,30 @@
       +   '<div class="center"><a class="brand" href="/" aria-label="Newsweed home">' + LOGO
       +     '<span class="word">newsweed<span>.com</span></span></a>'
       +     '<div class="motto">The news that matters, reported with respect.</div></div>'
-      +   '<div class="ear right"><span class="k">Today\'s edition</span><div class="vol">Volume ' + vol + '</div>'
-      +     '<div class="clock" id="nwClock">&nbsp;</div><div class="zone">New York time</div></div>'
+      +   '<a class="ear truck" href="/travel.html" aria-label="The Newsweed truck: where it has been">'
+      +     '<img src="/truck-side.jpg?v=1" alt="The green Newsweed truck" width="640" height="360">'
+      +     '<span class="k">The Newsweed truck</span><span class="seen" id="truckSeen">On the road across America →</span></a>'
       + '</header></div>'
-      + '<div class="edition"><div class="wrap"><span>' + esc(today) + '</span><span class="red">Vol. ' + vol + ' · Daily edition</span><span>Every edition archived · <a href="/archive.html">past editions</a></span></div></div>'
+      + '<div class="edition"><div class="wrap"><span>' + esc(today) + '</span>'
+      +   '<span class="big"><span class="red">Volume ' + vol + '</span> · <span id="nwClock">&nbsp;</span></span>'
+      +   '<span>Every edition archived · <a href="/archive.html">past editions</a></span></div></div>'
+      + '<div id="nwAnnounce"></div>'
       + '<nav class="main" aria-label="Sections"><div class="wrap">' + links(NAV) + '</div><div class="wrap navrow2">' + links(NAV2) + "</div></nav>";
+
+    // The special announcement, set from tips-admin.html. Hidden when there is none.
+    get("/api/announce").then(function (d) {
+      var a = d && d.announcement;
+      if (!a) return;
+      var link = a.link && /^(https?:\/\/|\/)/.test(a.link) ? a.link : "";
+      document.getElementById("nwAnnounce").innerHTML = '<div class="announce" role="status"><div class="wrap"><b>Special announcement</b><span>' + esc(a.text) + '</span>'
+        + (link ? '<a href="' + esc(link) + '">Details →</a>' : "") + '</div></div>';
+    }).catch(function () {});
+
+    // Where the truck was last seen (always at least a week old, town only).
+    get("/api/travel").then(function (d) {
+      var s = d && d.lastSeen;
+      if (s && s.place) document.getElementById("truckSeen").textContent = "Last seen: " + s.place + (s.state ? ", " + s.state : "") + " →";
+    }).catch(function () {});
 
     function tick() {
       var c = document.getElementById("nwClock");

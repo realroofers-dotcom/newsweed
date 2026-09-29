@@ -57,6 +57,18 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0
 .edition { border-top: 4px solid var(--ink); border-bottom: 1px solid var(--ink); }
 .edition .wrap { display: flex; justify-content: space-between; gap: 6px 16px; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; font: 600 11.5px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
 .edition .red { color: var(--red); }
+.edition .big { font: 800 14px var(--mono); letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+/* the truck, in the right ear: photo + where it was last seen */
+.mast .ear.truck { padding: 6px; text-align: left; display: block; }
+.mast .ear.truck img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 2px; }
+.mast .ear.truck .k { margin: 6px 2px 0; }
+.mast .ear.truck .seen { display: block; margin: 0 2px 2px; font: 600 12.5px var(--sans); color: var(--ink); }
+.mast .ear.truck:hover { background: var(--panel); }
+/* special announcement bar */
+.announce { background: var(--red); color: #fff; }
+.announce .wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding-top: 9px; padding-bottom: 9px; font: 500 15px var(--sans); }
+.announce b { font: 800 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; background: #fff; color: var(--red); padding: 2px 7px; border-radius: 2px; }
+.announce a { color: #fff; font-weight: 700; text-decoration: underline; }
 @media (max-width: 1000px) {
   .mast { grid-template-columns: 1fr 1fr; }
   .mast .center { grid-column: 1 / -1; order: -1; }
@@ -66,6 +78,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0
   .mast .word { font-size: clamp(30px, 10.5vw, 44px); }
   .mast .ear b { font-size: 15px; }
   .mast .ear .def { display: none; }
+  .mast .ear.truck .seen { font-size: 11.5px; }
   .mast .ear .vol { font-size: 20px; }
   .mast .ear .clock { font-size: 15px; }
 }

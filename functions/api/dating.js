@@ -1,4 +1,4 @@
-// functions/api/dating.js — BUILT 2026-09-29 · dating-1a
+// functions/api/dating.js — BUILT 2026-09-29 · dating-1b (+ "alcohol, weed, drugs or none" on every profile)
 //
 // Dating, by state. Mark, 29 Sep 2026: "voice and rough location only, people introduce themselves and record."
 //
@@ -34,7 +34,17 @@ const NO_CONTACT = /(\d[\s.\-()]*){7,}|@|https?:|www\.|\.com\b|snap(chat)?|insta
 
 async function live(kv) { try { return JSON.parse((await kv.get("dt:live")) || "[]"); } catch (e) { return []; } }
 function fresh(p) { return Date.now() - Date.parse(p.approved || p.submitted) < DAYS_LIVE * 86400000; }
-function shown(p) { return { id: p.id, firstName: p.firstName, age: p.age, state: p.state, area: p.area, seeking: p.seeking, posted: p.approved || p.submitted, seconds: p.seconds || null }; }
+function shown(p) { return { id: p.id, firstName: p.firstName, age: p.age, state: p.state, area: p.area, seeking: p.seeking, uses: p.uses || [], posted: p.approved || p.submitted, seconds: p.seconds || null }; }
+
+// Mark, 29 Sep 2026: "the dating site should ask the question if they use alcohol, weed, drugs or none."
+// Everyone answers; it shows on the profile, and readers can filter by it. (The back of the truck asks it too: "Compatibility?")
+const USES = ["alcohol", "weed", "drugs"];
+function readUses(v) {
+  const list = Array.isArray(v) ? v.map(String) : [];
+  if (list.indexOf("none") > -1) return ["none"];
+  const out = USES.filter(u => list.indexOf(u) > -1);
+  return out.length ? out : null;
+}
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -167,6 +177,8 @@ export async function onRequestPost(context) {
   if (!(age >= 18 && age <= 110) || b.agree18 !== true) return ok({ success: false, error: "Dating is for adults 18 and over." });
   if (!isState(state)) return ok({ success: false, error: "Pick your state." });
   if (b.agreeRules !== true) return ok({ success: false, error: "Please agree to the dating rules." });
+  const uses = readUses(b.uses);
+  if (!uses) return ok({ success: false, error: "Please answer: do you use alcohol, weed, drugs, or none?" });
   if (NO_CONTACT.test([firstName, area, seeking].join(" "))) return ok({ success: false, error: "No contact details, links or money talk in your profile. Your voice does the talking." });
 
   const mime = /^audio\/(webm|ogg|mp4|mpeg|aac|x-m4a)/.test(String(b.mime || "")) ? String(b.mime).split(";")[0] : "";
@@ -187,7 +199,7 @@ export async function onRequestPost(context) {
     await kv.put("dt:live", JSON.stringify((await live(kv)).filter(x => x.id !== old)));
   }
   const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
-  const p = { id, status: "pending", firstName, age, state, area, seeking, mime, seconds: Math.min(90, parseInt(b.seconds, 10) || 0) || null,
+  const p = { id, status: "pending", firstName, age, state, area, seeking, uses, mime, seconds: Math.min(90, parseInt(b.seconds, 10) || 0) || null,
     email: m.email, memberName: m.name, submitted: new Date().toISOString() };
   await kv.put("dt:a:" + id, bytes);
   await kv.put("dt:p:" + id, JSON.stringify(p));

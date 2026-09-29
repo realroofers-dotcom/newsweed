@@ -1,0 +1,111 @@
+<!-- BUILT 2026-09-29 · newsweed travel-1a · The Newsweed truck: where it has been.
+     Mark, 29 Sep 2026: "I am all over the country with the truck... show where it has been based on my GPS,
+     always lagging behind at least a week." /api/travel never returns anything newer than 7 days, and only towns.
+     Map: Leaflet + OpenStreetMap tiles (attribution required, kept). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Newsweed truck — where it's been — Newsweed</title>
+<meta name="description" content="The green Newsweed truck travels America meeting authors, leading hikes and teaching roofing. See where it has been.">
+<link rel="canonical" href="https://newsweed.com/travel.html">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="/nw.css?v=4a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.hero-truck { margin: 0 0 22px; }
+.hero-truck img { width: 100%; height: auto; display: block; border-radius: 6px; }
+.hero-truck figcaption { font: 400 12px var(--mono); color: var(--ink3); margin-top: 6px; }
+#tmap { height: 420px; border: 1px solid var(--line); border-radius: 6px; margin-bottom: 8px; z-index: 0; }
+.stopday { padding: 8px 0; border-bottom: 1px solid var(--line2); font-size: 14.5px; }
+.stopday b { font: 600 12px var(--mono); color: var(--ink3); display: inline-block; min-width: 110px; }
+.stats { display: flex; gap: 22px; flex-wrap: wrap; margin: 0 0 18px; }
+.stats div { font: 400 12px var(--mono); color: var(--ink3); text-transform: uppercase; letter-spacing: .08em; }
+.stats b { display: block; font: 800 34px/1 var(--serif); color: var(--ink); letter-spacing: -.02em; text-transform: none; }
+</style>
+</head>
+<body data-group="">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">On the road</span><h1>The Newsweed truck</h1>
+    <p>News, stocks, music, shop. The green truck carries Newsweed across America: meeting authors, leading hikes with TrailShrinks.com, and teaching roofing with RooferSchool.com. If you see it, wave.</p></div>
+  <div class="cols2">
+    <main>
+      <figure class="hero-truck"><img src="/truck-side.jpg?v=1" alt="The green Newsweed truck with NEWSWEED.COM across the top and News, Stocks, Music, Shop along the side" width="640" height="360">
+        <figcaption>The Newsweed truck. The back asks one question: <a href="/dating.html" style="color:var(--navy)">Compatibility?</a></figcaption></figure>
+
+      <div class="stats"><div><b id="nStates">–</b>states</div><div><b id="nTowns">–</b>towns</div><div><b id="nDays">–</b>days on the road</div><div><b id="lastSeen" style="font-size:22px">–</b>last seen</div></div>
+
+      <section class="block"><div class="kicker green"><h2>Where it's been</h2><span class="more" id="lagNote">Shown at least a week late</span></div>
+        <div id="tmap" role="img" aria-label="Map of towns the truck has visited"></div>
+        <p class="note">For safety, the map runs at least a week behind and shows towns only, never an address or a live location.</p></section>
+
+      <div class="grid2">
+        <section class="block"><div class="kicker navy"><h2>States visited</h2></div><div id="smap"></div></section>
+        <section class="block"><div class="kicker"><h2>Coming up</h2><span class="more"><a href="/events.html">All events →</a></span></div><div id="next"><div class="loading">Loading…</div></div></section>
+      </div>
+
+      <section class="block"><div class="kicker"><h2>The log</h2></div><div id="log"><div class="loading">Loading…</div></div></section>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-09-29 · travel-1a"></div>
+<script src="/nw.js?v=4a"></script><script src="/section.js?v=1b"></script>
+<script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function () {
+  var E = NW.esc;
+  var map = L.map("tmap", { scrollWheelZoom: false }).setView([39.5, -96], 4);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 10, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+
+  NW.get("/api/travel").then(function (d) {
+    var stops = d.stops || [];
+    document.getElementById("lagNote").textContent = "Shown at least " + (d.lagDays || 7) + " days late";
+    var towns = {}, days = {};
+    stops.forEach(function (s) { towns[s.place + "|" + s.state] = s; days[s.date] = 1; });
+    document.getElementById("nStates").textContent = (d.states || []).length;
+    document.getElementById("nTowns").textContent = Object.keys(towns).length;
+    document.getElementById("nDays").textContent = Object.keys(days).length;
+    document.getElementById("lastSeen").textContent = d.lastSeen ? d.lastSeen.place + ", " + d.lastSeen.state : "Soon";
+
+    var pts = stops.filter(function (s) { return s.lat != null && s.lon != null; }).map(function (s) { return [s.lat, s.lon]; });
+    if (pts.length) {
+      L.polyline(pts, { color: "#00a651", weight: 3, opacity: 0.7 }).addTo(map);
+      Object.keys(towns).forEach(function (k) {
+        var s = towns[k];
+        if (s.lat == null) return;
+        L.circleMarker([s.lat, s.lon], { radius: 6, color: "#2e3192", fillColor: "#00a651", fillOpacity: 0.9, weight: 2 }).addTo(map)
+          .bindPopup("<b>" + E(s.place) + ", " + E(s.state) + "</b><br>" + E(s.date));
+      });
+      map.fitBounds(pts, { padding: [30, 30], maxZoom: 7 });
+    }
+
+    var visited = {};
+    (d.states || []).forEach(function (c) { visited[c] = "yes"; });
+    NWMap.cats(document.getElementById("smap"), { cats: visited, colors: { yes: "#00a651" }, labels: { yes: "Visited" },
+      onPick: function (c) { location.href = "/states.html#" + c; } });
+
+    var byDay = {};
+    stops.forEach(function (s) { (byDay[s.date] = byDay[s.date] || []).push(s.place + ", " + s.state); });
+    var dates = Object.keys(byDay).sort().reverse();
+    document.getElementById("log").innerHTML = dates.length ? dates.slice(0, 60).map(function (dt) {
+      var nice = new Date(dt + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+      return '<div class="stopday"><b>' + E(nice) + '</b>' + E(byDay[dt].join(" · ")) + '</div>';
+    }).join("") : '<p class="note">The log starts soon. The truck\'s first week on the map appears here a week after it rolls.</p>';
+  }).catch(function () { document.getElementById("log").innerHTML = '<p class="note">Unavailable right now.</p>'; });
+
+  NW.get("/api/events").then(function (d) {
+    var up = (d.upcoming || []).slice(0, 4);
+    document.getElementById("next").innerHTML = up.length ? '<ul class="hl small">' + up.map(function (e) {
+      return '<li><a href="/events.html#' + E(e.id) + '">' + E(e.title) + '</a><span class="src">' + E(e.date) + (e.place ? " · " + E(e.place) : "") + (e.state ? ", " + E(e.state) : "") + '</span></li>';
+    }).join("") + '</ul>' : '<p class="note">New dates are posted on the <a href="/events.html" style="color:var(--navy)">events page</a>.</p>';
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

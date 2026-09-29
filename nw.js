@@ -1,5 +1,6 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4a (truck ear → travel page; Volume + live clock in the edition bar; special-announcement bar; Events)
-   was nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
+/* nw.js — BUILT 2026-09-29 · nw-js-4b (Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+   "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
+   was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
      - the masthead, nav and footer (one copy here, so every page matches)
      - small helpers (NW.esc, NW.ago, NW.get)
@@ -20,7 +21,7 @@
     ["/chat.html", "Chat room"]
   ];
   var NAV2 = [
-    ["/travel.html", "The truck"],
+    ["/travel.html", "Travel & Nomads"],
     ["/family.html", "Family & Lacrosse"],
     ["/farm.html", "Farm & Garden"],
     ["/college.html", "Schools & Colleges"],
@@ -35,12 +36,16 @@
     ["/advertise.html", "Advertise"],
     ["/suggestions.html", "Suggestions"]
   ];
-  var FIRST_DAY = Date.UTC(2026, 8, 29); // Newsweed relaunched as a news site: Volume 1
+  // Mark, 29 Sep 2026: "The volume should actually be 6, since we first printed in 2022 and we have been
+  // around online since 2010." Newspaper style: the VOLUME is the year of publication (Volume 6 in 2026,
+  // Volume 7 from January 1, 2027) and the NUMBER is the day's issue (the day of the year), new every day.
+  var VOLUME_2026 = 6;
 
   function nyNow() { return new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" })); }
-  function volume() {
+  function volume() { return VOLUME_2026 + (nyNow().getFullYear() - 2026); }
+  function issue() {
     var n = nyNow();
-    return Math.floor((Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()) - FIRST_DAY) / 86400000) + 1;
+    return Math.floor((Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()) - Date.UTC(n.getFullYear(), 0, 1)) / 86400000) + 1;
   }
 
   function esc(s) {
@@ -82,7 +87,7 @@
     if (!el) return;
     var here = location.pathname.replace(/index\.html$/, "");
     var today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/New_York" });
-    var vol = volume();
+    var vol = volume(), no = issue();
     function links(list) {
       return list.map(function (n) {
         var cur = n[0] === here ? ' aria-current="page"' : "";
@@ -90,19 +95,19 @@
       }).join("");
     }
     el.innerHTML =
-      '<div class="util"><div class="wrap"><span>Newsweed · Est. 2012 · New York · Medellín</span>'
+      '<div class="util"><div class="wrap"><span>Newsweed · Online since 2010 · In print since 2022 · New York · Medellín</span>'
       + '<span class="sale"><b>This brand is for sale</b> · <a href="/#acquire">acquisition details</a></span></div></div>'
       + '<div class="wrap"><header class="mast">'
       +   '<a class="ear ai" href="/ai.html" id="aiEar"><span class="k">AI term of the day</span><b id="aiTerm">…</b><span class="def" id="aiDef"></span></a>'
       +   '<div class="center"><a class="brand" href="/" aria-label="Newsweed home">' + LOGO
       +     '<span class="word">newsweed<span>.com</span></span></a>'
       +     '<div class="motto">The news that matters, reported with respect.</div></div>'
-      +   '<a class="ear truck" href="/travel.html" aria-label="The Newsweed truck: where it has been">'
-      +     '<img src="/truck-side.jpg?v=1" alt="The green Newsweed truck" width="640" height="360">'
-      +     '<span class="k">The Newsweed truck</span><span class="seen" id="truckSeen">On the road across America →</span></a>'
+      +   '<div class="ear right"><span class="k">Today\'s edition</span><div class="vol">Volume ' + vol + '</div>'
+      +     '<div class="zone" style="font:600 12px var(--mono);color:var(--ink2)">No. ' + no + '</div>'
+      +     '<div class="clock" id="nwClock">&nbsp;</div><div class="zone">New York time</div></div>'
       + '</header></div>'
       + '<div class="edition"><div class="wrap"><span>' + esc(today) + '</span>'
-      +   '<span class="big"><span class="red">Volume ' + vol + '</span> · <span id="nwClock">&nbsp;</span></span>'
+      +   '<span class="red">Vol. ' + vol + ' · No. ' + no + ' · Daily edition</span>'
       +   '<span>Every edition archived · <a href="/archive.html">past editions</a></span></div></div>'
       + '<div id="nwAnnounce"></div>'
       + '<nav class="main" aria-label="Sections"><div class="wrap">' + links(NAV) + '</div><div class="wrap navrow2">' + links(NAV2) + "</div></nav>";
@@ -114,12 +119,6 @@
       var link = a.link && /^(https?:\/\/|\/)/.test(a.link) ? a.link : "";
       document.getElementById("nwAnnounce").innerHTML = '<div class="announce" role="status"><div class="wrap"><b>Special announcement</b><span>' + esc(a.text) + '</span>'
         + (link ? '<a href="' + esc(link) + '">Details →</a>' : "") + '</div></div>';
-    }).catch(function () {});
-
-    // Where the truck was last seen (always at least a week old, town only).
-    get("/api/travel").then(function (d) {
-      var s = d && d.lastSeen;
-      if (s && s.place) document.getElementById("truckSeen").textContent = "Last seen: " + s.place + (s.state ? ", " + s.state : "") + " →";
     }).catch(function () {});
 
     function tick() {
@@ -202,7 +201,7 @@
     });
   }
 
-  window.NW = { esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume };
+  window.NW = { esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };
   header();
   footer();
   subscribeForms();

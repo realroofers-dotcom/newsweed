@@ -1,8 +1,8 @@
-// functions/api/feed.js — BUILT 2026-09-29 · feed-3a
+// functions/api/feed.js — BUILT 2026-09-29 · feed-3b (+ nomad group)
 //
 // Every desk, grouped so no single call fetches too much:
 //   GET /api/feed                 -> the home page desks
-//   GET /api/feed?group=farm      -> farm, 4-H, garden        (also: family, books, college, arts, gambling, dui)
+//   GET /api/feed?group=farm      -> farm, 4-H, garden        (also: family, books, college, arts, gambling, dui, nomad)
 //   -> { group, sections: { key:[{title,link,source,pubDate,snippet,section,label}] }, updated }
 //
 // Normal sections take the first feed that returns headlines. `merge` sections take a few from
@@ -78,6 +78,11 @@ const GROUPS = {
     { key: "gambling", label: "Gambling", take: 6, feeds: ["https://www.legalsportsreport.com/feed/", "https://www.casino.org/news/feed/", gnSearch("gambling law OR sports betting OR casino")] },
     { key: "problem", label: "Problem gambling", take: 5, feeds: [gnSearch("\"problem gambling\" OR \"gambling addiction\""), bing("gambling addiction")] },
     { key: "crimeg", label: "Gambling & crime", take: 5, feeds: [gnSearch("illegal gambling arrested OR charged OR embezzled gambling"), bing("illegal gambling arrest")] }
+  ],
+  nomad: [
+    { key: "nomad", label: "Nomad life", take: 6, feeds: [gnSearch("full-time RV OR \"van life\" OR \"digital nomad\" OR \"full-time travelers\""), bing("full-time RV living")] },
+    { key: "sd", label: "South Dakota & nomads", take: 5, feeds: [gnSearch("South Dakota residency OR domicile RV OR nomads OR \"full-time travelers\""), bing("South Dakota residency full-time travelers")] },
+    { key: "road", label: "On the road", take: 5, feeds: [gnSearch("campgrounds OR national parks OR road trip travel news"), bing("campground national park news")] }
   ],
   dui: [
     { key: "dui", label: "DUI crashes", take: 8, feeds: [gnSearch("DUI crash OR \"drunk driver\" killed OR charged"), bing("DUI crash")] },

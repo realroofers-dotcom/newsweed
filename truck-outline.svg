@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 296" role="img" aria-labelledby="t">
+  <title id="t">The Newsweed truck: a green box truck with NEWSWEED.COM on the side and News, Stocks, Music, Shop along the bottom</title>
+  <!-- truck-outline.svg — BUILT 2026-09-29 · truck-outline-1b · drawn from Mark's photo of the truck, outlined. -->
+  <g fill="none" stroke="#14150f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <!-- the ladder on the rack: Mark, 29 Sep 2026, "leave the ladder, it's a symbol of truth" -->
+    <path d="M36 42V32M452 42V32" stroke-width="5"/>
+    <path d="M44 32H448M44 16H448" stroke-width="4"/>
+    <path d="M64 32V16M100 32V16M136 32V16M172 32V16M208 32V16M244 32V16M280 32V16M316 32V16M352 32V16M388 32V16M424 32V16" stroke-width="3"/>
+    <!-- chassis -->
+    <path d="M24 236H616" stroke-width="6"/>
+  </g>
+  <!-- the box -->
+  <rect x="26" y="42" width="432" height="186" rx="6" fill="#3fb44a" stroke="#14150f" stroke-width="5"/>
+  <!-- the sign -->
+  <rect x="48" y="56" width="390" height="78" rx="12" fill="#ffffff" stroke="#14150f" stroke-width="4"/>
+  <text x="228" y="118" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="56" fill="#3fb44a" stroke="#14150f" stroke-width="1.5" textLength="340" lengthAdjust="spacingAndGlyphs">NEWSWEED</text>
+  <text x="426" y="95" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="15" fill="#d72b20" transform="rotate(-90 426 95)">.COM</text>
+  <!-- the posters -->
+  <g stroke="#14150f" stroke-width="2.5">
+    <rect x="60" y="146" width="52" height="42" fill="#f7f6f1"/>
+    <rect x="122" y="146" width="52" height="42" fill="#2b2f3a"/>
+    <rect x="184" y="146" width="52" height="42" fill="#f7f6f1"/>
+    <rect x="246" y="146" width="52" height="42" fill="#f7f6f1"/>
+    <rect x="308" y="146" width="52" height="42" fill="#f7f6f1"/>
+    <rect x="370" y="146" width="56" height="42" fill="#ffffff"/>
+  </g>
+  <text x="398" y="164" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="11" fill="#d72b20">HELP</text>
+  <text x="398" y="178" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="11" fill="#d72b20">WANTED</text>
+  <!-- the slogan -->
+  <text x="242" y="216" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="21" fill="#14150f" letter-spacing="1">NEWS • STOCKS • MUSIC • SHOP</text>
+  <!-- the cab -->
+  <path d="M462 92H536Q548 92 556 104L590 150Q612 154 614 170V228H462Z" fill="#3fb44a" stroke="#14150f" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M478 106H532Q540 106 545 114L570 150H478Z" fill="#cfe6f0" stroke="#14150f" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M478 166H500" stroke="#14150f" stroke-width="4" stroke-linecap="round"/>
+  <rect x="604" y="176" width="10" height="16" rx="2" fill="#f3c742" stroke="#14150f" stroke-width="2.5"/>
+  <!-- wheels -->
+  <g stroke="#14150f" stroke-width="5">
+    <circle cx="132" cy="256" r="30" fill="#2b2b2b"/>
+    <circle cx="132" cy="256" r="12" fill="#c9c7bd"/>
+    <circle cx="546" cy="256" r="30" fill="#2b2b2b"/>
+    <circle cx="546" cy="256" r="12" fill="#c9c7bd"/>
+  </g>
+</svg>

@@ -1,60 +1,116 @@
-<!-- BUILT 2026-09-29 · newsweed travel-1a · The Newsweed truck: where it has been.
-     Mark, 29 Sep 2026: "I am all over the country with the truck... show where it has been based on my GPS,
-     always lagging behind at least a week." /api/travel never returns anything newer than 7 days, and only towns.
-     Map: Leaflet + OpenStreetMap tiles (attribution required, kept). -->
+<!-- BUILT 2026-09-29 · newsweed travel-2a · Travel & Nomad Life.
+     Mark, 29 Sep 2026: take the truck off the header; "a travel section that focuses on the nomad life and especially
+     promotes the benefits of South Dakota license laws for nomads"; the truck outlined and smaller.
+     South Dakota facts checked 29 Sep 2026 against the sources linked on the page. RE-CHECK EVERY QUARTER: the
+     voting rules for travelers changed in 2025 and lawmakers have moved to change them again.
+     The truck map: /api/travel never returns anything newer than 7 days, towns only. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Newsweed truck — where it's been — Newsweed</title>
-<meta name="description" content="The green Newsweed truck travels America meeting authors, leading hikes and teaching roofing. See where it has been.">
+<title>Travel & Nomad Life — South Dakota for full-time travelers — Newsweed</title>
+<meta name="description" content="The nomad life: full-time RV, van and road living, why so many nomads make South Dakota home base, and where the Newsweed truck has been.">
 <link rel="canonical" href="https://newsweed.com/travel.html">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="/nw.css?v=4a">
+<link rel="stylesheet" href="/nw.css?v=4b">
 <style>
 /* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
-.hero-truck { margin: 0 0 22px; }
-.hero-truck img { width: 100%; height: auto; display: block; border-radius: 6px; }
-.hero-truck figcaption { font: 400 12px var(--mono); color: var(--ink3); margin-top: 6px; }
-#tmap { height: 420px; border: 1px solid var(--line); border-radius: 6px; margin-bottom: 8px; z-index: 0; }
-.stopday { padding: 8px 0; border-bottom: 1px solid var(--line2); font-size: 14.5px; }
+.truckhead { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 22px; align-items: center; margin: 0 0 26px; }
+.truckhead img.outline { width: 100%; height: auto; display: block; }
+.truckhead .photo { display: flex; gap: 10px; align-items: center; margin-top: 10px; font: 400 12px var(--mono); color: var(--ink3); }
+.truckhead .photo img { width: 120px; height: auto; border-radius: 4px; border: 1px solid var(--line); }
+.truckhead p { margin: 0 0 10px; color: var(--ink2); }
+@media (max-width: 700px) { .truckhead { grid-template-columns: 1fr; } .truckhead img.outline { max-width: 320px; } }
+.sd { border: 2px solid var(--ink); border-radius: 8px; padding: 20px 22px; margin: 0 0 28px; }
+.sd h2 { font: 800 clamp(24px, 3vw, 32px)/1.1 var(--serif); margin-bottom: 6px; }
+.sd .lede2 { color: var(--ink2); margin: 0 0 14px; }
+.steps { counter-reset: s; list-style: none; padding: 0; margin: 0 0 16px; }
+.steps li { counter-increment: s; position: relative; padding: 10px 0 10px 46px; border-bottom: 1px solid var(--line2); font-size: 15px; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 9px; width: 30px; height: 30px; border-radius: 50%; background: var(--green2); color: #fff; font: 700 14px/30px var(--mono); text-align: center; }
+.steps b { display: block; font: 700 16px var(--sans); }
+.plus { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 0 0 16px; }
+.plus div { background: #e8f5ed; border-radius: 6px; padding: 12px 14px; font-size: 14px; color: var(--ink2); }
+.plus b { display: block; font: 800 18px var(--serif); color: var(--green2); margin-bottom: 2px; }
+.caution { background: #fff7e6; border-left: 4px solid #c77f1c; padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 14px; color: var(--ink2); margin: 0 0 12px; }
+.caution b { color: var(--ink); }
+.srcs { font: 400 12px/1.7 var(--mono); color: var(--ink3); margin: 0; padding-left: 18px; }
+.srcs a { color: var(--navy); }
+#tmap { height: 360px; border: 1px solid var(--line); border-radius: 6px; margin-bottom: 8px; z-index: 0; }
+.stopday { padding: 7px 0; border-bottom: 1px solid var(--line2); font-size: 14px; }
 .stopday b { font: 600 12px var(--mono); color: var(--ink3); display: inline-block; min-width: 110px; }
-.stats { display: flex; gap: 22px; flex-wrap: wrap; margin: 0 0 18px; }
-.stats div { font: 400 12px var(--mono); color: var(--ink3); text-transform: uppercase; letter-spacing: .08em; }
-.stats b { display: block; font: 800 34px/1 var(--serif); color: var(--ink); letter-spacing: -.02em; text-transform: none; }
 </style>
 </head>
-<body data-group="">
+<body data-group="nomad">
 <div id="nw-top"></div>
 <div class="wrap">
-  <div class="sect-head"><span class="k">On the road</span><h1>The Newsweed truck</h1>
-    <p>News, stocks, music, shop. The green truck carries Newsweed across America: meeting authors, leading hikes with TrailShrinks.com, and teaching roofing with RooferSchool.com. If you see it, wave.</p></div>
+  <div class="sect-head"><span class="k">Travel &amp; Nomad Life</span><h1>Home is where you park it</h1>
+    <p>More Americans than ever live on the road: in RVs, vans, trucks and campers, working from wherever the day ends. This is their section, and the Newsweed truck's.</p></div>
   <div class="cols2">
     <main>
-      <figure class="hero-truck"><img src="/truck-side.jpg?v=1" alt="The green Newsweed truck with NEWSWEED.COM across the top and News, Stocks, Music, Shop along the side" width="640" height="360">
-        <figcaption>The Newsweed truck. The back asks one question: <a href="/dating.html" style="color:var(--navy)">Compatibility?</a></figcaption></figure>
-
-      <div class="stats"><div><b id="nStates">–</b>states</div><div><b id="nTowns">–</b>towns</div><div><b id="nDays">–</b>days on the road</div><div><b id="lastSeen" style="font-size:22px">–</b>last seen</div></div>
-
-      <section class="block"><div class="kicker green"><h2>Where it's been</h2><span class="more" id="lagNote">Shown at least a week late</span></div>
-        <div id="tmap" role="img" aria-label="Map of towns the truck has visited"></div>
-        <p class="note">For safety, the map runs at least a week behind and shows towns only, never an address or a live location.</p></section>
-
-      <div class="grid2">
-        <section class="block"><div class="kicker navy"><h2>States visited</h2></div><div id="smap"></div></section>
-        <section class="block"><div class="kicker"><h2>Coming up</h2><span class="more"><a href="/events.html">All events →</a></span></div><div id="next"><div class="loading">Loading…</div></div></section>
+      <div class="truckhead">
+        <div>
+          <img class="outline" src="/truck-outline.svg?v=1" alt="Outline drawing of the green Newsweed truck" width="640" height="300">
+          <div class="photo"><img src="/truck-side.jpg?v=1" alt="Photo of the Newsweed truck" width="640" height="360" loading="lazy"><span>The real thing.<br>If you see it, wave.</span></div>
+        </div>
+        <div>
+          <p><b>The ladder on the roof stays.</b> It's the symbol of truth: climb up and look for yourself.</p>
+          <p><b>The Newsweed truck</b> travels the country meeting authors, leading hikes with <a href="https://trailshrinks.com" rel="noopener" style="color:var(--navy)">TrailShrinks.com</a> and teaching roofing with <a href="https://rooferschool.com" rel="noopener" style="color:var(--navy)">RooferSchool.com</a>.</p>
+          <p><a class="btn" href="/events.html">Upcoming stops &amp; events</a> <a class="btn ghost" href="#where">Where it's been</a></p>
+        </div>
       </div>
 
-      <section class="block"><div class="kicker"><h2>The log</h2></div><div id="log"><div class="loading">Loading…</div></div></section>
+      <section class="sd" id="south-dakota">
+        <span class="k mono" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green2)">For full-time travelers</span>
+        <h2>Why nomads make South Dakota home</h2>
+        <p class="lede2">If you live on the road, you still need a home state for your driver's license, your vehicle and your mail. South Dakota is built for people like you.</p>
+        <div class="plus">
+          <div><b>No state income tax</b>South Dakota does not tax personal income.</div>
+          <div><b>One night is enough</b>A single documented night's stay in the state, within the past year, counts toward residency for your license.</div>
+          <div><b>Your mail, handled</b>A South Dakota mail-forwarding address can serve as your address, with a signed residency affidavit.</div>
+        </div>
+        <h3 style="font-size:19px;margin:6px 0 4px">Getting a South Dakota driver's license, step by step</h3>
+        <ol class="steps">
+          <li><b>Sign up with a South Dakota mail-forwarding service.</b>You'll get a personal mailbox (PMB) address in the state. Keep a receipt or a piece of mail showing it, no more than a year old.</li>
+          <li><b>Spend one night in South Dakota.</b>A hotel, motel, campground or RV park. Keep the receipt with your name on it, dated within the past year.</li>
+          <li><b>Go to a South Dakota driver license office.</b>Bring your usual ID documents, the lodging receipt and the mailbox proof, and sign the state's Residency Affidavit there (the examiners can notarize it).</li>
+          <li><b>Register your vehicles and move your life over.</b>Title and plates, insurance, bank and voter records follow the new address. Mail-forwarding services walk you through it.</li>
+        </ol>
+        <div class="caution"><b>Voting has changed.</b> A 2025 South Dakota law requires 30 consecutive days at a fixed home in the state to vote in state and local elections. Travelers who use a mailing address and have no physical home there can still receive a federal-only absentee ballot for President and Congress. Lawmakers have since moved to repeal the 30-day rule, so check the Secretary of State's page before you register.</div>
+        <div class="caution"><b>Before you switch, check:</b> that your health insurance works where you actually travel, what your car insurance costs with a South Dakota address, and when you'll need to be back in the state to renew your license.</div>
+        <p class="note" style="margin:10px 0 6px">Checked September 29, 2026. Laws change; confirm with the state before you rely on this. Not legal or tax advice.</p>
+        <ul class="srcs">
+          <li><a href="https://www.sd.gov/dps?id=cs_kb_article_view&amp;sysparm_article=KB0043552" rel="noopener">SD Department of Public Safety: Driver License/ID for Full-Time Travelers</a></li>
+          <li><a href="https://www.sd.gov/sys_attachment.do?sys_id=556dcdcd47902a50854b61d2e16d43d5" rel="noopener">State of South Dakota Residency Affidavit (PDF)</a></li>
+          <li><a href="https://sdsos.gov/elections-voting/voting/register-to-vote/residency-qualification.aspx" rel="noopener">SD Secretary of State: voting residency</a></li>
+          <li><a href="https://www.keloland.com/keloland-com-original/spend-one-night-here-and-you-can-be-a-south-dakota-resident/" rel="noopener">KELOLAND: "Spend one night here and you can be a South Dakota resident"</a></li>
+          <li><a href="https://kfgo.com/2025/03/26/new-south-dakota-law-changes-residency-requirements-for-voting/" rel="noopener">KFGO: New South Dakota law changes residency requirements for voting (2025)</a></li>
+          <li><a href="https://southdakotasearchlight.com/briefs/state-senate-votes-to-ditch-30-day-residency-requirement-for-voter-registration/" rel="noopener">South Dakota Searchlight: Senate votes to ditch the 30-day requirement</a></li>
+        </ul>
+      </section>
+
+      <section class="block"><div class="kicker green"><h2>Nomad life</h2></div><ul class="hl" data-s="nomad"><li class="loading">Loading…</li></ul></section>
+      <div class="grid2">
+        <section class="block"><div class="kicker navy"><h2>South Dakota &amp; nomads</h2></div><ul class="hl small" data-s="sd"><li class="loading">Loading…</li></ul></section>
+        <section class="block"><div class="kicker"><h2>On the road</h2></div><ul class="hl small" data-s="road"><li class="loading">Loading…</li></ul></section>
+      </div>
+
+      <section class="block" id="where"><div class="kicker green"><h2>Where the truck has been</h2><span class="more" id="lagNote">Shown at least a week late</span></div>
+        <div id="tmap" role="img" aria-label="Map of towns the truck has visited"></div>
+        <p class="note">For safety, the map runs at least a week behind and shows towns only, never an address or a live location. <span id="tstats"></span></p></section>
+      <div class="grid2">
+        <section class="block"><div class="kicker navy"><h2>States visited</h2></div><div id="smap"></div></section>
+        <section class="block"><div class="kicker"><h2>The log</h2></div><div id="log"><div class="loading">Loading…</div></div></section>
+      </div>
+      <div class="box"><p><b>Nomads: sell, swap and find work on the road</b> in the free <a href="/classifieds.html" style="color:var(--navy)">classifieds</a>, and meet people by state in <a href="/dating.html" style="color:var(--navy)">dating</a>.</p></div>
     </main>
     <aside id="rail"></aside>
   </div>
 </div>
-<div id="nw-foot" data-build="Built 2026-09-29 · travel-1a"></div>
-<script src="/nw.js?v=4a"></script><script src="/section.js?v=1b"></script>
+<div id="nw-foot" data-build="Built 2026-09-29 · travel-2a"></div>
+<script src="/nw.js?v=4b"></script><script src="/section.js?v=1c"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -68,43 +124,31 @@
     document.getElementById("lagNote").textContent = "Shown at least " + (d.lagDays || 7) + " days late";
     var towns = {}, days = {};
     stops.forEach(function (s) { towns[s.place + "|" + s.state] = s; days[s.date] = 1; });
-    document.getElementById("nStates").textContent = (d.states || []).length;
-    document.getElementById("nTowns").textContent = Object.keys(towns).length;
-    document.getElementById("nDays").textContent = Object.keys(days).length;
-    document.getElementById("lastSeen").textContent = d.lastSeen ? d.lastSeen.place + ", " + d.lastSeen.state : "Soon";
+    if (stops.length) document.getElementById("tstats").textContent = (d.states || []).length + " states · " + Object.keys(towns).length + " towns · " + Object.keys(days).length + " days on the road"
+      + (d.lastSeen ? " · last seen " + d.lastSeen.place + ", " + d.lastSeen.state : "") + ".";
 
     var pts = stops.filter(function (s) { return s.lat != null && s.lon != null; }).map(function (s) { return [s.lat, s.lon]; });
     if (pts.length) {
       L.polyline(pts, { color: "#00a651", weight: 3, opacity: 0.7 }).addTo(map);
       Object.keys(towns).forEach(function (k) {
-        var s = towns[k];
-        if (s.lat == null) return;
+        var s = towns[k]; if (s.lat == null) return;
         L.circleMarker([s.lat, s.lon], { radius: 6, color: "#2e3192", fillColor: "#00a651", fillOpacity: 0.9, weight: 2 }).addTo(map)
           .bindPopup("<b>" + E(s.place) + ", " + E(s.state) + "</b><br>" + E(s.date));
       });
       map.fitBounds(pts, { padding: [30, 30], maxZoom: 7 });
     }
-
     var visited = {};
     (d.states || []).forEach(function (c) { visited[c] = "yes"; });
-    NWMap.cats(document.getElementById("smap"), { cats: visited, colors: { yes: "#00a651" }, labels: { yes: "Visited" },
-      onPick: function (c) { location.href = "/states.html#" + c; } });
+    NWMap.cats(document.getElementById("smap"), { cats: visited, colors: { yes: "#00a651" }, labels: { yes: "Visited" }, onPick: function (c) { location.href = "/states.html#" + c; } });
 
     var byDay = {};
     stops.forEach(function (s) { (byDay[s.date] = byDay[s.date] || []).push(s.place + ", " + s.state); });
     var dates = Object.keys(byDay).sort().reverse();
-    document.getElementById("log").innerHTML = dates.length ? dates.slice(0, 60).map(function (dt) {
+    document.getElementById("log").innerHTML = dates.length ? dates.slice(0, 40).map(function (dt) {
       var nice = new Date(dt + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
       return '<div class="stopday"><b>' + E(nice) + '</b>' + E(byDay[dt].join(" · ")) + '</div>';
-    }).join("") : '<p class="note">The log starts soon. The truck\'s first week on the map appears here a week after it rolls.</p>';
+    }).join("") : '<p class="note">The log starts soon. The truck\'s first week appears here a week after it rolls.</p>';
   }).catch(function () { document.getElementById("log").innerHTML = '<p class="note">Unavailable right now.</p>'; });
-
-  NW.get("/api/events").then(function (d) {
-    var up = (d.upcoming || []).slice(0, 4);
-    document.getElementById("next").innerHTML = up.length ? '<ul class="hl small">' + up.map(function (e) {
-      return '<li><a href="/events.html#' + E(e.id) + '">' + E(e.title) + '</a><span class="src">' + E(e.date) + (e.place ? " · " + E(e.place) : "") + (e.state ? ", " + E(e.state) : "") + '</span></li>';
-    }).join("") + '</ul>' : '<p class="note">New dates are posted on the <a href="/events.html" style="color:var(--navy)">events page</a>.</p>';
-  }).catch(function () {});
 })();
 </script>
 </body>

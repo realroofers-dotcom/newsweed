@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://newsweed.com/archive.html">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nw.css?v=4a">
+<link rel="stylesheet" href="/nw.css?v=4b">
 <style>.days { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; } .days a { border: 1px solid var(--line); border-radius: 4px; padding: 5px 9px; font: 500 12.5px var(--mono); } .days a.on { background: var(--ink); color: #fff; border-color: var(--ink); }</style>
 </head>
 <body data-group="">
@@ -26,7 +26,7 @@
   </div>
 </div>
 <div id="nw-foot" data-build="Built 2026-09-29 · archive-1a"></div>
-<script src="/nw.js?v=4a"></script><script src="/section.js?v=1b"></script>
+<script src="/nw.js?v=4b"></script><script src="/section.js?v=1c"></script>
 <script>
 (function () {
   var E = NW.esc, U = NW.safeUrl;
@@ -40,7 +40,7 @@
     ed.innerHTML = '<div class="loading">Loading…</div>';
     NW.get("/api/archive?date=" + date).then(function (d) {
       var nice = new Date(date + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-      var h = '<h2 style="font:800 30px var(--serif);margin-bottom:4px">' + E(nice) + '</h2><p class="note">Volume ' + E(d.volume) + '</p>';
+      var h = '<h2 style="font:800 30px var(--serif);margin-bottom:4px">' + E(nice) + '</h2><p class="note">Vol. ' + E(d.volume) + (d.issue ? ' · No. ' + E(d.issue) : "") + '</p>';
       if (d.corruptmen) h += '<div class="kicker red"><h2>CorruptMen</h2></div><div class="cm-card" style="margin-bottom:22px"><h3><a href="' + E(U(d.corruptmen.link)) + '" target="_blank" rel="noopener">' + E(d.corruptmen.title) + '</a></h3><div class="src">' + E(d.corruptmen.source || "") + '</div></div>';
       var groups = d.groups || {};
       ORDER.concat(Object.keys(groups).filter(function (g) { return ORDER.indexOf(g) < 0; })).forEach(function (g) {

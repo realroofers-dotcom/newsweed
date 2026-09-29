@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4l (trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4m (Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -175,7 +175,7 @@
       '<footer class="site"><div class="wrap">'
       + '<div class="fnav">' + NAV.concat(NAV2).map(function (n) { return '<a href="' + n[0] + '">' + n[1] + "</a>"; }).join("")
       + '<a href="/newsroom.html">Newsroom &amp; tips</a><a href="/ai.html">AI glossary</a>'
-      + '<a href="/editor.html">About &amp; contact</a></div>'
+      + '<a href="/editor.html">About &amp; contact</a><a href="/privacy.html">Privacy</a></div>'
       + "<p><b>How we report.</b> Newsweed serves the cannabis-aware audience and the general public with respect. "
       + "We do not promote or put down anyone who uses cannabis, and we never promote the use of alcohol or any drug. "
       + "On health we report published results, medical and holistic, not hype. Headlines from other outlets link to "

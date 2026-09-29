@@ -1,4 +1,4 @@
-/* nw.css — BUILT 2026-09-29 · nw-css-3a
+/* nw.css — BUILT 2026-09-29 · nw-css-4c
    The Newsweed house style. Every page loads this file.
    A newspaper: white page, thin rules, serif headlines, nothing loud. */
 
@@ -11,6 +11,7 @@
   --ink2: #45473f;
   --ink3: #75776d;
   --navy: #2e3192;
+  --truth: #1d2470;   /* dark blue for the wordmark: blue means truth */
   --navy2: #4145b0;
   --green: #00a651;
   --green2: #058a44;
@@ -51,8 +52,9 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0
 .mast .center { text-align: center; min-width: 0; }
 .mast a.brand { display: inline-flex; align-items: center; gap: 14px; max-width: 100%; }
 .mast svg { width: clamp(56px, 7vw, 92px); height: auto; flex-shrink: 0; overflow: visible; }
-.mast .word { font: 800 clamp(40px, 7.4vw, 92px)/0.95 var(--serif); letter-spacing: -0.045em; color: var(--ink); white-space: nowrap; }
-.mast .word span { color: var(--green2); }
+/* The wordmark, lettered like the truck sign: heavy capitals in dark blue ("blue means truth", Mark 29 Sep 2026), red .COM standing on end. */
+.mast .word { display: inline-flex; align-items: center; font: 400 clamp(38px, 6.6vw, 84px)/1 "Archivo Black", "Arial Black", Arial, sans-serif; letter-spacing: 0.01em; color: var(--truth); white-space: nowrap; }
+.mast .word .com { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 0.24em; letter-spacing: 0.06em; color: #d72b20; margin-left: 0.08em; line-height: 1; }
 .mast .motto { margin-top: 8px; font: italic 600 clamp(14px, 1.6vw, 18px) var(--serif); color: var(--ink2); }
 .edition { border-top: 4px solid var(--ink); border-bottom: 1px solid var(--ink); }
 .edition .wrap { display: flex; justify-content: space-between; gap: 6px 16px; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; font: 600 11.5px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
@@ -69,7 +71,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0
   .mast .ear { min-height: 0; }
 }
 @media (max-width: 520px) {
-  .mast .word { font-size: clamp(30px, 10.5vw, 44px); }
+  .mast .word { font-size: clamp(28px, 9.6vw, 42px); }
   .mast .ear b { font-size: 15px; }
   .mast .ear .def { display: none; }
   .mast .ear .vol { font-size: 20px; }

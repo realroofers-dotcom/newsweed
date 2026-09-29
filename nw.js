@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4d (footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4e (wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -77,10 +77,22 @@
       .then(function (r) { return r.json(); });
   }
 
-  var LOGO = '<svg viewBox="48 28 258 192" aria-hidden="true"><defs><linearGradient id="nwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e3192"/><stop offset=".55" stop-color="#1a8a6e"/><stop offset="1" stop-color="#00a651"/></linearGradient></defs>'
+  var LOGO = '<svg viewBox="48 28 258 192" aria-hidden="true"><defs><linearGradient id="nwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d2470"/><stop offset=".55" stop-color="#1a8a6e"/><stop offset="1" stop-color="#00a651"/></linearGradient></defs>'
     + '<path d="M70 170V95a45 45 0 0 1 90 0v75" fill="none" stroke="url(#nwg)" stroke-width="22" stroke-linecap="round"/>'
     + '<path d="M175 90v80a27 27 0 0 0 54 0V90" fill="none" stroke="#00a651" stroke-width="22" stroke-linecap="round"/>'
     + '<path d="M229 90v80a27 27 0 0 0 54 0V90" fill="none" stroke="#00a651" stroke-width="22" stroke-linecap="round"/></svg>';
+
+  // The truck-sign lettering (Archivo Black) and the favicon, added once here so every page gets them.
+  (function headExtras() {
+    var h = document.head;
+    function link(attrs) { var l = document.createElement("link"); for (var k in attrs) l.setAttribute(k, attrs[k]); h.appendChild(l); }
+    if (!document.querySelector('link[href*="Archivo+Black"]')) link({ rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" });
+    if (!document.querySelector('link[rel="icon"]')) {
+      link({ rel: "icon", href: "/favicon.svg", type: "image/svg+xml" });
+      link({ rel: "icon", href: "/favicon-32.png", sizes: "32x32", type: "image/png" });
+      link({ rel: "apple-touch-icon", href: "/apple-touch-icon.png" });
+    }
+  })();
 
   function header() {
     var el = document.getElementById("nw-top");
@@ -100,7 +112,7 @@
       + '<div class="wrap"><header class="mast">'
       +   '<a class="ear ai" href="/ai.html" id="aiEar"><span class="k">AI term of the day</span><b id="aiTerm">…</b><span class="def" id="aiDef"></span></a>'
       +   '<div class="center"><a class="brand" href="/" aria-label="Newsweed home">' + LOGO
-      +     '<span class="word">newsweed<span>.com</span></span></a>'
+      +     '<span class="word">NEWSWEED<span class="com">.COM</span></span></a>'
       +     '<div class="motto">News reported with respect for the weed audience, and for all.</div></div>'
       +   '<div class="ear right"><span class="k">Today\'s edition</span><div class="vol">Volume ' + vol + '</div>'
       +     '<div class="zone" style="font:600 12px var(--mono);color:var(--ink2)">No. ' + no + '</div>'

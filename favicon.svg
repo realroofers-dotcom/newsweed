@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="44 -9 265 265">
+  <!-- favicon.svg — BUILT 2026-09-29 · favicon-1a · the Newsweed two-letter mark on a white tile -->
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d2470"/><stop offset=".55" stop-color="#1a8a6e"/><stop offset="1" stop-color="#00a651"/></linearGradient></defs>
+  <rect x="44" y="-9" width="265" height="265" rx="54" fill="#ffffff"/>
+  <path d="M70 170V95a45 45 0 0 1 90 0v75" fill="none" stroke="url(#g)" stroke-width="26" stroke-linecap="round"/>
+  <path d="M175 90v80a27 27 0 0 0 54 0V90" fill="none" stroke="#00a651" stroke-width="26" stroke-linecap="round"/>
+  <path d="M229 90v80a27 27 0 0 0 54 0V90" fill="none" stroke="#00a651" stroke-width="26" stroke-linecap="round"/>
+</svg>

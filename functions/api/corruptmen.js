@@ -1,4 +1,4 @@
-// functions/api/corruptmen.js — BUILT 2026-09-29 · corruptmen-1b (retry + Bing News backup)
+// functions/api/corruptmen.js — BUILT 2026-09-29 · corruptmen-1c (relevance + US-only check; bad auto picks re-picked)
 //
 // CorruptMen: one story a day on political and business corruption in a US town,
 // embezzlement first.
@@ -21,11 +21,18 @@ const KEEP_DAYS = 400;
 
 // In order of preference: embezzlement first, then public and business corruption.
 const QUERIES = [
-  "embezzlement charged town OR city OR county OR treasurer OR clerk",
-  "embezzled sentenced OR indicted OR charged",
-  "mayor OR councilman OR commissioner indicted bribery OR corruption OR kickbacks",
-  "business owner charged fraud embezzlement employees"
+  "embezzlement charged treasurer OR clerk OR bookkeeper OR township OR county",
+  "embezzled charged OR indicted OR sentenced",
+  "official charged bribery OR kickbacks OR corruption",
+  "charged embezzling from employer OR nonprofit OR church OR school"
 ];
+
+// A pick must be about corruption, and about the United States. (29 Sep 2026: the loose search once
+// picked "Ex-Hiscox chief executive set for City of London mayoralty". Never again.)
+const ON_TOPIC = /\b(embezzl\w*|brib\w*|kickbacks?|corrupt\w*|misappropriat\w*|stole|stealing|theft|fraud\w*|extort\w*|money laundering|misuse of (public )?funds|pleads? guilty|indicted|charged|sentenced|convicted|arrested)\b/i;
+const MONEY_CRIME = /\b(embezzl\w*|brib\w*|kickbacks?|corrupt\w*|misappropriat\w*|stole|stealing|theft|fraud\w*|extort\w*|money laundering|misuse of (public )?funds)\b/i;
+const FOREIGN = /\b(London|U\.?K\.?|Britain|British|England|Scotland|Wales|Ireland|India|Pakistan|Bangladesh|Nigeria|Kenya|Ghana|South Africa|Australia|New Zealand|Canada|Canadian|Ontario|Philippines|China|Chinese|Malaysia|Singapore|Indonesia|Russia|Ukraine|Israel|Mexico|Brazil|Argentina|EU|European)\b/i;
+function relevant(title) { return MONEY_CRIME.test(title) && ON_TOPIC.test(title) && !FOREIGN.test(title); }
 
 const JSON_HEADERS = { "Content-Type": "application/json", "Cache-Control": "no-store" };
 function ok(obj, status) { return new Response(JSON.stringify(obj), { status: status || 200, headers: JSON_HEADERS }); }
@@ -41,6 +48,14 @@ export async function onRequestGet(context) {
     const today = nyDate();
     const archive = await readArchive(kv);
     let story = archive.find(a => a.date === today) || null;
+    // An automatic pick that fails the relevance test is thrown out and picked again. Hand-set stories stay.
+    const badAuto = story && story.auto && !relevant(story.title);
+    if (badAuto) {
+      archive.splice(archive.indexOf(story), 1);
+      story = null;
+    }
+    // Earlier days' bad automatic picks are hidden from the archive list too.
+    for (let i = archive.length - 1; i >= 0; i--) if (archive[i].auto && !relevant(archive[i].title)) archive.splice(i, 1);
 
     if (!story) {
       story = await pick(archive);
@@ -103,6 +118,7 @@ async function pick(archive) {
         const res = await fetch(src, { headers: { "User-Agent": UA, "Accept": "application/rss+xml, text/xml, */*" } });
         if (!res.ok) continue;
         const items = parse(await res.text())
+          .filter(it => relevant(it.title))
           .filter(it => !used.has(fp(it.title)))
           .sort((a, b) => Date.parse(b.pubDate || 0) - Date.parse(a.pubDate || 0));
         if (items.length) return items[0];

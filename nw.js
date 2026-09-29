@@ -77,12 +77,13 @@
     var build = el.getAttribute("data-build") || "";
     el.innerHTML =
       '<footer class="site"><div class="wrap">'
-      + '<div class="fnav">' + NAV.map(function (n) { return '<a href="' + n[0] + '">' + n[1] + "</a>"; }).join("") + "</div>"
+      + '<div class="fnav">' + NAV.map(function (n) { return '<a href="' + n[0] + '">' + n[1] + "</a>"; }).join("")
+      + '<a href="/editor.html">About the editor</a></div>'
       + "<p><b>How we report.</b> Newsweed serves the cannabis-aware audience and the general public with respect. "
       + "We do not promote or put down anyone who uses cannabis, and we never promote the use of alcohol or any drug. "
       + "On health we report published results, medical and holistic, not hype. Headlines from other outlets link to "
       + "the original publisher. Nothing here is medical, legal or investment advice.</p>"
-      + "<p><b>Disclosure.</b> Newsweed.com is published by Mark Nejmeh, who is the plaintiff in "
+      + '<p><b>Disclosure.</b> Newsweed.com is published by <a href="/editor.html">Mark Nejmeh</a>, who is the plaintiff in '
       + '<i>Nejmeh v. Theriva Biologics, Inc.</i>, No. 3:26-cv-00705 (D. Nev.) (<a href="https://nejmehvstheriva.com" rel="noopener">the filings</a>), '
       + "and holds shares of Theriva Biologics. He also runs Warrant Wire, JobCreation.us, WiseSleuth, ACHplug and AdHotBox, which are promoted on this site.</p>"
       + '<div class="forsale" id="acquire"><b>Newsweed.com is for sale.</b> The site keeps publishing while it is listed. '

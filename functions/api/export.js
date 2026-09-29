@@ -4,6 +4,10 @@
 //   /api/export?admin=YOUR_KEY&type=emails       -> email signups + giveaway entries
 //   /api/export?admin=YOUR_KEY&type=journalists  -> roster: name, email, beat, location, link
 //   /api/export?admin=YOUR_KEY&type=tips         -> submitted tips, approved and pending
+//   /api/export?admin=YOUR_KEY&type=suggestions  -> the suggestions page
+//   /api/export?admin=YOUR_KEY&type=members      -> chat members (signed in with Google)
+//
+// BUILT 2026-09-29 · export-2a
 //
 // Uses the same TIP_ADMIN_KEY you set in Cloudflare, and the same EMAIL_LIST binding.
 // Easiest way in: newsweed.com/tips-admin.html — enter your key, click a download button.
@@ -101,20 +105,44 @@ export async function onRequestGet(context) {
       );
     }
 
-    // ---- Email list (everything that isn't a journalist, tip, or rate-limit marker) ----
+    // ---- Suggestions ----
+    if (type === "suggestions") {
+      const recs = await readAll(context.env, "sugg:");
+      const rows = recs
+        .map(r => r.data || {})
+        .sort((a, b) => (String(a.submitted) < String(b.submitted) ? 1 : -1))
+        .map(d => [d.submitted, d.kind, d.text, d.name, d.email, d.country]);
+      return csvFile(
+        ["Submitted", "Kind", "Suggestion", "Name", "Email", "Country"],
+        rows,
+        "newsweed-suggestions-" + stamp() + ".csv"
+      );
+    }
+
+    // ---- Chat members ----
+    if (type === "members") {
+      const recs = await readAll(context.env, "member:");
+      const rows = recs
+        .map(r => r.data || {})
+        .sort((a, b) => (String(a.joined) < String(b.joined) ? 1 : -1))
+        .map(d => [d.name, d.email, d.joined, d.lastSeen, d.banned ? "yes" : ""]);
+      return csvFile(
+        ["Name", "Email", "Joined", "Last seen", "Banned"],
+        rows,
+        "newsweed-members-" + stamp() + ".csv"
+      );
+    }
+
+    // ---- Email list: opt-ins are stored under the bare address (no "prefix:") ----
     const recs = await readAll(context.env, null);
     const rows = recs
-      .filter(r =>
-        !r.key.startsWith("journalist:") &&
-        !r.key.startsWith("tip:") &&
-        !r.key.startsWith("tipgate:")
-      )
+      .filter(r => r.key.indexOf(":") === -1 && r.key.indexOf("@") > -1)
       .map(r => {
         const d = r.data || {};
         // subscribe.js may store either a JSON record or a plain string —
         // fall back to the key itself, which is the email address.
         const email = d.email || (r.key.indexOf("@") > -1 ? r.key.replace(/^[^:]*:/, "") : r.key);
-        const when = d.subscribed || d.signedUp || d.date || d.timestamp || "";
+        const when = d.subscribedAt || d.subscribed || d.signedUp || d.date || d.timestamp || "";
         const source = d.source || "";
         return [email, source, d.country || "", when];
       })

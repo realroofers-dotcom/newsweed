@@ -1,0 +1,75 @@
+<!-- BUILT 2026-09-29 · newsweed corruptmen-1a
+     CorruptMen: one story a day on political and business corruption in an American town,
+     embezzlement first. The day's story is picked by /api/corruptmen and can be replaced by
+     hand (with a written summary) from tips-admin.html. Every story links to the original reporting. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CorruptMen — Newsweed</title>
+<meta name="description" content="CorruptMen: a story a day on political and business corruption in American towns, embezzlement first. Linked to the original reporting.">
+<link rel="canonical" href="https://newsweed.com/corruptmen.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=2a">
+</head>
+<body>
+<div id="nw-top"></div>
+
+<main class="page">
+  <h1 style="color:var(--red)">CorruptMen</h1>
+  <p class="lede">One story a day on political and business corruption somewhere in the United States: town halls, school boards, county offices, and companies. Embezzlement first, because it is the theft of money other people trusted someone with.</p>
+
+  <div class="box" style="margin-bottom:26px">
+    <p><b>How we handle it.</b> A charge is an allegation. Everyone named is presumed innocent unless and until a court finds otherwise. Each story links to the outlet that reported it, and we report outcomes (acquittals and dismissals too) when they come.</p>
+    <p>Know about corruption in your town? <a href="/newsroom.html#tipline" style="color:var(--navy)">Send a tip</a> or <a href="/chat.html" style="color:var(--navy)">report it in the chat room</a>.</p>
+  </div>
+
+  <div class="kicker red"><h2>Today</h2></div>
+  <div class="cm-card" id="today" style="margin-bottom:30px"><div class="loading">Loading…</div></div>
+
+  <div class="kicker"><h2>Past 30 days</h2></div>
+  <div id="archive"><div class="loading">Loading…</div></div>
+
+  <form class="signup" data-subscribe="corruptmen" style="margin-top:34px">
+    <h3>Get CorruptMen by email</h3>
+    <p class="sub">The story of the day arrives with the Newsweed Daily.</p>
+    <div class="form">
+      <div class="inline">
+        <label for="cEmail" class="vh">Email address</label>
+        <input type="email" id="cEmail" placeholder="you@email.com" autocomplete="email" required>
+        <button class="btn" type="submit">Sign me up</button>
+      </div>
+      <label class="chk"><input type="checkbox" name="consent" required> Yes, email me the Newsweed Daily. I can unsubscribe at any time.</label>
+      <div class="status" role="status" aria-live="polite"></div>
+    </div>
+  </form>
+</main>
+
+<div id="nw-foot" data-build="Built 2026-09-29 · corruptmen-1a"></div>
+<script src="/nw.js?v=2a"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+  function card(s) {
+    return '<div class="date">' + E(s.date) + (s.place ? " · " + E(s.place) : "") + '</div>'
+      + '<h3><a href="' + E(U(s.link)) + '" target="_blank" rel="noopener">' + E(s.title) + '</a></h3>'
+      + (s.summary ? '<p>' + E(s.summary) + '</p>' : "")
+      + '<div class="src">Reported by ' + E(s.source || "the original publisher") + '</div>';
+  }
+  NW.get("/api/corruptmen").then(function (d) {
+    document.getElementById("today").innerHTML = d.today ? card(d.today) : "<p>Today's story is being chosen. Check back shortly.</p>";
+    var past = (d.archive || []).filter(function (a) { return !d.today || a.date !== d.today.date; });
+    document.getElementById("archive").innerHTML = past.length
+      ? past.map(function (s) { return '<div class="cm-card" style="margin-bottom:10px">' + card(s) + '</div>'; }).join("")
+      : '<p class="note">The archive starts today.</p>';
+  }).catch(function () {
+    document.getElementById("today").innerHTML = "<p>Unavailable right now.</p>";
+    document.getElementById("archive").innerHTML = "";
+  });
+})();
+</script>
+</body>
+</html>

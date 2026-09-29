@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Newsweed — Tip queue</title>
+<title>Newsweed — Admin</title>
+<!-- BUILT 2026-09-29 · tips-admin-2a: + suggestions & members downloads, CorruptMen override, chat moderation -->
 <style>
   :root { --ink:#ffffff; --bone:#14150f; --panel:#f5f5f0; --panel-line:#e0e0d6;
           --slate:#6b6b5e; --moss:#0f9d58; --moss-bright:#0b7a43; --ember:#2e3192; }
@@ -66,8 +67,41 @@
       <button data-type="emails">Email list</button>
       <button data-type="journalists">Journalist roster</button>
       <button data-type="tips">All tips</button>
+      <button data-type="suggestions">Suggestions</button>
+      <button data-type="members">Chat members</button>
     </div>
     <div class="dlstatus" id="dlStatus"></div>
+  </div>
+
+  <!-- 2026-09-29 · admin-2a: CorruptMen and chat moderation -->
+  <div class="exports" id="cmAdmin" hidden>
+    <h2>CorruptMen: set today's story by hand</h2>
+    <div class="sub">Replaces the automatic pick for that day. Link to the reporting; write the summary as allegations ("charged with", "accused of"), never as findings.</div>
+    <input class="headline" id="cmTitle" placeholder="Headline">
+    <input class="headline" id="cmLink" placeholder="Link to the original reporting (https://…)">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input class="headline" id="cmSource" placeholder="Publisher" style="flex:1;min-width:160px">
+      <input class="headline" id="cmPlace" placeholder="Town, State" style="flex:1;min-width:160px">
+      <input class="headline" id="cmDate" type="date" style="flex:1;min-width:160px">
+    </div>
+    <textarea class="headline" id="cmSummary" rows="4" placeholder="Short summary (optional, up to 700 characters)"></textarea>
+    <div class="acts"><button class="ok" id="cmSave">Save story</button></div>
+    <div class="dlstatus" id="cmStatus"></div>
+  </div>
+
+  <div class="exports" id="chatAdmin" hidden>
+    <h2>Chat room moderation</h2>
+    <div class="sub">Hide a post that breaks the rules. To stop a member posting, ban their email (see the Chat members download).</div>
+    <div class="dl">
+      <button data-room="report">Load "Report the news"</button>
+      <button data-room="comment">Load "Comment on the news"</button>
+    </div>
+    <div id="chatOut"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <input class="headline" id="banEmail" placeholder="Member email to ban" style="flex:1;min-width:200px;margin:0">
+      <div class="acts"><button class="no" id="banBtn">Ban from posting</button></div>
+    </div>
+    <div class="dlstatus" id="chatStatus"></div>
   </div>
 </div>
 
@@ -100,6 +134,8 @@
       const data = await res.json();
       if (data.error) { out.innerHTML = '<div class="err">' + esc(data.error) + '</div>'; return; }
       document.getElementById("exports").hidden = false;
+      document.getElementById("cmAdmin").hidden = false;
+      document.getElementById("chatAdmin").hidden = false;
       const tips = data.pending || [];
       if (!tips.length) { out.innerHTML = '<div class="note">Queue is empty. Nothing waiting on you.</div>'; return; }
       out.innerHTML = tips.map(t => `
@@ -184,6 +220,55 @@
         btn.disabled = false;
       }
     });
+  });
+
+  function k() { return encodeURIComponent(keyInput.value.trim()); }
+  async function postJson(url, body) {
+    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    return res.json();
+  }
+
+  document.getElementById("cmSave").addEventListener("click", async () => {
+    const st = document.getElementById("cmStatus");
+    st.textContent = "Saving…";
+    try {
+      const d = await postJson("/api/corruptmen?admin=" + k(), {
+        title: document.getElementById("cmTitle").value, link: document.getElementById("cmLink").value,
+        source: document.getElementById("cmSource").value, place: document.getElementById("cmPlace").value,
+        date: document.getElementById("cmDate").value, summary: document.getElementById("cmSummary").value
+      });
+      st.textContent = d.success ? "Saved for " + d.story.date + "." : (d.error || "Failed.");
+    } catch (e) { st.textContent = "Failed."; }
+  });
+
+  document.querySelectorAll("#chatAdmin .dl button").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const room = btn.dataset.room, box = document.getElementById("chatOut");
+      box.innerHTML = '<div class="note">Loading…</div>';
+      const d = await (await fetch("/api/chat?room=" + room)).json();
+      const list = d.messages || [];
+      box.innerHTML = list.length ? list.map(m => `
+        <div class="tip" data-id="${esc(m.id)}">
+          <div class="stamp"><b>${esc(m.name)}</b> · ${esc(when(m.at))}</div>
+          <div class="details">${esc(m.text)}${m.link ? "\n" + esc(m.link) : ""}</div>
+          <div class="acts"><button class="no">Hide this post</button></div>
+        </div>`).join("") : '<div class="note">No posts.</div>';
+      box.querySelectorAll(".tip").forEach(card => {
+        card.querySelector("button").addEventListener("click", async () => {
+          if (!confirm("Hide this post?")) return;
+          const r = await postJson("/api/chat?admin=" + k(), { action: "hide", room, id: card.dataset.id });
+          if (r.success) card.style.opacity = "0.35"; else alert(r.error || "Failed.");
+        });
+      });
+    });
+  });
+
+  document.getElementById("banBtn").addEventListener("click", async () => {
+    const email = document.getElementById("banEmail").value.trim();
+    const st = document.getElementById("chatStatus");
+    if (!email || !confirm("Ban " + email + " from posting?")) return;
+    const r = await postJson("/api/chat?admin=" + k(), { action: "ban", email });
+    st.textContent = r.success ? "Banned." : (r.error || "Failed.");
   });
 
   document.getElementById("loadBtn").addEventListener("click", load);

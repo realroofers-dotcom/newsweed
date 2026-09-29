@@ -1,0 +1,139 @@
+<!-- BUILT 2026-09-29 · newsweed chat-1a
+     Two rooms only: Report the news · Comment on the news. No other rooms.
+     Not anonymous: posting needs Google sign-in (/api/auth), and each post shows the member's name.
+     Reading is open to everyone. Moderation: tips-admin.html (hide a post, ban a member). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat room — Newsweed</title>
+<meta name="description" content="The Newsweed chat room: report important news, or comment on the news. Real names, no anonymous posts.">
+<link rel="canonical" href="https://newsweed.com/chat.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=2a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin: 0 0 16px; }
+.tabs button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 16px; font: 600 14px var(--sans); color: var(--ink3); cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--navy); border-bottom-color: var(--green); }
+.me { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink2); margin-bottom: 10px; }
+.me img { width: 28px; height: 28px; border-radius: 50%; }
+.me a { color: var(--navy); }
+.rules { font-size: 13px; color: var(--ink2); }
+.rules li { margin-bottom: 5px; }
+.msg img.av { width: 22px; height: 22px; border-radius: 50%; vertical-align: -6px; margin-right: 6px; }
+#feed { min-height: 200px; }
+</style>
+</head>
+<body>
+<div id="nw-top"></div>
+
+<main class="page" style="max-width:900px">
+  <h1>Chat room</h1>
+  <p class="lede">Two rooms, for news only. Report something important that is happening, or comment on the news. Everyone posts under their real name.</p>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="t-report" aria-selected="true" data-room="report">Report the news</button>
+    <button role="tab" id="t-comment" aria-selected="false" data-room="comment">Comment on the news</button>
+  </div>
+
+  <div id="composer" class="box" style="margin-bottom:18px">
+    <div class="loading">Checking sign-in…</div>
+  </div>
+
+  <div id="feed" aria-live="polite"><div class="loading">Loading…</div></div>
+
+  <div class="box" style="margin-top:26px">
+    <h3>Room rules</h3>
+    <ul class="rules">
+      <li>News only: report it or comment on it. No selling, no promotion, no spam.</li>
+      <li>Respect. No insults, no slurs, no threats, and no putting anyone down for who they are, or for using or not using cannabis.</li>
+      <li>No promoting alcohol or drug use.</li>
+      <li>When you report, say what happened, where, and how you know. Add a link if there is one.</li>
+      <li>Don't accuse a named private person of a crime unless a court record or a news report says so. Link it.</li>
+      <li>Posts are reader content, not Newsweed reporting. Posts that break the rules are removed, and repeat offenders lose posting rights.</li>
+    </ul>
+  </div>
+</main>
+
+<div id="nw-foot" data-build="Built 2026-09-29 · chat-1a"></div>
+<script src="/nw.js?v=2a"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+  var room = (location.hash === "#comment") ? "comment" : "report";
+  var me = null, ready = false;
+
+  function linkify(text) { return E(text); }
+
+  function renderComposer() {
+    var el = document.getElementById("composer");
+    if (!me) {
+      el.innerHTML = ready
+        ? '<p><b>Sign in to post.</b> No anonymous posts: your name appears on everything you write. Your email is never shown.</p>'
+          + '<a class="btn" href="/api/auth/google?back=' + encodeURIComponent("/chat.html#" + room) + '">Sign in with Google</a>'
+        : '<p><b>Posting opens soon.</b> Sign-in is being switched on. You can read the room now.</p>';
+      return;
+    }
+    if (me.banned) { el.innerHTML = '<p>Your posting privileges have been removed.</p>'; return; }
+    var ph = room === "report"
+      ? "What happened, where, and how do you know?"
+      : "Your comment on the news";
+    el.innerHTML = '<div class="me">' + (me.picture ? '<img src="' + E(U(me.picture)) + '" alt="" referrerpolicy="no-referrer">' : "")
+      + 'Posting as <b>' + E(me.name) + '</b> · <a href="/api/auth/logout?back=/chat.html">sign out</a></div>'
+      + '<form class="form" id="postForm"><label for="ptext" class="vh">Message</label>'
+      + '<textarea id="ptext" maxlength="600" placeholder="' + E(ph) + '" required style="min-height:90px"></textarea>'
+      + '<input type="url" id="plink" placeholder="Link to a source (optional)">'
+      + '<div><button class="btn" type="submit" id="pbtn">Post</button></div>'
+      + '<div class="status" id="pst" role="status"></div></form>';
+    document.getElementById("postForm").addEventListener("submit", send);
+  }
+
+  function msgHtml(m) {
+    return '<div class="msg">' + (m.picture ? '<img class="av" src="' + E(U(m.picture)) + '" alt="" referrerpolicy="no-referrer">' : "")
+      + '<span class="who">' + E(m.name) + '</span><span class="when">' + E(NW.stamp(m.at)) + '</span>'
+      + '<p>' + linkify(m.text) + (m.link ? ' <a href="' + E(U(m.link)) + '" target="_blank" rel="noopener nofollow ugc">source</a>' : "") + '</p></div>';
+  }
+
+  function load() {
+    NW.get("/api/chat?room=" + room).then(function (d) {
+      var list = d.messages || [];
+      document.getElementById("feed").innerHTML = list.length ? list.map(msgHtml).join("")
+        : '<p class="note">Nothing here yet. ' + (room === "report" ? "Report the first story." : "Start the conversation.") + '</p>';
+    }).catch(function () { document.getElementById("feed").innerHTML = '<p class="note">The room is unavailable right now.</p>'; });
+  }
+
+  function send(e) {
+    e.preventDefault();
+    var btn = document.getElementById("pbtn"), st = document.getElementById("pst");
+    btn.disabled = true; st.className = "status"; st.textContent = "";
+    NW.post("/api/chat", { room: room, text: document.getElementById("ptext").value, link: document.getElementById("plink").value })
+      .then(function (d) {
+        if (d.success) {
+          document.getElementById("postForm").reset();
+          var feed = document.getElementById("feed");
+          if (feed.querySelector(".note")) feed.innerHTML = "";
+          feed.insertAdjacentHTML("afterbegin", msgHtml(d.message));
+        } else { st.textContent = d.error || "Something went wrong."; st.className = "status err"; }
+      })
+      .catch(function () { st.textContent = "Something went wrong."; st.className = "status err"; })
+      .then(function () { btn.disabled = false; });
+  }
+
+  function setRoom(r) {
+    room = r;
+    document.querySelectorAll(".tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-room") === r ? "true" : "false"); });
+    history.replaceState(null, "", "#" + r);
+    renderComposer(); load();
+  }
+  document.querySelectorAll(".tabs button").forEach(function (b) { b.addEventListener("click", function () { setRoom(b.getAttribute("data-room")); }); });
+
+  NW.get("/api/auth/me").then(function (d) { me = d.member; ready = !!d.signInReady; }).catch(function () {}).then(function () { setRoom(room); });
+  setInterval(load, 30000);
+})();
+</script>
+</body>
+</html>

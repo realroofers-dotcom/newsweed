@@ -1,0 +1,117 @@
+<!-- BUILT 2026-09-29 · newsweed desk-1a
+     PRIVATE. Luis Orozco files his dispatches here with his own key (env var LUIS_KEY).
+     Only his key can publish under his name. Mark's TIP_ADMIN_KEY can delete, not write. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Desk — Newsweed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=2a">
+</head>
+<body>
+<main class="page">
+  <h1>The Medellín desk</h1>
+  <p class="lede">File a dispatch / Enviar una nota. It goes live on newsweed.com as soon as you publish, under the byline <b>Luis Orozco</b>.</p>
+
+  <div class="form" style="margin-bottom:20px">
+    <label for="key" class="vh">Desk key</label>
+    <input type="text" id="key" placeholder="Desk key / clave" autocomplete="off" style="-webkit-text-security:disc">
+  </div>
+
+  <form class="form box" id="f" style="padding:20px">
+    <input type="hidden" id="editId">
+    <input type="text" id="title" placeholder="Headline / Titular" maxlength="160" required>
+    <input type="text" id="place" placeholder="Dateline, e.g. Medellín / Bogotá / Caracas" maxlength="80">
+    <textarea id="body" placeholder="Dispatch text. Leave a blank line between paragraphs." style="min-height:320px" required></textarea>
+    <div class="row2" style="align-items:center">
+      <div><button class="btn" type="submit" id="go">Publish</button> <button class="btn ghost" type="button" id="clear">New</button></div>
+    </div>
+    <div class="status" id="st" role="status"></div>
+    <div class="fine">Tips: say where and when, and how you know. Name your sources or say why you can't. Report with respect; no promotion of alcohol or drugs.</div>
+  </form>
+
+  <div class="kicker" style="margin-top:28px"><h2>Byline line</h2></div>
+  <form class="form" id="bioForm">
+    <input type="text" id="bio" maxlength="160" placeholder="Journalist · Medellín, Colombia">
+    <div><button class="btn ghost" type="submit">Save byline</button></div>
+    <div class="status" id="bioSt"></div>
+  </form>
+
+  <div class="kicker" style="margin-top:28px"><h2>Your dispatches</h2></div>
+  <div id="mine"><div class="loading">Loading…</div></div>
+</main>
+
+<script src="/nw.js?v=2a"></script>
+<script>
+(function () {
+  var E = NW.esc, list = [];
+  var keyEl = document.getElementById("key");
+  try { keyEl.value = sessionStorage.getItem("nwDeskKey") || ""; } catch (e) {}
+  function key() { var k = keyEl.value.trim(); try { sessionStorage.setItem("nwDeskKey", k); } catch (e) {} return encodeURIComponent(k); }
+  function v(id) { return document.getElementById(id).value; }
+
+  function load() {
+    NW.get("/api/dispatch").then(function (d) {
+      list = d.dispatches || [];
+      if (d.bio) document.getElementById("bio").value = d.bio;
+      document.getElementById("mine").innerHTML = list.length ? list.map(function (x, i) {
+        return '<div class="msg"><span class="who">' + E(x.title) + '</span><span class="when">' + E(NW.stamp(x.published)) + '</span>'
+          + '<p><a href="/luis.html?id=' + encodeURIComponent(x.id) + '" target="_blank">view</a> · <a href="#" data-edit="' + i + '">edit</a> · <a href="#" data-del="' + i + '">delete</a></p></div>';
+      }).join("") : '<p class="note">Nothing filed yet.</p>';
+    });
+  }
+
+  document.getElementById("mine").addEventListener("click", function (e) {
+    var t = e.target;
+    if (t.dataset.edit) {
+      e.preventDefault();
+      var x = list[+t.dataset.edit];
+      document.getElementById("editId").value = x.id;
+      document.getElementById("title").value = x.title;
+      document.getElementById("place").value = x.place || "";
+      document.getElementById("body").value = x.body;
+      document.getElementById("go").textContent = "Save changes";
+      window.scrollTo(0, 0);
+    }
+    if (t.dataset.del) {
+      e.preventDefault();
+      var y = list[+t.dataset.del];
+      if (!confirm("Delete \"" + y.title + "\"?")) return;
+      NW.post("/api/dispatch?key=" + key(), { action: "delete", id: y.id }).then(function (r) { if (!r.success) alert(r.error || "Failed."); load(); });
+    }
+  });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    document.getElementById("f").reset(); document.getElementById("editId").value = ""; document.getElementById("go").textContent = "Publish";
+  });
+
+  document.getElementById("f").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = document.getElementById("st"), editId = v("editId");
+    st.className = "status"; st.textContent = "Sending…";
+    var body = { title: v("title"), place: v("place"), body: v("body") };
+    if (editId) { body.action = "edit"; body.id = editId; }
+    NW.post("/api/dispatch?key=" + key(), body).then(function (r) {
+      if (r.success) { st.textContent = editId ? "Saved." : "Published."; document.getElementById("clear").click(); load(); }
+      else { st.textContent = r.error || "Failed."; st.className = "status err"; }
+    }).catch(function () { st.textContent = "Failed."; st.className = "status err"; });
+  });
+
+  document.getElementById("bioForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = document.getElementById("bioSt");
+    NW.post("/api/dispatch?key=" + key(), { action: "bio", bio: v("bio") }).then(function (r) {
+      st.textContent = r.success ? "Saved." : (r.error || "Failed.");
+    });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

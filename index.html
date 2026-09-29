@@ -1,783 +1,301 @@
+<!-- BUILT 2026-09-29 · newsweed index-2a
+     Newsweed is now a news site (Mark, 29 Sep 2026). It stays for sale: the line at the
+     top of every page and the block in the footer. The old for-sale landing page is in
+     git history (commit d876039) if anything from it is wanted back.
+
+     LEFT    legal cannabis news · our projects (WiseSleuth first) · AdHotBox
+     CENTER  news for everyone · email opt-in · markets · CorruptMen · Medellín desk · world · tribal nations · chat
+     RIGHT   warrants · crime · medical & holistic · sports · court cases · AdHotBox
+
+     ⚠ Respect: we do not promote or put down cannabis users, and we never promote alcohol
+       or drug use. /api/feed drops product/deal headlines and medical hype before they get here. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Newsweed.com — For Sale | A News Brand for the World's Cannabis-Aware Audience</title>
-<meta name="description" content="Newsweed.com is for sale. A credible daily-news brand positioned for a worldwide audience of hundreds of millions who use, used to use, are considering, or simply think about cannabis." />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newsweed — The news that matters, reported with respect</title>
+<meta name="description" content="Daily news for everyone: top stories, markets, world news from our Medellín desk, tribal nations, crime and warrants, medical and holistic research, sports, legal cannabis news, and CorruptMen, a story a day on corruption and embezzlement in American towns.">
+<link rel="canonical" href="https://newsweed.com/">
+<meta property="og:title" content="Newsweed — The news that matters, reported with respect">
+<meta property="og:description" content="Top stories, markets, world, tribal nations, CorruptMen and more. Reported with respect.">
+<meta property="og:url" content="https://newsweed.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #ffffff;
-    --panel: #f5f5f0;
-    --panel-line: #e2e0d5;
-    --moss: #00a651;
-    --moss-bright: #058a44;
-    --ember: #2e3192;
-    --ember-bright: #4145b0;
-    --bone: #14150f;
-    --slate: #6b6d63;
-    --max-w: 1180px;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0; background: var(--ink); color: var(--bone);
-    font-family: 'IBM Plex Sans', sans-serif; line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
-  a { color: inherit; }
-  .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
-  .mono { font-family: 'IBM Plex Mono', monospace; }
-  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-  .ticker-bar { background: var(--panel); border-bottom: 1px solid var(--panel-line); overflow: hidden; position: sticky; top: 0; z-index: 50; }
-  .ticker-track { display: flex; width: max-content; animation: scroll-left 70s linear infinite; }
-  .ticker-track:hover { animation-play-state: paused; }
-  @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .ticker-item { display: flex; align-items: center; gap: 10px; padding: 10px 28px; white-space: nowrap; font-size: 13px; border-right: 1px solid var(--panel-line); text-decoration: none; }
-  .tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 7px; border-radius: 3px; color: var(--ink); background: var(--moss); flex-shrink: 0; }
-  .tag.crime, .tag.obituaries, .tag.business { background: var(--ember); }
-  .ticker-item span.headline { color: var(--bone); opacity: 0.9; }
-  @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
-  header.site { padding: 28px 0 0; }
-  nav { display: flex; align-items: center; justify-content: space-between; }
-  .logo-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 0px; }
-  .logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; line-height: 1; letter-spacing: -0.02em; color: var(--ember); margin-top: 4px; }
-  .logo .dot { color: var(--moss-bright); font-size: 18px; font-weight: 600; }
-  .nav-cta { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; background: var(--ember); color: var(--ink); padding: 10px 18px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: background 0.15s ease; }
-  .nav-cta:hover { background: var(--ember-bright); }
-  .sale-banner { background: var(--ember); color: var(--ink); text-align: center; padding: 10px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.02em; }
-  .sale-banner a { text-decoration: underline; font-weight: 600; }
-  .hero { padding: 80px 0 60px; border-bottom: 1px solid var(--panel-line); }
-  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--moss-bright); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; }
-  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ember); display: inline-block; animation: pulse 2s ease-in-out infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .hero h1 { font-size: clamp(36px, 5.5vw, 60px); line-height: 1.05; max-width: 920px; }
-  .hero h1 em { font-style: italic; color: var(--moss-bright); }
-  .hero p.lede { margin-top: 18px; font-size: 18px; color: var(--slate); max-width: 680px; line-height: 1.6; }
-  .hero p.lede:first-of-type { margin-top: 24px; }
-  .hero p.lede-contact { font-weight: 600; color: var(--bone); }
-  .hero p.lede-contact a { color: var(--ember-bright); text-decoration: none; border-bottom: 1px solid currentColor; }
-  .hero-cta-row { margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--panel-line); display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; max-width: 900px; }
-  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-  .giveaway { flex: 1 1 400px; max-width: 520px; }
-  @media (max-width: 860px) {
-    .hero-cta-row { gap: 26px; }
-    .hero-actions { order: -1; width: 100%; }
-    .giveaway { flex: 1 1 100%; }
-  }
-  .giveaway-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink); background: var(--moss); padding: 4px 8px; border-radius: 3px; font-weight: 500; }
-  .giveaway p.sub { margin: 10px 0 12px; font-size: 14px; color: var(--slate); line-height: 1.5; }
-  .giveaway p.sub strong { color: var(--bone); font-weight: 600; }
-  .giveaway-form { display: flex; gap: 8px; flex-wrap: wrap; }
-  .giveaway-form input[type="email"] { flex: 1; min-width: 200px; padding: 12px 14px; border-radius: 5px; border: 1px solid var(--panel-line); font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; }
-  .giveaway-form input[type="email"]:focus { outline: 2px solid var(--moss); outline-offset: 1px; }
-  .giveaway-form button { background: var(--ember); color: var(--ink); font-weight: 600; padding: 12px 20px; border-radius: 5px; border: none; font-size: 14px; cursor: pointer; transition: background 0.15s ease; }
-  .giveaway-form button:hover { background: var(--ember-bright); }
-  .giveaway-form button:disabled { opacity: 0.6; cursor: default; }
-  .giveaway-status { margin-top: 10px; font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
-  .giveaway-rules { margin-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; line-height: 1.5; color: var(--slate); }
-  @media (max-width: 640px) { .giveaway { padding: 22px 20px 20px; } .giveaway-form input[type="email"], .giveaway-form button { width: 100%; flex: none; } }
-  .btn-primary { background: var(--ember); color: var(--ink); font-weight: 600; padding: 14px 26px; border-radius: 5px; text-decoration: none; font-size: 15px; transition: background 0.15s ease, transform 0.15s ease; display: inline-block; }
-  .btn-primary:hover { background: var(--ember-bright); transform: translateY(-1px); }
-  .btn-secondary { background: transparent; color: var(--bone); border: 1px solid var(--panel-line); font-weight: 500; padding: 13px 24px; border-radius: 5px; text-decoration: none; font-size: 15px; display: inline-block; }
-  .btn-secondary:hover { border-color: var(--moss); }
-  section { padding: 60px 0; border-bottom: 1px solid var(--panel-line); }
-  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 30px; flex-wrap: wrap; gap: 12px; }
-  .section-head h2 { font-size: 26px; }
-  .section-head .meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.08em; }
-  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-  .stat-card { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 8px; padding: 26px; }
-  .stat-card .num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 600; color: var(--moss-bright); line-height: 1; }
-  .stat-card .label { margin-top: 10px; font-size: 14px; color: var(--bone); }
-  .stat-card .src { margin-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.05em; }
-  .stat-note { margin-top: 24px; font-size: 15px; color: var(--slate); max-width: 760px; line-height: 1.7; }
-
-  .quad-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-  .quad-card { border-radius: 10px; padding: 26px; color: var(--ink); }
-  .quad-card .qnum { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; opacity: 0.8; margin-bottom: 10px; }
-  .quad-card h3 { font-size: 19px; color: var(--ink); margin-bottom: 8px; }
-  .quad-card p { font-size: 14px; line-height: 1.6; margin: 0; opacity: 0.92; }
-  .quad-card.c1 { background: var(--moss-bright); }
-  .quad-card.c2 { background: #2f7a52; }
-  .quad-card.c3 { background: var(--ember); }
-  .quad-card.c4 { background: #4145b0; }
-
-  .thesis { background: var(--panel); border-radius: 10px; padding: 40px; margin-top: 34px; }
-  .thesis p.big { font-family: 'Fraunces', serif; font-size: clamp(20px, 2.4vw, 28px); line-height: 1.4; color: var(--bone); font-weight: 500; }
-  .thesis p.big em { color: var(--ember-bright); font-style: italic; }
-  .thesis .sub { margin-top: 16px; font-size: 15px; color: var(--slate); line-height: 1.7; max-width: 800px; }
-
-  .feed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-  .card { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 8px; padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.15s ease, transform 0.15s ease; }
-  .card:hover { border-color: var(--moss); transform: translateY(-2px); }
-  .card .tag { align-self: flex-start; }
-  .card h3 { font-size: 18px; line-height: 1.3; color: var(--bone); }
-  .card .excerpt { font-size: 14px; color: var(--slate); line-height: 1.6; }
-  .card .date { margin-top: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); }
-  .loading-note, .empty-note { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--slate); }
-  .list-item { display: flex; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--panel-line); text-decoration: none; align-items: baseline; flex-wrap: wrap; }
-  .list-item:last-child { border-bottom: none; }
-  .list-item h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 16px; color: var(--bone); margin: 0; flex: 1; min-width: 200px; }
-  .list-item .date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); white-space: nowrap; }
-  .callout { background: var(--panel); border-left: 3px solid var(--ember); border-radius: 4px; padding: 24px 28px; margin-top: 30px; }
-  .callout .k { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ember-bright); }
-  .callout p { margin: 10px 0 0; font-size: 15px; color: var(--bone); line-height: 1.6; }
-  .callout .src { margin-top: 10px; font-size: 12px; color: var(--slate); }
-  .newsroom { border-top: 1px solid var(--panel-line); }
-  .newsroom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .tipline { border-top: 1px solid var(--panel-line); }
-  .tipline-grid { display: grid; grid-template-columns: minmax(0,0.9fr) minmax(0,1.1fr); gap: 34px; align-items: start; }
-  .journo-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 34px; align-items: start; }
-  .journo-pitch p { font-size: 15px; color: var(--slate); line-height: 1.65; margin-bottom: 14px; max-width: 460px; }
-  .nr-card { border: 1px solid var(--panel-line); border-radius: 8px; padding: 26px; background: var(--panel); }
-  .nr-card h3 { font-size: 20px; margin-bottom: 8px; }
-  .nr-card p.nr-sub { font-size: 14px; color: var(--slate); line-height: 1.55; margin-bottom: 18px; }
-  .nr-count { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--panel-line); }
-  .nr-count .num { font-family: 'Fraunces', Georgia, serif; font-size: 42px; line-height: 1; color: var(--moss-bright); font-weight: 700; }
-  .nr-count .lab { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); max-width: 180px; line-height: 1.5; }
-  .nr-form { display: flex; flex-direction: column; gap: 10px; }
-  .nr-form input, .nr-form textarea, .nr-form select { width: 100%; padding: 11px 13px; border-radius: 5px; border: 1px solid var(--panel-line); font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; background: var(--ink); color: var(--bone); }
-  .nr-form textarea { min-height: 96px; resize: vertical; }
-  .nr-form input:focus, .nr-form textarea:focus { outline: 2px solid var(--moss); outline-offset: 1px; }
-  .nr-form .row2 { display: flex; gap: 10px; flex-wrap: wrap; }
-  .nr-form .row2 > * { flex: 1; min-width: 150px; }
-  .nr-form button { background: var(--ember); color: var(--ink); font-weight: 600; padding: 13px 22px; border-radius: 5px; border: none; font-size: 15px; cursor: pointer; align-self: flex-start; transition: background 0.15s ease; }
-  .nr-form button:hover { background: var(--ember-bright); }
-  .nr-form button:disabled { opacity: 0.6; cursor: default; }
-  .nr-hp { position: absolute; left: -9999px; opacity: 0; height: 0; }
-  .nr-status { font-size: 13px; font-weight: 500; min-height: 18px; color: var(--moss-bright); }
-  .nr-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; line-height: 1.6; color: var(--slate); margin-top: 4px; }
-  .nr-counter { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate); margin: -6px 0 2px; }
-  .tipwall { margin-top: 0; }
-  .tipwall-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-  .tipwall-head h3 { font-size: 20px; }
-  .tipwall-head .meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.08em; }
-  .tip-disclaimer { background: var(--panel); border-left: 3px solid var(--slate); border-radius: 0 5px 5px 0; padding: 13px 16px; margin-bottom: 16px; font-size: 13px; line-height: 1.6; color: var(--slate); max-width: 860px; }
-  .tip-disclaimer strong { color: var(--bone); }
-  .tip-row { display: flex; gap: 14px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--panel-line); font-size: 15px; line-height: 1.5; }
-  .tip-row:last-child { border-bottom: none; }
-  .tip-stamp { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--slate); white-space: nowrap; letter-spacing: 0.04em; flex-shrink: 0; min-width: 168px; }
-  .tip-stamp .place { color: var(--moss-bright); }
-  .tip-text { color: var(--bone); }
-  .tip-text a { color: var(--ember-bright); text-decoration: none; border-bottom: 1px solid currentColor; font-size: 12px; margin-left: 6px; }
-  .tip-empty { font-size: 14px; color: var(--slate); padding: 14px 0; }
-  @media (max-width: 700px) { .tip-row { flex-direction: column; gap: 4px; } .tip-stamp { min-width: 0; } }
-  .acquire-journos { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--moss-bright); margin: -6px 0 18px; }
-  @media (max-width: 860px) { .newsroom-grid, .tipline-grid, .journo-grid { grid-template-columns: 1fr; } }
-  .subscribe-strip h2 { font-size: clamp(26px, 3.6vw, 38px); max-width: 640px; margin: 0 auto 14px; }
-  .subscribe-strip p { color: var(--slate); max-width: 480px; margin: 0 auto 26px; font-size: 16px; }
-
-  .future-strip { background: var(--ember); color: var(--ink); text-align: center; padding: 56px 24px; border-bottom: 1px solid var(--panel-line); }
-  .future-strip h2 { font-size: clamp(24px, 3.2vw, 32px); max-width: 620px; margin: 0 auto 10px; color: var(--ink); }
-  .future-strip p { opacity: 0.88; max-width: 480px; margin: 0 auto 26px; font-size: 15px; line-height: 1.6; }
-  .future-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 460px; margin: 0 auto; }
-  .future-form input[type="email"] { flex: 1; min-width: 220px; padding: 13px 16px; border-radius: 5px; border: none; font-size: 15px; font-family: 'IBM Plex Sans', sans-serif; }
-  .future-form button { background: var(--moss-bright); color: var(--ink); font-weight: 600; padding: 13px 22px; border-radius: 5px; border: none; font-size: 15px; cursor: pointer; transition: background 0.15s ease; }
-  .future-form button:hover { background: #046b38; }
-  .future-form button:disabled { opacity: 0.6; cursor: default; }
-  .future-note { margin-top: 14px; font-size: 13px; opacity: 0.75; }
-  .future-status { margin-top: 14px; font-size: 14px; font-weight: 500; min-height: 20px; }
-
-  .acquire-section { padding: 64px 0; }
-  .acquire-box { display: flex; gap: 36px; align-items: center; flex-wrap: wrap; background: var(--panel); border: 1px solid var(--panel-line); border-radius: 14px; padding: 40px; }
-  .acquire-box img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 3px solid var(--ink); box-shadow: 0 4px 18px rgba(0,0,0,0.12); }
-  .acquire-info { flex: 1; min-width: 260px; }
-  .acquire-info .k { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--moss-bright); margin-bottom: 8px; }
-  .acquire-info h2 { font-size: 28px; margin-bottom: 6px; }
-  .acquire-info .price { font-family: 'Fraunces', serif; font-size: 34px; color: var(--ember-bright); margin: 6px 0 14px; }
-  .acquire-info p { font-size: 15px; color: var(--slate); max-width: 520px; line-height: 1.6; margin: 0 0 18px; }
-  .acquire-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(20,21,15,0.55); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
-  .modal-overlay.open { display: flex; }
-  .modal-box { background: var(--ink); border-radius: 12px; max-width: 440px; width: 100%; padding: 40px 32px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-  .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 26px; line-height: 1; color: var(--slate); cursor: pointer; padding: 4px; }
-  .modal-close:hover { color: var(--bone); }
-  .modal-box img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 18px; }
-  .modal-box h2 { font-size: 24px; }
-  .modal-box .price { font-family: 'Fraunces', serif; font-size: 40px; color: var(--ember-bright); margin: 14px 0; }
-  .modal-box p { color: var(--slate); font-size: 14px; margin: 0 auto 22px; }
-  footer { padding: 40px 24px 60px; }
-  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-  footer .brand { font-family: 'Fraunces', serif; font-size: 18px; }
-  footer .fine { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--slate); }
-  @media (max-width: 640px) { .hero { padding: 50px 0 40px; } section { padding: 44px 0; } .acquire-box { padding: 28px; } }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=2a">
 </head>
 <body>
 
-<div class="sale-banner">This domain and brand are for sale — $900,000 · <a href="#acquire">See acquisition details</a></div>
+<div id="nw-top"></div>
 
-<div class="ticker-bar">
-  <div class="ticker-track" id="tickerTrack">
-    <div class="ticker-item"><span class="tag mono">Live</span><span class="headline">Loading today's wire…</span></div>
-  </div>
-</div>
+<div class="board" aria-label="Markets"><div class="wrap" id="board"><span class="asof">Markets loading…</span></div></div>
 
-<header class="site">
-  <div class="wrap">
-    <nav>
-      <div class="logo-wrap">
-        <svg width="108" height="108" viewBox="30 30 260 150" aria-hidden="true">
-          <defs>
-            <linearGradient id="nwgrad2" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#2e3192"/>
-              <stop offset="55%" stop-color="#1a8a6e"/>
-              <stop offset="100%" stop-color="#00a651"/>
-            </linearGradient>
-          </defs>
-          <path d="M 70 170 L 70 95 A 45 45 0 0 1 160 95 L 160 170"
-                fill="none" stroke="url(#nwgrad2)" stroke-width="22" stroke-linecap="round"/>
-          <path d="M 175 90 L 175 170 A 27 27 0 0 0 229 170 L 229 90"
-                fill="none" stroke="#00a651" stroke-width="22" stroke-linecap="round"/>
-          <path d="M 229 90 L 229 170 A 27 27 0 0 0 283 170 L 283 90"
-                fill="none" stroke="#00a651" stroke-width="22" stroke-linecap="round"/>
-        </svg>
-        <div class="logo">newsweed<span class="dot">.com</span></div>
-      </div>
-      <a class="nav-cta" href="https://newsweedcom.substack.com/subscribe" target="_blank" rel="noopener">Subscribe</a>
-    </nav>
-  </div>
-</header>
+<div class="wrap cols">
 
-<section class="hero">
-  <div class="wrap">
-    <div class="eyebrow">A brand built for a worldwide audience, not just an American one</div>
-    <h1>News for the <em>hundreds of millions</em><br>cannabis touches — everywhere.</h1>
-    <p class="lede">Newsweed.com can become a very powerful voice in news, and here is why. Is news today meant to inform or to persuade? Or is it simply a fact that if you want to change people's minds, you change the information you give them? That is the issue with news today: it has become the business of pushing the masses in one direction or another.</p>
-    <p class="lede">We hope the strong minds of the weed audience will demand broad perspectives, so they can move the news in the right direction. Major media companies should take a hard look at this powerful demographic and bring Newsweed.com to the next level. We are considering carefully who to sell to or partner with, because the weed audience is growing into one of the largest and most diverse audiences in the world.</p>
-    <p class="lede lede-contact">Contact Mark Nejmeh about this opportunity: <a href="tel:+17329953914">732-995-3914</a></p>
-    <div class="hero-cta-row">
-    <div class="giveaway" id="giveaway">
-      <span class="giveaway-badge">Free giveaway</span>
-      <p class="sub">Enter your email for a chance to win a <strong>Newsweed t-shirt and hat</strong> — plus first look at merch drops and offers.</p>
-      <form class="giveaway-form" id="giveawayForm">
-        <label for="giveawayEmail" class="visually-hidden">Email address</label>
-        <input type="email" id="giveawayEmail" placeholder="you@email.com" autocomplete="email" required>
-        <button type="submit" id="giveawaySubmit">Enter to win</button>
-      </form>
-      <div class="giveaway-status" id="giveawayStatus" role="status" aria-live="polite"></div>
-      <div class="giveaway-rules">No purchase necessary · One entry per email · 21+ · Drawn monthly</div>
-    </div>
-    <div class="hero-actions">
-      <a class="btn-primary" href="https://newsweedcom.substack.com/subscribe" target="_blank" rel="noopener">Subscribe free</a>
-      <a class="btn-secondary" href="#audience">See the worldwide data</a>
-    </div>
-    </div>
-  </div>
-</section>
+  <!-- ================= LEFT ================= -->
+  <aside class="left">
 
-<section id="audience">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>The audience, sized worldwide</h2>
-      <span class="meta">UNODC · Statista · WHO</span>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="num">256M+</div>
-        <div class="label">People worldwide who used cannabis in the past year</div>
-        <div class="src">UNODC World Drug Report 2026</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">+40%</div>
-        <div class="label">Growth in the global user base over the past decade</div>
-        <div class="src">UNODC World Drug Report 2026</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">$79.5B</div>
-        <div class="label">Global cannabis market revenue forecast for 2026</div>
-        <div class="src">Statista Market Forecast</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">$114.35B</div>
-        <div class="label">Projected global market size by 2031</div>
-        <div class="src">Statista Market Forecast</div>
-      </div>
-    </div>
-    <p class="stat-note">And that 256 million is only the core. It doesn't count the people who used to use, the people weighing whether to start, or the much larger circle who will never touch it but think about it every time it comes up at work, at the dinner table, or on a ballot. Add all four groups together and this isn't a niche audience — it's a majority conversation happening in nearly every country with almost no dedicated newsroom covering it honestly.</p>
+    <section class="block">
+      <div class="kicker green"><h2>Cannabis: law &amp; medicine</h2></div>
+      <p class="note">Legal and medical news, reported straight. We don't promote use and we don't talk down to anyone.</p>
+      <ul class="hl small" id="s-cannabis"><li class="loading">Loading…</li></ul>
+    </section>
 
-    <div class="section-head" style="margin-top:48px;">
-      <h2>Four audiences, one underserved beat</h2>
-    </div>
-    <div class="quad-grid">
-      <div class="quad-card c1">
-        <div class="qnum">01 / USERS</div>
-        <h3>They use cannabis</h3>
-        <p>Current users — the core, most engaged readership. Directly affected by every law, product, and price change.</p>
-      </div>
-      <div class="quad-card c2">
-        <div class="qnum">02 / FORMER USERS</div>
-        <h3>They used to</h3>
-        <p>Still culturally and socially invested. They read the news to track how far the world has moved since they stepped away.</p>
-      </div>
-      <div class="quad-card c3">
-        <div class="qnum">03 / CONSIDERING</div>
-        <h3>They're thinking about it</h3>
-        <p>Weighing legality, health, and stigma. The most persuadable audience in media — and the most valuable for advertisers.</p>
-      </div>
-      <div class="quad-card c4">
-        <div class="qnum">04 / AWARE</div>
-        <h3>They never will — but it's on their mind</h3>
-        <p>Parents, employers, voters, neighbors. They don't use it, but they think about it constantly. The largest group of all.</p>
-      </div>
+    <section class="block">
+      <div class="kicker navy"><h2>From our network</h2></div>
+
+      <a class="feature" href="https://wisesleuths.com" rel="noopener" style="display:block">
+        <span class="tag">WiseSleuths.com · gig work for thinkers</span>
+        <h3>Borrow a wise mind.</h3>
+        <ul>
+          <li>Deep and complicated thinkers: get paid to work out problems other people can't.</li>
+          <li>Stuck on something tangled? A boss, a business, a deal that doesn't add up? Hire a mind that has seen it all.</li>
+          <li>A second chance that pays: ex-convicts are judged on the work, never on the past.</li>
+          <li>Always remote. Opinion, never advice. Your own name on your work.</li>
+        </ul>
+        <span class="btn green">Visit WiseSleuths.com</span>
+      </a>
+      <a class="promo" href="https://wisesleuth.com/excons.html" rel="noopener"><b>Jobs for ex-cons that use the mind</b><span>Research gigs under your own name. Nobody is judged on the past.</span></a>
+      <a class="promo" href="https://achplug.com" rel="noopener"><b>ACHplug.com</b><span>Collect payments by ACH, straight from the bank. No card processor, no percentage fees. $25 once.</span></a>
+      <a class="promo" href="https://adhotbox.com" rel="noopener"><b>AdHotBox.com: any small business can advertise</b><span>Text and image ads from $20. Pick a town or a subject. No cookies, no traffic minimum.</span></a>
+      <a class="promo" href="https://warrantwire.com" rel="noopener"><b>Warrant Wire</b><span>Every stock-warrant financing, as it is filed with the SEC.</span></a>
+      <a class="promo" href="https://jobcreation.us" rel="noopener"><b>JobCreation.us</b><span>Where federal contract money lands, and the jobs it pays for.</span></a>
+      <a class="promo" href="https://8k10q.com" rel="noopener"><b>8K10Q.com</b><span>Company filings read in plain English. Back shortly.</span></a>
+    </section>
+
+    <div class="ad">
+      <span class="adlab">Advertisement</span>
+      <div data-ad="rail"></div>
+      <div class="adfall">Your business here, from $20. <a href="https://adhotbox.com/advertise.html" rel="noopener">Advertise with AdHotBox →</a></div>
     </div>
 
-    <div class="thesis">
-      <p class="big">He who speaks to the cannabis audience <em>with respect</em> controls the outcome — politically, economically, socially, and in fashion and the arts.</p>
-      <p class="sub">Every headline nudges these four groups a little further — toward a law, a stock, a stigma lifted or reinforced. That's not a slogan; it's the reason this beat is worth owning rather than ignoring, and why a credible, respectful voice in this space carries real influence — and real value. At $900,000, Newsweed is priced for exactly that: a domain, a brand, and a running Substack audience positioned ahead of a wave most of the media is still pretending not to see.</p>
-    </div>
-  </div>
-</section>
+  </aside>
 
-<section id="desk">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Today's brief</h2>
-      <span class="meta" id="deskMeta">Live feed — refreshed every 15 min</span>
-    </div>
-    <div class="feed-grid" id="deskGrid">
-      <div class="loading-note">Pulling the latest…</div>
-    </div>
-  </div>
-</section>
+  <!-- ================= CENTER ================= -->
+  <main class="center" id="main">
 
-<section id="wire">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>The wire</h2>
-      <span class="meta">Politics · Crime · Weather · World · Business · Health · Sports · Culture · Cannabis</span>
-    </div>
-    <div id="wireList">
-      <div class="loading-note">Loading the wire…</div>
-    </div>
-  </div>
-</section>
+    <section class="block lead" id="lead" aria-label="Top stories">
+      <div class="loading">Loading today's news…</div>
+    </section>
 
-<section class="tipline" id="tipline">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>The tip line</h2>
-      <span class="meta">Reader submissions · not validated</span>
-    </div>
-    <div class="tipline-grid">
-
-      <div class="nr-card">
-        <h3>Send us a story or tip</h3>
-        <p class="nr-sub">Something happening in your state or country that the majors are ignoring? Send it in one line. Court rulings, licensing fights, raids, research, business moves, culture — we read everything that comes in.</p>
-        <form class="nr-form" id="tipForm">
-          <input type="text" id="tipHeadline" placeholder="Your tip in one line" maxlength="120" required>
-          <div class="nr-counter"><span id="tipHeadlineCount">0</span>/120 — this is the line that gets posted</div>
-          <textarea id="tipDetails" placeholder="Details for us only: who, where, when, and how you know." maxlength="500" required></textarea>
-          <div class="nr-counter"><span id="tipDetailsCount">0</span>/500 — not published, for our checking</div>
-          <input type="url" id="tipLink" placeholder="Link or source (optional)">
-          <div class="row2">
-            <input type="text" id="tipName" placeholder="Your name (optional)">
-            <input type="email" id="tipEmail" placeholder="Email, if we can follow up">
-          </div>
-          <input type="text" id="tipHp" class="nr-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button type="submit" id="tipSubmit">Send it in</button>
-          <div class="nr-status" id="tipStatus" role="status" aria-live="polite"></div>
-          <div class="nr-note">Your name and email are never shown · Posted tips show region and time only · Don't send anything you can't stand behind</div>
-        </form>
-      </div>
-
-      <div class="tipwall" id="tipwall">
-        <div class="tipwall-head">
-          <h3>Last 24 hours</h3>
+    <form class="signup" data-subscribe="home-daily">
+      <h3>The Newsweed Daily</h3>
+      <p class="sub">One email a day: the news that matters, markets, and the CorruptMen story of the day. Free.</p>
+      <div class="form">
+        <div class="inline">
+          <label for="sEmail" class="vh">Email address</label>
+          <input type="email" id="sEmail" placeholder="you@email.com" autocomplete="email" required>
+          <button class="btn" type="submit">Sign me up</button>
         </div>
-        <div class="tip-disclaimer">
-          <strong>Tips are not validated.</strong> Nothing on this wall has been verified by Newsweed.com. We read what comes in and post what seems reasonable — that is a judgment call, not a fact-check, and we can be wrong about it. Every line here is an unconfirmed claim from a reader, not Newsweed reporting. When a tip becomes a Newsweed story, it is reported and sourced separately, and it will say so.
-        </div>
-        <div id="tipwallList"><div class="loading-note">Loading tips…</div></div>
+        <label class="chk"><input type="checkbox" name="consent" required> Yes, email me the Newsweed Daily. I can unsubscribe at any time, and my address is never sold.</label>
+        <div class="status" role="status" aria-live="polite"></div>
+        <div class="fine">Subscribers are also entered in the monthly Newsweed t-shirt &amp; hat drawing · No purchase necessary</div>
       </div>
+    </form>
 
-    </div>
-  </div>
-</section>
+    <section class="block" id="markets">
+      <div class="kicker navy"><h2>Markets &amp; money</h2><span class="more" id="mAsOf"></span></div>
+      <div class="mboard" id="mboard"></div>
+      <ul class="hl" id="s-markets"><li class="loading">Loading…</li></ul>
+      <p class="note" style="margin-top:8px">Market news, not investment advice. Prices can be delayed.</p>
+    </section>
 
-<section class="newsroom" id="newsroom">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Write for Newsweed</h2>
-      <span class="meta">Reporters · Columnists · Photographers · Stringers</span>
-    </div>
-    <div class="journo-grid">
+    <section class="block" id="corruptmen">
+      <div class="kicker red"><h2>CorruptMen · story of the day</h2><span class="more"><a href="/corruptmen.html">Past stories →</a></span></div>
+      <div class="cm-card" id="cmToday"><div class="loading">Loading…</div></div>
+      <p class="allege">Political and business corruption in American towns, embezzlement first. Charges are allegations; everyone is presumed innocent unless proven guilty in court. We link to the original reporting.</p>
+    </section>
 
-      <div class="journo-pitch">
-        <div class="nr-count">
-          <span class="num" id="journoCount">—</span>
-          <span class="lab" id="journoLabel">journalists signed up to write for Newsweed</span>
-        </div>
-        <p>Newsweed is building a roster of working journalists across every market where this beat matters — statehouses, courtrooms, trade shows, and the streets. Worldwide, not just American.</p>
-        <p>Tell us your beat and where you are. As assignments and budget come online, we work down this list. This is a roster, not a job offer — but nothing gets assigned to anyone who isn't on it.</p>
-      </div>
-
-      <div class="nr-card">
-        <h3>Join the roster</h3>
-        <form class="nr-form" id="journoForm">
-          <div class="row2">
-            <input type="text" id="journoName" placeholder="Your name" autocomplete="name" required>
-            <input type="email" id="journoEmail" placeholder="you@email.com" autocomplete="email" required>
-          </div>
-          <div class="row2">
-            <input type="text" id="journoBeat" placeholder="Beat (politics, business, culture…)">
-            <input type="text" id="journoLocation" placeholder="City / country">
-          </div>
-          <input type="url" id="journoLink" placeholder="Link to your work (optional)">
-          <input type="text" id="journoHp" class="nr-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button type="submit" id="journoSubmit">Add me to the list</button>
-          <div class="nr-status" id="journoStatus" role="status" aria-live="polite"></div>
-          <div class="nr-note">Free to join · No exclusivity · We contact you before publishing anything of yours</div>
-        </form>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="subscribe-strip" id="subscribe">
-  <h2>One email a day. Straight reporting, worldwide, no stigma.</h2>
-  <p>Join readers who want real news without pretending a few hundred million people don't exist.</p>
-  <a class="btn-primary" href="https://newsweedcom.substack.com/subscribe" target="_blank" rel="noopener">Subscribe free on Substack</a>
-</div>
-
-<div class="future-strip" id="future">
-  <h2>Be part of Newsweed's future</h2>
-  <p>Drop your email for early access to merch drops, special offers, and giveaways — t-shirts, hats, and more, before anyone else hears about them.</p>
-  <form class="future-form" id="futureForm">
-    <input type="email" id="futureEmail" placeholder="you@email.com" required>
-    <button type="submit" id="futureSubmit">Count me in</button>
-  </form>
-  <div class="future-status" id="futureStatus"></div>
-  <div class="future-note">No spam — just merch drops and the occasional special offer.</div>
-</div>
-
-<section class="acquire-section" id="acquire">
-  <div class="wrap">
-    <div class="acquire-box">
-      <img src="owner-photo.jpg" alt="Newsweed founder">
-      <div class="acquire-info">
-        <div class="k">Own this brand</div>
-        <h2>Newsweed.com is for sale</h2>
-        <div class="price">$900,000</div>
-        <p>Domain, brand, and an active Substack audience — positioned ahead of one of the largest underserved readerships in world media. Talk to me directly, no gatekeepers.</p>
-        <p style="font-size:14px; color:var(--slate); margin:-6px 0 10px;">A compensated merger or partnership with an established media company would also be considered, in place of an outright sale.</p>
-        <div class="acquire-journos" id="acquireJournos"></div>
-        <div class="acquire-actions">
-          <a class="btn-primary" href="tel:7329953914">Call 732-995-3914</a>
-          <a class="btn-secondary" href="mailto:realroofers@gmail.com?subject=Newsweed.com%20Acquisition%20Inquiry">Email realroofers@gmail.com</a>
+    <section class="block" id="world">
+      <div class="kicker navy"><h2>The Medellín desk · world news</h2><span class="more"><a href="/luis.html">All dispatches →</a></span></div>
+      <div class="desk" id="luisLatest">
+        <div class="mono-av" aria-hidden="true">LO</div>
+        <div>
+          <div class="by">Luis Orozco</div>
+          <div class="bio">Journalist · Medellín, Colombia</div>
+          <p style="margin-top:8px">Daily world news from Luis Orozco, reporting from Medellín. His first dispatch is coming soon.</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+      <div class="kicker" style="margin-top:20px;border-top-width:1px"><h2>World wire</h2></div>
+      <ul class="hl" id="s-world"><li class="loading">Loading…</li></ul>
+      <div class="kicker" style="margin-top:14px;border-top-width:1px"><h2>Latin America</h2></div>
+      <ul class="hl small" id="s-latam"><li class="loading">Loading…</li></ul>
+    </section>
 
-<div class="modal-overlay" id="acquireModal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeAcquireModal()" aria-label="Close">&times;</button>
-    <img src="owner-photo.jpg" alt="Newsweed founder">
-    <h2>Newsweed.com is for sale</h2>
-    <div class="price">$900,000</div>
-    <p>Domain, brand, and an active Substack audience — positioned to reach one of the largest underserved readerships in world media.</p>
-    <p style="font-size:13px; color:var(--slate); margin:-6px 0 22px;">A compensated merger or partnership with an established media company would also be considered.</p>
-    <div class="acquire-actions">
-      <a class="btn-secondary" href="tel:7329953914">Call 732-995-3914</a>
-      <a class="btn-secondary" href="mailto:realroofers@gmail.com?subject=Newsweed.com%20Acquisition%20Inquiry">Email realroofers@gmail.com</a>
+    <section class="block" id="tribal">
+      <div class="kicker green"><h2>Tribal nations</h2><span class="more">From Native newsrooms</span></div>
+      <p class="note">Headlines from Native American and Indigenous news outlets, credited and linked to each newsroom: <a href="https://ictnews.org" rel="noopener">ICT News</a>, <a href="https://nativenewsonline.net" rel="noopener">Native News Online</a>, <a href="https://www.aptnnews.ca" rel="noopener">APTN News</a>.</p>
+      <ul class="hl" id="s-tribal"><li class="loading">Loading…</li></ul>
+    </section>
+
+    <section class="block" id="chatPreview">
+      <div class="kicker"><h2>From the chat room</h2><span class="more"><a href="/chat.html">Join the room →</a></span></div>
+      <p class="note">Two rooms only: report important news, or comment on the news. Real names, no anonymous posts.</p>
+      <div id="chatLatest"><div class="loading">Loading…</div></div>
+    </section>
+
+  </main>
+
+  <!-- ================= RIGHT ================= -->
+  <aside class="right">
+
+    <section class="block">
+      <div class="kicker red"><h2>Warrants</h2></div>
+      <ul class="hl small" id="s-warrants"><li class="loading">Loading…</li></ul>
+      <p class="note" style="margin-top:6px">Stock warrants and SEC filings: <a href="https://warrantwire.com" rel="noopener" style="color:var(--navy)">Warrant Wire →</a></p>
+    </section>
+
+    <section class="block">
+      <div class="kicker red"><h2>Crime</h2></div>
+      <ul class="hl small" id="s-crime"><li class="loading">Loading…</li></ul>
+    </section>
+
+    <section class="block">
+      <div class="kicker green"><h2>Medical breakthroughs</h2></div>
+      <p class="note">Published research and trial results, not hype.</p>
+      <ul class="hl small" id="s-medical"><li class="loading">Loading…</li></ul>
+      <div class="kicker green" style="margin-top:14px;border-top-width:1px"><h2>Holistic &amp; wellness</h2></div>
+      <ul class="hl small" id="s-wellness"><li class="loading">Loading…</li></ul>
+    </section>
+
+    <section class="block">
+      <div class="kicker navy"><h2>Sports</h2></div>
+      <ul class="hl small" id="s-sports"><li class="loading">Loading…</li></ul>
+    </section>
+
+    <section class="block" id="cases">
+      <div class="kicker"><h2>Court cases we follow</h2></div>
+      <div class="case">
+        <b>Nejmeh v. Theriva Biologics, Inc.</b>
+        <span>No. 3:26-cv-00705 · D. Nev. · filed Sept. 16, 2026</span>
+        Shareholder suit over warrants. Brought by Newsweed's publisher.<br>
+        <a href="https://nejmehvstheriva.com" rel="noopener">Filings</a><a href="https://warrantwire.com/cases.html" rel="noopener">Case study</a>
+      </div>
+      <div class="case">
+        <b>SEC v. Sabby Management, LLC and Hal D. Mintz</b>
+        <span>D.N.J. · filed 2023 · SEC enforcement</span>
+        The SEC alleges naked short selling and fraudulent trading in at least 10 public companies.<br>
+        <a href="https://www.sec.gov/newsroom/press-releases/2023-107" rel="noopener">SEC release</a><a href="https://www.sec.gov/files/litigation/complaints/2023/comp25746.pdf" rel="noopener">Complaint (PDF)</a>
+      </div>
+      <div class="case">
+        <b>More stock-market suits</b>
+        <span>SEC litigation releases</span>
+        <a href="https://www.sec.gov/enforcement-litigation/litigation-releases" rel="noopener">SEC litigation releases</a>
+      </div>
+      <p class="note" style="margin-top:8px">Complaints are allegations. The court's record controls.</p>
+    </section>
+
+    <div class="ad">
+      <span class="adlab">Advertisement</span>
+      <div data-ad="card"></div>
+      <div class="adfall">Reach Newsweed readers from $20. <a href="https://adhotbox.com/advertise.html" rel="noopener">AdHotBox →</a></div>
     </div>
-  </div>
+
+  </aside>
 </div>
 
-<footer>
-  <div class="wrap">
-    <div class="brand">newsweed<span style="color:var(--ember)">.</span>com</div>
-    <div class="fine">© 2026 Newsweed.com</div>
-  </div>
-</footer>
+<div id="nw-foot" data-build="Built 2026-09-29 · index-2a"></div>
 
+<script src="/nw.js?v=2a"></script>
 <script>
-  function closeAcquireModal() {
-    document.getElementById("acquireModal").classList.remove("open");
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+
+  function li(it) {
+    return '<li><a href="' + E(U(it.link)) + '" target="_blank" rel="noopener">' + E(it.title) + '</a>'
+      + '<span class="src">' + E(it.source || "") + (it.pubDate ? " · " + E(NW.ago(it.pubDate)) : "") + '</span></li>';
   }
-  document.addEventListener("keydown", function(e) {
-    if (e.key === "Escape") closeAcquireModal();
-  });
-
-  const JOURNO_SHOW_AT = 5;
-  async function loadJournoCount() {
-    const numEl = document.getElementById("journoCount");
-    const labEl = document.getElementById("journoLabel");
-    const acqEl = document.getElementById("acquireJournos");
-    try {
-      const res = await fetch("/api/journalists");
-      const data = await res.json();
-      const n = Number(data.count) || 0;
-      if (n >= JOURNO_SHOW_AT) {
-        numEl.textContent = n.toLocaleString();
-        labEl.textContent = "journalists signed up to write for Newsweed";
-        if (acqEl) acqEl.textContent = n.toLocaleString() + " journalists worldwide have signed up to write for Newsweed.";
-      } else {
-        numEl.textContent = "";
-        labEl.textContent = "Be among the first journalists on the Newsweed roster";
-        if (acqEl) acqEl.textContent = "";
-      }
-    } catch (err) {
-      numEl.textContent = "";
-      labEl.textContent = "Join the Newsweed roster";
-    }
+  function fill(id, items, empty) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = items && items.length ? items.map(li).join("") : '<li class="loading">' + (empty || "Nothing new right now. Check back shortly.") + '</li>';
   }
-  loadJournoCount();
 
-  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+  function lead(items) {
+    var el = document.getElementById("lead");
+    if (!items || !items.length) { el.innerHTML = '<div class="loading">The news is loading slowly. Refresh in a moment.</div>'; return; }
+    var a = items[0], rest = items.slice(1, 7);
+    el.innerHTML = '<h1><a href="' + E(U(a.link)) + '" target="_blank" rel="noopener">' + E(a.title) + '</a></h1>'
+      + '<div class="src">' + E(a.source || "") + (a.pubDate ? " · " + E(NW.ago(a.pubDate)) : "") + '</div>'
+      + '<div class="lead-grid">' + rest.map(function (it) {
+          return '<a href="' + E(U(it.link)) + '" target="_blank" rel="noopener">' + E(it.title) + '<span class="src">' + E(it.source || "") + '</span></a>';
+        }).join("") + '</div>';
+  }
 
-  const journoForm = document.getElementById("journoForm");
-  if (journoForm) {
-    journoForm.addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById("journoSubmit");
-      const status = document.getElementById("journoStatus");
-      const rest = btn.textContent;
-      btn.disabled = true; btn.textContent = "Sending…"; status.textContent = "";
-      try {
-        const res = await fetch("/api/journalists", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: val("journoName"), email: val("journoEmail"),
-            beat: val("journoBeat"), location: val("journoLocation"),
-            link: val("journoLink"), website: val("journoHp")
-          })
-        });
-        const data = await res.json();
-        if (data.success) {
-          status.textContent = data.alreadyListed
-            ? "You're already on the roster — we have your details."
-            : "You're on the roster. We'll be in touch as assignments open up.";
-          journoForm.reset();
-          loadJournoCount();
-        } else {
-          status.textContent = data.error || "Something went wrong. Please try again.";
-        }
-      } catch (err) {
-        status.textContent = "Something went wrong. Please try again.";
-      } finally { btn.disabled = false; btn.textContent = rest; }
+  function loadFeed() {
+    NW.get("/api/feed").then(function (d) {
+      var s = d.sections || {};
+      lead(s.top);
+      ["markets", "world", "latam", "cannabis", "crime", "warrants", "medical", "wellness", "sports", "tribal"].forEach(function (k) { fill("s-" + k, s[k]); });
+    }).catch(function () {
+      lead([]);
     });
   }
 
-  function bindCounter(inputId, countId) {
-    const input = document.getElementById(inputId);
-    const out = document.getElementById(countId);
-    if (!input || !out) return;
-    const update = () => { out.textContent = input.value.length; };
-    input.addEventListener("input", update);
-    update();
-  }
-  bindCounter("tipHeadline", "tipHeadlineCount");
-  bindCounter("tipDetails", "tipDetailsCount");
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    })[c]);
-  }
-
-  function stampTime(iso) {
-    const d = new Date(iso);
-    if (isNaN(d)) return "";
-    return d.toLocaleString(undefined, {
-      month: "short", day: "numeric", hour: "numeric", minute: "2-digit"
-    });
+  function fmt(n) { return Number(n).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 }); }
+  function loadMarkets() {
+    NW.get("/api/markets").then(function (d) {
+      var q = d.quotes || [];
+      if (!q.length) { document.querySelector(".board").style.display = "none"; document.getElementById("mboard").style.display = "none"; return; }
+      document.getElementById("board").innerHTML = q.map(function (x) {
+        var c = x.change >= 0 ? "up" : "dn", sign = x.change >= 0 ? "+" : "";
+        return '<span class="q"><b>' + E(x.name) + '</b>' + fmt(x.price) + ' <span class="' + c + '">' + sign + fmt(x.pct) + '%</span></span>';
+      }).join("") + '<span class="asof">as of ' + E(NW.stamp(d.asOf)) + '</span>';
+      document.getElementById("mboard").innerHTML = q.slice(0, 8).map(function (x) {
+        var c = x.change >= 0 ? "up" : "dn", sign = x.change >= 0 ? "+" : "";
+        return '<div><b>' + E(x.name) + '</b><span class="px">' + fmt(x.price) + '</span><br><span class="ch ' + c + '" style="color:' + (x.change >= 0 ? "var(--green2)" : "var(--red)") + '">' + sign + fmt(x.change) + ' (' + sign + fmt(x.pct) + '%)</span></div>';
+      }).join("");
+      document.getElementById("mAsOf").textContent = "as of " + NW.stamp(d.asOf);
+    }).catch(function () { document.querySelector(".board").style.display = "none"; });
   }
 
-  async function loadTipWall() {
-    const list = document.getElementById("tipwallList");
-    if (!list) return;
-    try {
-      const res = await fetch("/api/tips");
-      const data = await res.json();
-      const tips = data.tips || [];
-      if (!tips.length) {
-        list.innerHTML = '<div class="tip-empty">No tips posted in the last 24 hours. Send one in — the wall clears daily, so nothing old sits here.</div>';
+  function loadCorruptMen() {
+    var el = document.getElementById("cmToday");
+    NW.get("/api/corruptmen").then(function (d) {
+      var s = d.today;
+      if (!s) { el.innerHTML = '<p>Today\'s story is being chosen. Check back shortly.</p>'; return; }
+      el.innerHTML = '<div class="date">' + E(s.date) + (s.place ? " · " + E(s.place) : "") + '</div>'
+        + '<h3><a href="' + E(U(s.link)) + '" target="_blank" rel="noopener">' + E(s.title) + '</a></h3>'
+        + (s.summary ? '<p>' + E(s.summary) + '</p>' : "")
+        + '<div class="src">Reported by ' + E(s.source || "the original publisher") + '</div>';
+    }).catch(function () { el.innerHTML = '<p>CorruptMen is unavailable right now.</p>'; });
+  }
+
+  function loadLuis() {
+    NW.get("/api/dispatch").then(function (d) {
+      var x = (d.dispatches || [])[0];
+      if (!x) {
+        if (d.bio) document.querySelector("#luisLatest .bio").textContent = d.bio;
         return;
       }
-      list.innerHTML = tips.map(t => {
-        const link = t.link
-          ? ' <a href="' + escapeHtml(t.link) + '" target="_blank" rel="noopener nofollow">source</a>'
-          : "";
-        return '<div class="tip-row">'
-          + '<span class="tip-stamp"><span class="place">' + escapeHtml(t.place || "Unknown") + '</span> · ' + escapeHtml(stampTime(t.submitted)) + '</span>'
-          + '<span class="tip-text">' + escapeHtml(t.headline) + link + '</span>'
-          + '</div>';
+      var first = String(x.body || "").split(/\n\n+/)[0];
+      if (first.length > 360) first = first.slice(0, 360).trim() + "…";
+      document.getElementById("luisLatest").innerHTML = '<div class="mono-av" aria-hidden="true">LO</div><div>'
+        + '<div class="by">' + E(x.author || "Luis Orozco") + '</div><div class="bio">' + E(d.bio || "") + ' · ' + E(x.place || "") + ' · ' + E(NW.stamp(x.published)) + '</div>'
+        + '<h3><a href="/luis.html?id=' + encodeURIComponent(x.id) + '">' + E(x.title) + '</a></h3>'
+        + '<p>' + E(first) + '</p><a class="btn ghost" href="/luis.html?id=' + encodeURIComponent(x.id) + '">Read the dispatch</a></div>';
+    }).catch(function () {});
+  }
+
+  function loadChat() {
+    var el = document.getElementById("chatLatest");
+    Promise.all([NW.get("/api/chat?room=report"), NW.get("/api/chat?room=comment")]).then(function (r) {
+      var all = (r[0].messages || []).map(function (m) { m.room = "Report"; return m; })
+        .concat((r[1].messages || []).map(function (m) { m.room = "Comment"; return m; }))
+        .sort(function (a, b) { return a.at < b.at ? 1 : -1; }).slice(0, 4);
+      if (!all.length) { el.innerHTML = '<p class="note">The room is open. Be the first to <a href="/chat.html" style="color:var(--navy)">report the news</a>.</p>'; return; }
+      el.innerHTML = all.map(function (m) {
+        return '<div class="msg"><span class="who">' + E(m.name) + '</span><span class="when">' + E(m.room) + ' · ' + E(NW.ago(m.at)) + '</span><p>' + E(m.text) + '</p></div>';
       }).join("");
-    } catch (err) {
-      list.innerHTML = '<div class="tip-empty">Tip line unavailable right now.</div>';
-    }
-  }
-  loadTipWall();
-  setInterval(loadTipWall, 5 * 60 * 1000);
-
-  const tipForm = document.getElementById("tipForm");
-  if (tipForm) {
-    tipForm.addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById("tipSubmit");
-      const status = document.getElementById("tipStatus");
-      const rest = btn.textContent;
-      btn.disabled = true; btn.textContent = "Sending…"; status.textContent = "";
-      try {
-        const res = await fetch("/api/tips", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            headline: val("tipHeadline"), details: val("tipDetails"),
-            link: val("tipLink"), name: val("tipName"),
-            email: val("tipEmail"), website: val("tipHp")
-          })
-        });
-        const data = await res.json();
-        if (data.success) {
-          status.textContent = "Got it. If it looks reasonable it posts to the tip line, marked unvalidated.";
-          tipForm.reset();
-        } else {
-          status.textContent = data.error || "Something went wrong. Please try again.";
-        }
-      } catch (err) {
-        status.textContent = "Something went wrong. Please try again.";
-      } finally { btn.disabled = false; btn.textContent = rest; }
-    });
+    }).catch(function () { el.innerHTML = ""; });
   }
 
-  function wireFutureForm(formId, emailId, submitId, statusId, opts) {
-    const form = document.getElementById(formId);
-    if (!form) return;
-    const status = document.getElementById(statusId);
-    const submitBtn = document.getElementById(submitId);
-    const settings = opts || {};
-    const restLabel = submitBtn.textContent;
-    const busyLabel = settings.busyLabel || "Sending…";
-    form.addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const email = document.getElementById(emailId).value.trim();
-      submitBtn.disabled = true;
-      submitBtn.textContent = busyLabel;
-      status.textContent = "";
-      try {
-        const res = await fetch("/api/subscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, source: settings.source || "newsweed.com" })
-        });
-        const data = await res.json();
-        if (data.success) {
-          status.textContent = data.alreadySubscribed
-            ? (settings.repeatMsg || "You're already on the list — thanks for being here.")
-            : (settings.successMsg || "You're in! Watch your inbox for merch drops and offers.");
-          form.reset();
-        } else {
-          status.textContent = data.error || "Something went wrong. Please try again.";
-        }
-      } catch (err) {
-        status.textContent = "Something went wrong. Please try again.";
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = restLabel;
-      }
-    });
-  }
-  wireFutureForm("giveawayForm", "giveawayEmail", "giveawaySubmit", "giveawayStatus", {
-    source: "hero-giveaway",
-    busyLabel: "Entering…",
-    successMsg: "You're entered — good luck. We'll email the winner and send merch drops your way.",
-    repeatMsg: "You're already entered — one entry per email, so you're all set."
-  });
-  wireFutureForm("futureForm", "futureEmail", "futureSubmit", "futureStatus", {
-    source: "footer-signup",
-    busyLabel: "Joining…"
-  });
-
-  const API_BASE = "/api/feed";
-  const EVERGREEN_ITEMS = [
-    { category: "business", categoryLabel: "For Sale", title: "Newsweed.com — the domain and brand are for sale, $900,000", link: "#acquire", pubDate: new Date().toISOString(), excerpt: "Domain, brand, and an active Substack audience for sale." }
-  ];
-  const FALLBACK_ITEMS = [
-    { category: "substack", categoryLabel: "Newsweed", title: "Welcome to Newsweed — why this beat matters", link: "https://newsweedcom.substack.com", pubDate: new Date().toISOString(), excerpt: "An introduction to the Newsweed mission." }
-  ];
-  function timeAgo(iso) {
-    if (!iso) return "";
-    const diff = Date.now() - new Date(iso).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return mins + "m ago";
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return hrs + "h ago";
-    return Math.floor(hrs / 24) + "d ago";
-  }
-  function renderTicker(items) {
-    const track = document.getElementById("tickerTrack");
-    if (!items.length) return;
-    const doubled = [...items, ...items];
-    track.innerHTML = doubled.map(it => `
-      <a class="ticker-item" href="${it.link || '#'}" target="_blank" rel="noopener">
-        <span class="tag ${it.category}">${it.categoryLabel}</span>
-        <span class="headline">${it.title}</span>
-      </a>
-    `).join("");
-  }
-  function renderDesk(items) {
-    const grid = document.getElementById("deskGrid");
-    const substackItems = items.filter(i => i.category === "substack").slice(0, 3);
-    const toShow = substackItems.length ? substackItems : items.slice(0, 3);
-    if (!toShow.length) {
-      grid.innerHTML = `<div class="empty-note">No posts yet — <a href="https://newsweedcom.substack.com" target="_blank" rel="noopener" style="color:var(--moss-bright)">read on Substack</a>.</div>`;
-      return;
-    }
-    grid.innerHTML = toShow.map(it => `
-      <a class="card" href="${it.link}" target="_blank" rel="noopener">
-        <span class="tag ${it.category}">${it.categoryLabel}</span>
-        <h3>${it.title}</h3>
-        <p class="excerpt">${it.excerpt || ""}</p>
-        <span class="date">${timeAgo(it.pubDate)}</span>
-      </a>
-    `).join("");
-  }
-  function renderWire(items) {
-    const list = document.getElementById("wireList");
-    const filtered = items.filter(i => i.category !== "substack");
-    if (!filtered.length) {
-      list.innerHTML = `<div class="empty-note">Nothing loaded yet — check back shortly.</div>`;
-      return;
-    }
-    list.innerHTML = filtered.slice(0, 12).map(it => `
-      <a class="list-item" href="${it.link}" target="_blank" rel="noopener">
-        <span class="tag ${it.category}">${it.categoryLabel}</span>
-        <h4>${it.title}</h4>
-        <span class="date">${timeAgo(it.pubDate)}</span>
-      </a>
-    `).join("");
-  }
-  let allItems = [...EVERGREEN_ITEMS, ...FALLBACK_ITEMS];
-  async function loadFeed() {
-    try {
-      const res = await fetch(API_BASE + "?category=all");
-      if (!res.ok) throw new Error("bad response");
-      const data = await res.json();
-      if (data.items && data.items.length) {
-        allItems = [...EVERGREEN_ITEMS, ...data.items];
-      }
-    } catch (err) {
-      console.warn("Feed fetch failed, using fallback content.", err);
-    }
-    renderTicker(allItems);
-    renderDesk(allItems);
-    renderWire(allItems);
-  }
-  loadFeed();
-  setInterval(loadFeed, 15 * 60 * 1000);
+  loadFeed(); loadMarkets(); loadCorruptMen(); loadLuis(); loadChat();
+  setInterval(loadFeed, 10 * 60 * 1000);
+  setInterval(loadMarkets, 5 * 60 * 1000);
+})();
 </script>
-
+<script src="https://adhotbox.com/box.js" async></script>
 </body>
 </html>

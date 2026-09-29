@@ -1,0 +1,71 @@
+<!-- BUILT 2026-09-29 · newsweed suggestions-1a
+     Reader suggestions -> /api/suggestions (KV sugg:*). Private; read them with
+     /api/export?type=suggestions or the button on tips-admin.html. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suggestions — Newsweed</title>
+<meta name="description" content="Tell Newsweed what to cover, what to fix, and what we got wrong.">
+<link rel="canonical" href="https://newsweed.com/suggestions.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=2a">
+</head>
+<body>
+<div id="nw-top"></div>
+
+<main class="page">
+  <h1>Suggestions</h1>
+  <p class="lede">Tell us what to cover, what to change, or what we got wrong. Every suggestion is read by the editor. Nothing you send here is published.</p>
+
+  <form class="form box" id="sugForm" style="padding:22px">
+    <label for="kind" class="vh">What kind of suggestion</label>
+    <select id="kind">
+      <option value="story">A story we should cover</option>
+      <option value="coverage">More (or less) of a kind of news</option>
+      <option value="site">Something about the site</option>
+      <option value="correction">A correction</option>
+      <option value="other">Something else</option>
+    </select>
+    <label for="text" class="vh">Your suggestion</label>
+    <textarea id="text" placeholder="Your suggestion" maxlength="2000" required></textarea>
+    <div class="row2">
+      <input type="text" id="name" placeholder="Your name (optional)" autocomplete="name">
+      <input type="email" id="email" placeholder="Email, if you'd like a reply (optional)" autocomplete="email">
+    </div>
+    <input type="text" id="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div><button class="btn" type="submit" id="sugBtn">Send suggestion</button></div>
+    <div class="status" id="sugStatus" role="status" aria-live="polite"></div>
+    <div class="fine">Your name and email are never published or shared. We use your email only to reply to you.</div>
+  </form>
+
+  <div style="margin-top:28px" class="note">
+    Got news rather than a suggestion? <a href="/chat.html" style="color:var(--navy)">Report it in the chat room</a> or <a href="/newsroom.html#tipline" style="color:var(--navy)">send a private tip</a>.
+  </div>
+</main>
+
+<div id="nw-foot" data-build="Built 2026-09-29 · suggestions-1a"></div>
+<script src="/nw.js?v=2a"></script>
+<script>
+(function () {
+  var form = document.getElementById("sugForm");
+  function v(id) { return document.getElementById(id).value.trim(); }
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = document.getElementById("sugBtn"), st = document.getElementById("sugStatus");
+    btn.disabled = true; st.className = "status"; st.textContent = "";
+    NW.post("/api/suggestions", { kind: v("kind"), text: v("text"), name: v("name"), email: v("email"), website: v("website") })
+      .then(function (d) {
+        if (d.success) { st.textContent = "Thank you. Your suggestion is with the editor."; form.reset(); }
+        else { st.textContent = d.error || "Something went wrong."; st.className = "status err"; }
+      })
+      .catch(function () { st.textContent = "Something went wrong. Please try again."; st.className = "status err"; })
+      .then(function () { btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

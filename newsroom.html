@@ -1,0 +1,140 @@
+<!-- BUILT 2026-09-29 · newsweed newsroom-1a
+     The tip line and the journalist roster, moved here from the old home page (same APIs:
+     /api/tips and /api/journalists, same KV records). Tips are moderated in tips-admin.html. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newsroom — tips and the reporter roster — Newsweed</title>
+<meta name="description" content="Send Newsweed a tip, or join the roster of journalists who write for Newsweed.">
+<link rel="canonical" href="https://newsweed.com/newsroom.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=2a">
+<style>
+/* ⚠ ONLY WHAT THIS PAGE ALONE NEEDS. */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 30px; align-items: start; }
+@media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+.tip-row { padding: 10px 0; border-bottom: 1px solid var(--line2); font-size: 14.5px; }
+.tip-row .st { display: block; font: 400 11px var(--mono); color: var(--ink3); }
+.tip-row a { color: var(--navy); font-size: 12px; margin-left: 6px; }
+.counter { font: 400 10.5px var(--mono); color: var(--ink3); margin-top: -5px; }
+</style>
+</head>
+<body>
+<div id="nw-top"></div>
+
+<main class="page" style="max-width:1100px">
+  <h1>Newsroom</h1>
+  <p class="lede">Newsweed is built with its readers. Send us what is happening where you are, or join the reporters who write for us.</p>
+
+  <section id="tipline" style="margin-bottom:40px">
+    <div class="kicker"><h2>The tip line</h2><span class="more">Reader submissions · not validated</span></div>
+    <div class="two">
+      <form class="form box" id="tipForm" style="padding:20px">
+        <h3>Send us a story or tip</h3>
+        <p>Something the big outlets are ignoring? Court rulings, corruption, business moves, research. Send it in one line.</p>
+        <input type="text" id="tipHeadline" placeholder="Your tip in one line" maxlength="120" required>
+        <div class="counter"><span id="c1">0</span>/120 · this is the line that may be posted</div>
+        <textarea id="tipDetails" placeholder="Details for us only: who, where, when, and how you know." maxlength="500" required></textarea>
+        <div class="counter"><span id="c2">0</span>/500 · never published</div>
+        <input type="url" id="tipLink" placeholder="Link or source (optional)">
+        <div class="row2">
+          <input type="text" id="tipName" placeholder="Your name (optional)">
+          <input type="email" id="tipEmail" placeholder="Email, if we can follow up">
+        </div>
+        <input type="text" id="tipHp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div><button class="btn" type="submit" id="tipSubmit">Send it in</button></div>
+        <div class="status" id="tipStatus" role="status" aria-live="polite"></div>
+        <div class="fine">Your name and email are never shown · Posted tips show region and time only · Don't send anything you can't stand behind</div>
+      </form>
+      <div>
+        <h3 style="margin-bottom:8px">Last 24 hours</h3>
+        <p class="note" style="margin:0 0 10px"><b>Tips are not validated.</b> Nothing here has been verified by Newsweed. Each line is an unconfirmed claim from a reader, not Newsweed reporting. When a tip becomes a story, it is reported and sourced separately.</p>
+        <div id="wall"><div class="loading">Loading tips…</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roster">
+    <div class="kicker"><h2>Write for Newsweed</h2><span class="more">Reporters · columnists · photographers · stringers</span></div>
+    <div class="two">
+      <div>
+        <p style="font-size:15px;color:var(--ink2)">Newsweed is building a roster of working journalists wherever the news is: statehouses, courtrooms, town halls, and abroad. Our world news already comes from Luis Orozco in Medellín.</p>
+        <p style="font-size:15px;color:var(--ink2)">Tell us your beat and where you are. This is a roster, not a job offer, but assignments go to people on it.</p>
+        <p class="note" id="rosterCount"></p>
+      </div>
+      <form class="form box" id="jForm" style="padding:20px">
+        <h3>Join the roster</h3>
+        <div class="row2">
+          <input type="text" id="jName" placeholder="Your name" autocomplete="name" required>
+          <input type="email" id="jEmail" placeholder="you@email.com" autocomplete="email" required>
+        </div>
+        <div class="row2">
+          <input type="text" id="jBeat" placeholder="Beat (politics, business, courts…)">
+          <input type="text" id="jLoc" placeholder="City / country">
+        </div>
+        <input type="url" id="jLink" placeholder="Link to your work (optional)">
+        <input type="text" id="jHp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div><button class="btn" type="submit" id="jBtn">Add me to the list</button></div>
+        <div class="status" id="jStatus" role="status" aria-live="polite"></div>
+        <div class="fine">Free to join · No exclusivity · We contact you before publishing anything of yours</div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div id="nw-foot" data-build="Built 2026-09-29 · newsroom-1a"></div>
+<script src="/nw.js?v=2a"></script>
+<script>
+(function () {
+  var E = NW.esc, U = NW.safeUrl;
+  function v(id) { return document.getElementById(id).value.trim(); }
+  function count(i, o) { var a = document.getElementById(i), b = document.getElementById(o); a.addEventListener("input", function () { b.textContent = a.value.length; }); }
+  count("tipHeadline", "c1"); count("tipDetails", "c2");
+
+  function wall() {
+    NW.get("/api/tips").then(function (d) {
+      var t = d.tips || [];
+      document.getElementById("wall").innerHTML = t.length ? t.map(function (x) {
+        return '<div class="tip-row"><span class="st">' + E(x.place || "Unknown") + " · " + E(NW.stamp(x.submitted)) + '</span>' + E(x.headline)
+          + (x.link ? '<a href="' + E(U(x.link)) + '" target="_blank" rel="noopener nofollow">source</a>' : "") + '</div>';
+      }).join("") : '<p class="note">No tips posted in the last 24 hours.</p>';
+    }).catch(function () { document.getElementById("wall").innerHTML = '<p class="note">Tip line unavailable right now.</p>'; });
+  }
+  wall();
+
+  function sendForm(formId, btnId, stId, url, body, okMsg) {
+    var btn = document.getElementById(btnId), st = document.getElementById(stId);
+    btn.disabled = true; st.className = "status"; st.textContent = "";
+    NW.post(url, body).then(function (d) {
+      if (d.success) { st.textContent = typeof okMsg === "function" ? okMsg(d) : okMsg; document.getElementById(formId).reset(); }
+      else { st.textContent = d.error || "Something went wrong."; st.className = "status err"; }
+    }).catch(function () { st.textContent = "Something went wrong. Please try again."; st.className = "status err"; })
+      .then(function () { btn.disabled = false; });
+  }
+
+  document.getElementById("tipForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendForm("tipForm", "tipSubmit", "tipStatus", "/api/tips",
+      { headline: v("tipHeadline"), details: v("tipDetails"), link: v("tipLink"), name: v("tipName"), email: v("tipEmail"), website: v("tipHp") },
+      "Got it. If it looks reasonable it posts to the tip line, marked unvalidated.");
+  });
+
+  document.getElementById("jForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendForm("jForm", "jBtn", "jStatus", "/api/journalists",
+      { name: v("jName"), email: v("jEmail"), beat: v("jBeat"), location: v("jLoc"), link: v("jLink"), website: v("jHp") },
+      function (d) { return d.alreadyListed ? "You're already on the roster." : "You're on the roster. We'll be in touch as assignments open up."; });
+  });
+
+  NW.get("/api/journalists").then(function (d) {
+    var n = Number(d.count) || 0;
+    if (n >= 5) document.getElementById("rosterCount").textContent = n.toLocaleString() + " journalists have signed up to write for Newsweed.";
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

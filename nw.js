@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4b (Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4c (motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -101,7 +101,7 @@
       +   '<a class="ear ai" href="/ai.html" id="aiEar"><span class="k">AI term of the day</span><b id="aiTerm">…</b><span class="def" id="aiDef"></span></a>'
       +   '<div class="center"><a class="brand" href="/" aria-label="Newsweed home">' + LOGO
       +     '<span class="word">newsweed<span>.com</span></span></a>'
-      +     '<div class="motto">The news that matters, reported with respect.</div></div>'
+      +     '<div class="motto">News reported with respect for the weed audience, and for all.</div></div>'
       +   '<div class="ear right"><span class="k">Today\'s edition</span><div class="vol">Volume ' + vol + '</div>'
       +     '<div class="zone" style="font:600 12px var(--mono);color:var(--ink2)">No. ' + no + '</div>'
       +     '<div class="clock" id="nwClock">&nbsp;</div><div class="zone">New York time</div></div>'

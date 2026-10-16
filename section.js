@@ -1,4 +1,4 @@
-/* section.js — BUILT 2026-09-29 · section-1d (phones: no ad boxes, no section list, no AdHotBox tag; 1c Events, Travel & Nomads)
+/* section.js — BUILT 2026-09-29 · section-1g (2026-10-16: WiseSleuths box in every rail; 1f Obituaries + All sections; 1d phones: no ad boxes, no section list, no AdHotBox tag; 1c Events, Travel & Nomads)
    Fills a section page. The page says which feed group it reads and where each desk goes:
      <body data-group="farm">
        <ul class="hl" data-s="fourh"></ul>      <- filled with /api/feed?group=farm -> sections.fourh
@@ -52,9 +52,14 @@
       + '<input type="email" placeholder="you@email.com" aria-label="Email address" required>'
       + '<label class="chk"><input type="checkbox" name="consent" required> Yes, email me the Newsweed Daily. Unsubscribe any time.</label>'
       + '<button class="btn" type="submit">Sign me up</button><div class="status" role="status"></div></div></form>';
-    // Phones: just the sign-up. The icons replace the section list; small text ads replace the boxes.
-    if (NW.phone) { el.innerHTML = signup; NW.subscribe(); return; }
-    el.innerHTML = signup
+    // 2026-10-16 section-1g: WiseSleuths on every section page (Mark: "put wisesleuths.com on newsweed.com as well").
+    var wise = '<a href="https://wisesleuths.com" rel="noopener" style="display:block;border:2px solid #14150f;border-radius:10px;padding:12px 14px;margin:14px 0;color:inherit;text-decoration:none">'
+      + '<span style="display:block;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555">WiseSleuths.com</span>'
+      + '<b style="display:block;font:800 19px/1.2 var(--serif);margin:4px 0">Borrow a wise mind.</b>'
+      + '<span style="font:400 14px var(--sans)">Gigs for deep and complicated thinkers. All minds have value.</span></a>';
+    // Phones: just the sign-up (and WiseSleuths). The icons replace the section list; small text ads replace the boxes.
+    if (NW.phone) { el.innerHTML = signup + wise; NW.subscribe(); return; }
+    el.innerHTML = signup + wise
       + '<div class="ad"><span class="adlab">Advertisement</span><div data-ad="card"></div>'
       + '<div class="adfall">This space is for your business. <a href="/advertise.html">Advertise from $20 →</a></div></div>'
       + '<div class="kicker"><h2>More sections</h2></div><div class="teasers" style="grid-template-columns:1fr 1fr;margin-bottom:24px">'

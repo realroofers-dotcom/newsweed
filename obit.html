@@ -38,6 +38,21 @@
 .ob-one .story{font:400 18px/1.6 var(--serif,Fraunces,serif);white-space:pre-line;margin-top:18px}
 .ob-one .serv{border-left:3px solid var(--navy);padding:8px 14px;margin-top:20px;white-space:pre-line;font:400 15px/1.5 var(--sans)}
 .ob-one .src{font:400 13px var(--sans);color:var(--ink2);margin-top:20px}
+.ob-act{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 6px}
+.ob-act button,.ob-act a{font:600 14px var(--sans);border:1px solid #c9c9c9;background:#fff;border-radius:999px;padding:9px 16px;cursor:pointer;color:inherit;text-decoration:none}
+.ob-mem{max-width:760px;margin-top:10px}
+.ob-mem .m{border-top:1px solid #e8e8e8;padding:12px 0}
+.ob-mem .m .who{font:600 14px var(--sans)}
+.ob-mem .m .who span{font-weight:400;color:var(--ink2)}
+.ob-mem .m .msg{font:400 16px/1.55 var(--serif,Fraunces,serif);white-space:pre-line;margin-top:4px}
+.ob-mem .m .rep{font:400 12px var(--sans);color:var(--ink2);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;margin-top:4px}
+.ob-mform{border:1px solid #e3e3e3;border-radius:10px;padding:16px;background:#fbfaf6;margin-top:14px}
+.ob-mform label{display:block;font:600 14px var(--sans);margin:10px 0 4px}
+.ob-mform input,.ob-mform textarea{width:100%;box-sizing:border-box;font:400 15px var(--sans);padding:9px 10px;border:1px solid #c9c9c9;border-radius:8px;background:#fff}
+.ob-mform textarea{min-height:100px}
+.ob-mform .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ob-mform .hp{position:absolute;left:-5000px}
+@media (max-width:640px){.ob-mform .two{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -47,13 +62,35 @@
     <main>
       <p style="margin:14px 0 0"><a href="/obituaries.html" style="color:var(--navy)">← All obituaries</a></p>
       <article class="ob-one block" id="ob"><p class="loading">Loading…</p></article>
+      <div class="ob-act" id="ob-act" hidden>
+        <button type="button" id="ob-copy">Copy link to share</button>
+        <a id="ob-fb" target="_blank" rel="noopener">Share on Facebook</a>
+      </div>
+      <section class="ob-mem block" id="ob-mem" hidden>
+        <div class="kicker navy"><h2>Memories</h2></div>
+        <div id="ob-list"></div>
+        <form class="ob-mform" id="ob-mform">
+          <b>Share a memory</b>
+          <div class="two">
+            <div><label for="m-name">Your first and last name</label><input id="m-name" name="name" required maxlength="120"></div>
+            <div><label for="m-rel">How you knew them (optional)</label><input id="m-rel" name="relationship" maxlength="80" placeholder="Friend, teammate, fan…"></div>
+          </div>
+          <div class="two">
+            <div><label for="m-city">Your town (optional)</label><input id="m-city" name="city" maxlength="120"></div>
+            <div><label for="m-email">Your email (never shown)</label><input id="m-email" name="email" type="email" required maxlength="160"></div>
+          </div>
+          <label for="m-msg">Your memory</label><textarea id="m-msg" name="message" required maxlength="3000"></textarea>
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p style="margin:12px 0 0"><button class="btn" type="submit">Share</button> <span id="m-st" role="status" style="font:600 14px var(--sans)"></span></p>
+        </form>
+      </section>
       <div class="box"><p><b>Remembering someone?</b> Post an obituary on Newsweed, free, with a photo. It is kept forever.
         <a href="/obituaries.html#post" style="color:var(--navy)">Post one →</a></p></div>
     </main>
     <aside id="rail"></aside>
   </div>
 </div>
-<div id="nw-foot" data-build="Built 2026-10-16 · obit-1a"></div>
+<div id="nw-foot" data-build="Built 2026-10-16 · obit-1b"></div>
 <script src="/nw.js?v=4n"></script><script src="/section.js?v=1f"></script>
 <script>
 (function () {
@@ -73,7 +110,42 @@
       + (o.services ? '<div class="serv"><b>Services</b>\n' + E(o.services) + '</div>' : "")
       + '<p class="src">' + (o.kind === "family" ? "Shared by " + (o.relationship ? "a " + E(o.relationship.toLowerCase()) : "the family") + " on " + date((o.posted_at || "").slice(0, 10)) + "."
           : "Written by Newsweed from public records. Sources: " + (o.sources || []).map(function (s) { return '<a href="' + E(s.url) + '" target="_blank" rel="noopener">' + E(s.label) + '</a>'; }).join(", ") + ".") + '</p>';
+    interactive(o);
   }).catch(function () { el.innerHTML = "<p>The obituary could not be loaded just now.</p>"; });
+
+  /* obit-1b (2026-10-16): sharing, memories, report (no candles - Mark 2026-10-16: "no candle lights"). Mark: "the site to begin to be interactive.
+     People have very little option for honoring their loved ones for free." */
+  function interactive(o) {
+    var act = document.getElementById("ob-act"), mem = document.getElementById("ob-mem"), list = document.getElementById("ob-list");
+    act.hidden = false; mem.hidden = false;
+    var link = "https://newsweed.com/obit.html?id=" + o.id;
+    document.getElementById("ob-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(link);
+    document.getElementById("ob-copy").addEventListener("click", function () {
+      var b = this; (navigator.clipboard ? navigator.clipboard.writeText(link) : Promise.reject()).then(function () { b.textContent = "Link copied"; }, function () { prompt("Copy this link:", link); });
+    });
+    function post(path, data) { var fd = new FormData(); Object.keys(data).forEach(function (k) { fd.append(k, data[k]); }); return fetch(API + path, { method: "POST", body: fd }).then(function (r) { return r.json(); }); }
+    function show(d) {
+      list.innerHTML = (d.memories || []).length ? d.memories.map(function (m) {
+        return '<div class="m"><div class="who">' + E(m.name) + ' <span>' + [m.relationship, m.city].filter(Boolean).map(E).join(" · ") + (m.at ? " · " + date(m.at.slice(0, 10)) : "") + '</span></div>'
+          + '<div class="msg">' + E(m.message) + '</div><button type="button" class="rep" data-m="' + m.id + '">Report</button></div>';
+      }).join("") : '<p style="font:400 15px var(--sans);color:var(--ink2)">Be the first to share a memory.</p>';
+    }
+    function load() { fetch(API + "/memories?id=" + o.id).then(function (r) { return r.json(); }).then(show).catch(function () {}); }
+    load();
+    list.addEventListener("click", function (e) {
+      var b = e.target.closest(".rep"); if (!b) return;
+      var why = prompt("What is wrong with this message? (optional)") ; if (why === null) return;
+      post("/report", { obit_id: o.id, memory_id: b.getAttribute("data-m"), why: why }).then(function () { b.textContent = "Reported. Thank you."; b.disabled = true; });
+    });
+    var f = document.getElementById("ob-mform"), st = document.getElementById("m-st");
+    f.addEventListener("submit", function (e) {
+      e.preventDefault(); st.textContent = "Sharing…"; st.style.color = "";
+      var fd = new FormData(f); fd.append("obit_id", o.id);
+      fetch(API + "/memory", { method: "POST", body: fd }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.ok) { st.textContent = "Thank you."; f.reset(); load(); } else { st.textContent = d.error || "Please try again."; st.style.color = "#b3261e"; }
+      }).catch(function () { st.textContent = "It could not be sent. Please try again."; st.style.color = "#b3261e"; });
+    });
+  }
 })();
 </script>
 </body>

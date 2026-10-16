@@ -110,6 +110,28 @@
       <div class="loading">Loading today's news…</div>
     </section>
 
+    <!-- 2026-10-16 obituaries-1b: Mark: "an obit should be front page news focus on sports, entertainment, or music personalities or scientists" -->
+    <section class="block" id="obits">
+      <div class="kicker navy"><h2>Remembered</h2><span class="more"><a href="/obituaries.html">All obituaries →</a> · <a href="/obituaries.html#post">Post one free →</a></span></div>
+      <div id="obitsFront" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px"></div>
+      <script>
+      (function () {
+        var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+        var FOCUS = ["Sports", "Entertainment", "Science & medicine"];
+        fetch("https://newsweed-obits.realroofers.workers.dev/list?kind=notable").then(function (r) { return r.json(); }).then(function (d) {
+          var items = (d.items || []).filter(function (o) { return FOCUS.indexOf(o.category) >= 0; }).slice(0, 3);
+          if (!items.length) { document.getElementById("obits").hidden = true; return; }
+          document.getElementById("obitsFront").innerHTML = items.map(function (o) {
+            return '<a href="/obit.html?id=' + o.id + '" style="display:block;color:inherit;text-decoration:none">'
+              + (o.photo_url ? '<div style="aspect-ratio:4/3;background:#f1f0ec url(\'' + esc(o.photo_url) + '\') center/cover no-repeat;border-radius:8px"></div>' : "")
+              + '<div style="font:700 17px/1.2 var(--serif,Fraunces,serif);margin-top:8px">' + esc(o.name) + '</div>'
+              + '<div style="font:400 13px var(--sans);color:var(--ink2);margin-top:3px">' + esc(o.headline || o.category) + (o.age != null ? ", " + o.age : "") + '</div></a>';
+          }).join("");
+        }).catch(function () { document.getElementById("obits").hidden = true; });
+      })();
+      </script>
+    </section>
+
     <section class="block" id="states50">
       <div class="kicker navy"><h2>Across the 50 states</h2><span class="more"><a href="/states.html">Every state →</a></span></div>
       <div class="grid2" id="stateTops"><div class="loading">Loading…</div></div>

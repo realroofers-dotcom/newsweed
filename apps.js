@@ -1,4 +1,4 @@
-/* apps.js — BUILT 2026-09-29 · apps-1e (+ Contests tile; 1c video icon for any contributor who files one; 1b Luis video icon)
+/* apps.js — BUILT 2026-09-29 · apps-1f (2026-10-16: Obituaries and All sections tiles, icons exported for sections.html; 1e + Contests tile; 1c video icon for any contributor who files one; 1b Luis video icon)
    Newsweed on the phone is icon driven (Mark, 29 Sep 2026): "icons for every section: news, then dating,
    then classifieds, then all other sections. When a user scrolls they should get what they want fast.
    Squeeze ads in between on the scroll, in text form, small letters only, so as not to interfere."
@@ -42,7 +42,9 @@
     about: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.5h.01"/>',
     more: '<circle cx="5.5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18.5" cy="12" r="1.4"/>',
     trophy: '<path d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 6H4.5a3 3 0 0 0 3 4M16.5 6h3a3 3 0 0 1-3 4M12 13.5V17M8.5 20.5h7M9.5 17h5v3.5h-5z"/>',
-    video: '<rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/>'
+    video: '<rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/>',
+    obits: '<path d="M12 3c1.6 2.1 2.6 3.5 2.6 5.1a2.6 2.6 0 0 1-5.2 0C9.4 6.5 10.4 5.1 12 3z"/><rect x="9.3" y="11" width="5.4" height="9.5" rx="1"/><path d="M6.5 20.5h11"/>',
+    directory: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>'
   };
 
   // [href, label, icon, tile color]. News, Dating, Classifieds first (Mark's order), then the rest.
@@ -50,6 +52,7 @@
     ["/", "News", "news", "#1d2470"],
     ["/dating.html", "Dating", "dating", "#c2185b"],
     ["/classifieds.html", "Classifieds", "classifieds", "#058a44"],
+    ["/obituaries.html", "Obituaries", "obits", "#37474f"],   // 2026-10-16 obituaries-1a
     ["/states.html", "50 States", "states", "#2e3192"],
     ["/#markets", "Markets", "markets", "#0b6b3a"],
     ["/corruptmen.html", "CorruptMen", "corrupt", "#b3261e"],
@@ -73,6 +76,7 @@
     ["/ai.html", "AI terms", "ai", "#1d2470"],
     ["/advertise.html", "Advertise", "advertise", "#058a44"],
     ["/suggestions.html", "Suggest", "suggestions", "#c77f1c"],
+    ["/sections.html", "All sections", "directory", "#14150f"],   // 2026-10-16 sections-1a: the directory
     ["/editor.html", "About", "about", "#455a64"]
   ];
   var FIRST = 11; // shown before "More"
@@ -97,6 +101,7 @@
   function svg(name) {
     return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + (I[name] || "") + "</svg>";
   }
+  window.NW_APP_SVG = svg;   // the directory page uses the same icons
   function tile(a, cls) {
     return '<a class="' + cls + '" href="' + a[0] + '"><span class="ic" style="background:' + a[3] + '">' + svg(a[2]) + '</span><span class="lb">' + a[1] + "</span></a>";
   }

@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4m (Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4n (2026-10-16 apps.js v1f: Obituaries + All sections; 4m Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -17,6 +17,7 @@
     ["/corruptmen.html", "CorruptMen", "cm"],
     ["/dui.html", "Crime & DUI"],
     ["/classifieds.html", "Classifieds"],
+    ["/obituaries.html", "Obituaries"],
     ["/events.html", "Events"],
     ["/contests.html", "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7.5 4h9v5a4.5 4.5 0 0 1-9 0z\"/><path d=\"M7.5 6H4.5a3 3 0 0 0 3 4M16.5 6h3a3 3 0 0 1-3 4M12 13.5V17M8.5 20.5h7M9.5 17h5v3.5h-5z\"/></svg> Contests", "contestlink"],
     ["/chat.html", "Chat room"]
@@ -36,7 +37,8 @@
     ["/#tribal", "Tribal nations"],
     ["/archive.html", "Archive"],
     ["/advertise.html", "Advertise"],
-    ["/suggestions.html", "Suggestions"]
+    ["/suggestions.html", "Suggestions"],
+    ["/sections.html", "All sections"]
   ];
   // Mark, 29 Sep 2026: "The volume should actually be 6, since we first printed in 2022 and we have been
   // around online since 2010." Newspaper style: the VOLUME is the year of publication (Volume 6 in 2026,
@@ -231,7 +233,7 @@
   var phone = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   if (phone) Array.prototype.forEach.call(document.querySelectorAll(".ad"), function (el) { el.parentNode.removeChild(el); });
   var appsJs = document.createElement("script");
-  appsJs.src = "/apps.js?v=1e";
+  appsJs.src = "/apps.js?v=1f";
   document.body.appendChild(appsJs);
 
   window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };

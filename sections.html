@@ -1,0 +1,70 @@
+<!-- BUILT 2026-10-16 · newsweed sections-1a · Mark: "there should also be a directory of sections of the site". Every section with its icon and one line.
+     The list comes from apps.js (icons, order) and section.js (one-line descriptions), so a new section shows up here by itself. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every section of Newsweed — Newsweed</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="The directory of every Newsweed section: news, obituaries, classifieds, dating, the 50 states, crime maps, contests, travel and more.">
+<link rel="canonical" href="https://newsweed.com/sections">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Every section of Newsweed — Newsweed">
+<meta property="og:description" content="The directory of every Newsweed section: news, obituaries, classifieds, dating, the 50 states, crime maps, contests, travel and more.">
+<meta property="og:url" content="https://newsweed.com/sections">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Every section of Newsweed — Newsweed">
+<meta name="twitter:description" content="The directory of every Newsweed section: news, obituaries, classifieds, dating, the 50 states, crime maps, contests, travel and more.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4g">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<style>
+.dir{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.dir a{display:flex;gap:12px;align-items:center;border:1px solid #e3e3e3;border-radius:10px;padding:12px;color:inherit;text-decoration:none;background:#fff}
+.dir a:hover{border-color:var(--navy)}
+.dir .ic{flex:0 0 44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.dir .ic svg{width:24px;height:24px}
+.dir b{display:block;font:700 16px var(--sans)}
+.dir span.d{display:block;font:400 13px var(--sans);color:var(--ink2);margin-top:2px}
+</style>
+</head>
+<body>
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Directory</span><h1>Every section of Newsweed.</h1>
+    <p>Everything on the site, in one place. Tap a section to go there.</p></div>
+  <div class="cols2">
+    <main><section class="block"><div class="dir" id="dir"><p class="loading">Loading…</p></div></section></main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-10-16 · sections-1a"></div>
+<script src="/nw.js?v=4n"></script><script src="/section.js?v=1f"></script>
+<script>
+(function () {
+  var E = NW.esc, tries = 0;
+  function draw() {
+    var apps = window.NW_APPS && window.NW_APPS.list, svg = window.NW_APP_SVG, sects = window.NW_SECTIONS || [];
+    if (!apps || !svg) { if (tries++ < 50) return setTimeout(draw, 100); }
+    var desc = {}; sects.forEach(function (s) { desc[s[0]] = s[2]; });
+    document.getElementById("dir").innerHTML = (apps || []).filter(function (a) { return a[0] !== "/sections.html"; }).map(function (a) {
+      return '<a href="' + E(a[0]) + '"><span class="ic" style="background:' + E(a[3]) + '">' + (svg ? svg(a[2]) : "") + '</span><span><b>' + E(a[1]) + '</b>'
+        + (desc[a[0]] ? '<span class="d">' + E(desc[a[0]]) + '</span>' : "") + '</span></a>';
+    }).join("");
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

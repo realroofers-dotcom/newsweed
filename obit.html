@@ -1,0 +1,80 @@
+<!-- BUILT 2026-10-16 · newsweed obit-1a · One obituary, by id (/obit.html?id=N). Same respect for every life; ads as on every page (Mark, 2026-10-16). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obituary — Newsweed</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="An obituary on Newsweed. Every life deserves to be remembered.">
+<link rel="canonical" href="https://newsweed.com/obit">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Obituary — Newsweed">
+<meta property="og:description" content="An obituary on Newsweed. Every life deserves to be remembered.">
+<meta property="og:url" content="https://newsweed.com/obit">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Obituary — Newsweed">
+<meta name="twitter:description" content="An obituary on Newsweed. Every life deserves to be remembered.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4g">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<style>
+.ob-one{max-width:760px}
+.ob-one img{width:100%;max-height:520px;object-fit:contain;background:#f1f0ec;border-radius:10px}
+.ob-one .credit{font:400 12px var(--sans);color:var(--ink2);margin:6px 0 0}
+.ob-one h1{font:800 clamp(30px,5vw,46px)/1.1 var(--serif,Fraunces,serif);margin:18px 0 6px}
+.ob-one .dates{font:500 16px var(--sans);color:var(--ink2)}
+.ob-one .cat{font:600 12px var(--mono,monospace);letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-top:8px}
+.ob-one .story{font:400 18px/1.6 var(--serif,Fraunces,serif);white-space:pre-line;margin-top:18px}
+.ob-one .serv{border-left:3px solid var(--navy);padding:8px 14px;margin-top:20px;white-space:pre-line;font:400 15px/1.5 var(--sans)}
+.ob-one .src{font:400 13px var(--sans);color:var(--ink2);margin-top:20px}
+</style>
+</head>
+<body>
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="cols2">
+    <main>
+      <p style="margin:14px 0 0"><a href="/obituaries.html" style="color:var(--navy)">← All obituaries</a></p>
+      <article class="ob-one block" id="ob"><p class="loading">Loading…</p></article>
+      <div class="box"><p><b>Remembering someone?</b> Post an obituary on Newsweed, free, with a photo. It is kept forever.
+        <a href="/obituaries.html#post" style="color:var(--navy)">Post one →</a></p></div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-10-16 · obit-1a"></div>
+<script src="/nw.js?v=4n"></script><script src="/section.js?v=1f"></script>
+<script>
+(function () {
+  var API = "https://newsweed-obits.realroofers.workers.dev", E = NW.esc;
+  var id = new URLSearchParams(location.search).get("id"), el = document.getElementById("ob");
+  function date(s) { if (!s) return ""; var d = new Date(s + "T12:00:00Z"); return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }); }
+  if (!id) { el.innerHTML = "<p>No obituary was chosen.</p>"; return; }
+  fetch(API + "/obit?id=" + encodeURIComponent(id)).then(function (r) { return r.json(); }).then(function (d) {
+    if (!d.ok) { el.innerHTML = "<p>This obituary could not be found.</p>"; return; }
+    var o = d.item;
+    document.title = o.name + " — Obituary — Newsweed";
+    el.innerHTML = (o.photo_url ? '<img src="' + E(o.photo_url) + '" alt="' + E(o.name) + '"><p class="credit">' + E(o.photo_credit || "") + '</p>' : "")
+      + '<h1>' + E(o.name) + '</h1>'
+      + '<div class="dates">' + (o.birth_date ? date(o.birth_date) + " – " : "") + date(o.death_date) + (o.age != null ? " · age " + o.age : "") + (o.hometown ? " · " + E(o.hometown) : "") + '</div>'
+      + '<div class="cat">' + E(o.category || "") + '</div>'
+      + '<div class="story">' + E(o.story || "") + '</div>'
+      + (o.services ? '<div class="serv"><b>Services</b>\n' + E(o.services) + '</div>' : "")
+      + '<p class="src">' + (o.kind === "family" ? "Shared by " + (o.relationship ? "a " + E(o.relationship.toLowerCase()) : "the family") + " on " + date((o.posted_at || "").slice(0, 10)) + "."
+          : "Written by Newsweed from public records. Sources: " + (o.sources || []).map(function (s) { return '<a href="' + E(s.url) + '" target="_blank" rel="noopener">' + E(s.label) + '</a>'; }).join(", ") + ".") + '</p>';
+  }).catch(function () { el.innerHTML = "<p>The obituary could not be loaded just now.</p>"; });
+})();
+</script>
+</body>
+</html>

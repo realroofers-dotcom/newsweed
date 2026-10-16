@@ -1,0 +1,159 @@
+<!-- BUILT 2026-10-16 · newsweed obituaries-1a · Mark: "free obituaries on newsweed.com and archive them. Let people post a picture and info on their deceased ...
+     we should post our own important obituaries daily ... sports figures, entertainment, political, etc." "one name for both, all dead deserve respect."
+     "we allow automatic posts and i get sent a copy. Posters not anonymous, phone required, email address and real address. No charge but we call to verify."
+     "ads on every page". Data: worker newsweed-obits (D1 newsweed_obits, R2 newsweed-obits). Posters' phone, email and address are private. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obituaries: free to post, kept forever — Newsweed</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Post an obituary free, with a photo, kept forever. Plus the notable people who died this week: sports, entertainment, politics, business and science.">
+<link rel="canonical" href="https://newsweed.com/obituaries">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Obituaries: free to post, kept forever — Newsweed">
+<meta property="og:description" content="Post an obituary free, with a photo, kept forever. Plus the notable people who died this week: sports, entertainment, politics, business and science.">
+<meta property="og:url" content="https://newsweed.com/obituaries">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Obituaries: free to post, kept forever — Newsweed">
+<meta name="twitter:description" content="Post an obituary free, with a photo, kept forever. Plus the notable people who died this week: sports, entertainment, politics, business and science.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4g">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<style>
+.ob-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 16px}
+.ob-tools button{font:600 13px var(--sans);border:1px solid #c9c9c9;background:#fff;border-radius:999px;padding:7px 14px;cursor:pointer}
+.ob-tools button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ob-tools input,.ob-tools select{font:400 14px var(--sans);padding:8px 10px;border:1px solid #c9c9c9;border-radius:8px}
+.ob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.ob-card{display:block;border:1px solid #e3e3e3;border-radius:10px;overflow:hidden;background:#fff;color:inherit;text-decoration:none}
+.ob-card:hover{border-color:var(--navy)}
+.ob-card .ph{aspect-ratio:4/3;background:#f1f0ec center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#9a9a9a}
+.ob-card .tx{padding:12px 14px}
+.ob-card .nm{font:700 18px/1.2 var(--serif,Fraunces,serif)}
+.ob-card .dt{font:500 13px var(--sans);color:var(--ink2);margin-top:4px}
+.ob-card .cat{font:600 11px var(--mono,monospace);letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-top:6px}
+.ob-form{border:1px solid #e3e3e3;border-radius:10px;padding:18px;background:#fbfaf6;margin-top:28px}
+.ob-form label{display:block;font:600 14px var(--sans);margin:12px 0 4px}
+.ob-form input,.ob-form textarea{width:100%;box-sizing:border-box;font:400 15px var(--sans);padding:9px 10px;border:1px solid #c9c9c9;border-radius:8px;background:#fff}
+.ob-form textarea{min-height:140px}
+.ob-form .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ob-form .priv{font:400 13px var(--sans);color:var(--ink2);margin:6px 0 0}
+.ob-form .hp{position:absolute;left:-5000px}
+.ob-form .status{margin-top:10px;font:600 14px var(--sans)}
+@media (max-width:640px){.ob-form .two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Obituaries</span><h1>Every life deserves to be remembered.</h1>
+    <p>Families post here free, with a photo, and every obituary is kept forever. Each day we also add the notable people who died that week: sports, entertainment, politics, business, science and more. Every one is treated with the same respect.</p></div>
+  <div class="cols2">
+    <main>
+      <section class="block">
+        <div class="ob-tools" role="toolbar" aria-label="Show">
+          <button type="button" data-kind="" class="on">All</button>
+          <button type="button" data-kind="family">Shared by families</button>
+          <button type="button" data-kind="notable">Notable lives</button>
+          <select id="ob-cat" aria-label="Category"><option value="">Every field</option><option>Sports</option><option>Entertainment</option><option>Politics &amp; government</option><option>Business</option><option>Writers &amp; journalists</option><option>Science &amp; medicine</option><option>Art &amp; design</option><option>Faith</option><option>Other notable lives</option><option>Family</option></select>
+          <input id="ob-q" type="search" placeholder="Search a name or hometown" aria-label="Search a name or hometown">
+        </div>
+        <div class="ob-grid" id="ob-grid"><p class="loading">Loading…</p></div>
+        <p style="margin-top:14px"><button type="button" class="btn" id="ob-more" hidden>Show more</button></p>
+      </section>
+
+      <section class="block" id="post">
+        <div class="kicker navy"><h2>Post an obituary, free</h2></div>
+        <form class="ob-form" id="ob-form" enctype="multipart/form-data">
+          <p style="margin:0">It goes up right away and stays in the archive forever. There is no charge. We will call you to verify it.</p>
+          <label for="f-name">Their full name</label><input id="f-name" name="deceased_name" required maxlength="150">
+          <div class="two">
+            <div><label for="f-born">Date of birth</label><input id="f-born" name="birth_date" type="date"></div>
+            <div><label for="f-died">Date of death</label><input id="f-died" name="death_date" type="date" required></div>
+          </div>
+          <label for="f-home">Hometown</label><input id="f-home" name="hometown" maxlength="150" placeholder="City, State">
+          <label for="f-story">Their life</label><textarea id="f-story" name="story" required minlength="40" maxlength="8000" placeholder="Who they were, their family, their work, what they loved."></textarea>
+          <label for="f-serv">Services (optional)</label><textarea id="f-serv" name="services" maxlength="2000" style="min-height:70px" placeholder="Where and when, or in lieu of flowers"></textarea>
+          <label for="f-photo">Photo (optional, up to 8 MB)</label><input id="f-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+          <div class="kicker" style="margin-top:22px"><h2>About you</h2></div>
+          <p class="priv">Required, so no obituary is anonymous. Your phone, email and address are never shown on the site. We use them only to call and verify.</p>
+          <div class="two">
+            <div><label for="p-name">Your full name</label><input id="p-name" name="poster_name" required maxlength="120"></div>
+            <div><label for="p-rel">How you knew them</label><input id="p-rel" name="relationship" required maxlength="80" placeholder="Son, daughter, friend…"></div>
+          </div>
+          <div class="two">
+            <div><label for="p-phone">Your phone</label><input id="p-phone" name="poster_phone" type="tel" required maxlength="40"></div>
+            <div><label for="p-email">Your email</label><input id="p-email" name="poster_email" type="email" required maxlength="160"></div>
+          </div>
+          <label for="p-addr">Your mailing address</label><input id="p-addr" name="poster_address" required maxlength="300" placeholder="Street, city, state, ZIP">
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p style="margin-top:16px"><button class="btn" type="submit">Post the obituary</button></p>
+          <div class="status" role="status" id="ob-status"></div>
+        </form>
+      </section>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-10-16 · obituaries-1a"></div>
+<script src="/nw.js?v=4n"></script><script src="/section.js?v=1f"></script>
+<script>
+(function () {
+  var API = "https://newsweed-obits.realroofers.workers.dev";
+  var E = NW.esc, kind = "", page = 0;
+  var grid = document.getElementById("ob-grid"), more = document.getElementById("ob-more");
+  function date(s) { if (!s) return ""; var d = new Date(s + "T12:00:00Z"); return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }); }
+  function card(o) {
+    var ph = o.photo_url ? '<div class="ph" style="background-image:url(\'' + E(o.photo_url) + '\')" role="img" aria-label="' + E(o.name) + '"></div>'
+                         : '<div class="ph" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3c1.5 2 2.5 3.4 2.5 5a2.5 2.5 0 0 1-5 0c0-1.6 1-3 2.5-5z"/><rect x="9.5" y="11" width="5" height="9.5" rx="1"/></svg></div>';
+    return '<a class="ob-card" href="/obit.html?id=' + o.id + '">' + ph + '<div class="tx"><div class="nm">' + E(o.name) + '</div>'
+      + '<div class="dt">' + (o.birth_date ? date(o.birth_date) + " – " : "") + date(o.death_date) + (o.hometown ? " · " + E(o.hometown) : "") + '</div>'
+      + '<div class="cat">' + E(o.category || "") + '</div></div></a>';
+  }
+  function load(reset) {
+    if (reset) { page = 0; grid.innerHTML = '<p class="loading">Loading…</p>'; }
+    var q = "?page=" + page + (kind ? "&kind=" + kind : "") + (document.getElementById("ob-cat").value ? "&cat=" + encodeURIComponent(document.getElementById("ob-cat").value) : "")
+      + (document.getElementById("ob-q").value.trim() ? "&q=" + encodeURIComponent(document.getElementById("ob-q").value.trim()) : "");
+    fetch(API + "/list" + q).then(function (r) { return r.json(); }).then(function (d) {
+      var html = (d.items || []).map(card).join("");
+      if (reset) grid.innerHTML = html || '<p>No obituaries match yet.</p>'; else grid.insertAdjacentHTML("beforeend", html);
+      more.hidden = (d.items || []).length < 24;
+    }).catch(function () { grid.innerHTML = '<p>The obituaries could not be loaded just now. Please try again shortly.</p>'; });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".ob-tools button"), function (b) {
+    b.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".ob-tools button"), function (x) { x.classList.remove("on"); });
+      b.classList.add("on"); kind = b.getAttribute("data-kind"); load(true);
+    });
+  });
+  document.getElementById("ob-cat").addEventListener("change", function () { load(true); });
+  var t; document.getElementById("ob-q").addEventListener("input", function () { clearTimeout(t); t = setTimeout(function () { load(true); }, 350); });
+  more.addEventListener("click", function () { page++; load(false); });
+  load(true);
+
+  var form = document.getElementById("ob-form"), st = document.getElementById("ob-status");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); st.textContent = "Posting…"; st.style.color = "";
+    var btn = form.querySelector("button[type=submit]"); btn.disabled = true;
+    fetch(API + "/submit", { method: "POST", body: new FormData(form) }).then(function (r) { return r.json(); }).then(function (d) {
+      btn.disabled = false;
+      if (d.ok && d.id) { st.innerHTML = 'Thank you. The obituary is posted: <a href="/obit.html?id=' + d.id + '">read it here</a>. We will call you to verify.'; form.reset(); load(true); }
+      else { st.textContent = d.error || "Something went wrong. Please try again."; st.style.color = "#b3261e"; }
+    }).catch(function () { btn.disabled = false; st.textContent = "It could not be sent. Please try again."; st.style.color = "#b3261e"; });
+  });
+})();
+</script>
+</body>
+</html>

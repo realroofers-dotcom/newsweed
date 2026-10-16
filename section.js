@@ -10,6 +10,8 @@
   var group = document.body.getAttribute("data-group");
 
   var SECTIONS = [
+    ["/obituaries.html", "Obituaries", "Free to post, kept forever"],
+    ["/sections.html", "All sections", "Everything on Newsweed"],
     ["/contests.html", "Contests", "The prize is the title"],
     ["/events.html", "Events", "Authors, hikes, roofing"],
     ["/travel.html", "Travel & Nomads", "South Dakota, the truck"],

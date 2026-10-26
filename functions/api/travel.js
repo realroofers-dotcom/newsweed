@@ -4,7 +4,7 @@
 // always lagging behind at least a week."
 //
 // SAFETY, by design:
-//   - Nothing newer than LAG_DAYS (7) days is ever returned to the public. Not by the page, not by this API.
+//   - Nothing newer than LAG_DAYS (30) days is ever returned to the public. Not by the page, not by this API.
 //   - Only the town is kept (coordinates rounded to about 1 km on save, about 10 km when shown). No street, no route.
 //
 // FEEDING IT
@@ -19,7 +19,7 @@
 //
 // Env var: TRAVEL_KEY (for the GPS app).  KV: EMAIL_LIST  trk:days (the log), trk:last (throttle)
 
-const LAG_DAYS = 7;
+const LAG_DAYS = 30;   /* Mark 2026-10-26: "leave a 30 day lag until the case is over" (was 7) */
 const MIN_GAP_MIN = 45;
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8" };
 function ok(obj, cache) { return new Response(JSON.stringify(obj), { headers: Object.assign({ "Cache-Control": cache || "no-store" }, JSON_HEADERS) }); }

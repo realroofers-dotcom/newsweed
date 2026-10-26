@@ -168,7 +168,7 @@
 
   <div class="exports" id="trAdmin" hidden>
     <h2>Truck travel log</h2>
-    <div class="sub">The public map always runs at least 7 days behind and shows towns only. To log automatically, install OwnTracks on your phone (mode HTTP) with the URL
+    <div class="sub">The public map always runs at least 30 days behind and shows towns only. To log automatically, install OwnTracks on your phone (mode HTTP) with the URL
       <code>https://newsweed.com/api/travel?key=YOUR_TRAVEL_KEY</code> (set TRAVEL_KEY in Cloudflare). Or add a stop by hand:</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <input class="headline" id="trDate" type="date" style="flex:1;min-width:150px">
@@ -461,7 +461,7 @@
   // ---- Truck travel ----
   document.getElementById("trSave").addEventListener("click", async () => {
     const r = await postJson("/api/travel?admin=" + k(), { action: "stop", date: v2("trDate"), place: v2("trPlace"), state: v2("trState") });
-    document.getElementById("trStatus").textContent = r.success ? "Logged. It appears on the public map once it's 7 days old." : (r.error || "Failed.");
+    document.getElementById("trStatus").textContent = r.success ? "Logged. It appears on the public map once it's 30 days old." : (r.error || "Failed.");
   });
   document.getElementById("trList").addEventListener("click", async () => {
     const r = await postJson("/api/travel?admin=" + k(), { action: "list" });

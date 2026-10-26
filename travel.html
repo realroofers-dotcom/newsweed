@@ -3,7 +3,7 @@
      promotes the benefits of South Dakota license laws for nomads"; the truck outlined and smaller.
      South Dakota facts checked 29 Sep 2026 against the sources linked on the page. RE-CHECK EVERY QUARTER: the
      voting rules for travelers changed in 2025 and lawmakers have moved to change them again.
-     The truck map: /api/travel never returns anything newer than 7 days, towns only. -->
+     The truck map: /api/travel never returns anything newer than 30 days, towns only (30 since 2026-10-26). -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,9 +116,9 @@
         <section class="block"><div class="kicker"><h2>On the road</h2></div><ul class="hl small" data-s="road"><li class="loading">Loading…</li></ul></section>
       </div>
 
-      <section class="block" id="where"><div class="kicker green"><h2>Where the truck has been</h2><span class="more" id="lagNote">Shown at least a week late</span></div>
+      <section class="block" id="where"><div class="kicker green"><h2>Where the truck has been</h2><span class="more" id="lagNote">Shown at least 30 days late</span></div>
         <div id="tmap" role="img" aria-label="Map of towns the truck has visited"></div>
-        <p class="note">For safety, the map runs at least a week behind and shows towns only, never an address or a live location. <span id="tstats"></span></p></section>
+        <p class="note">For safety, the map runs at least 30 days behind and shows towns only, never an address or a live location. <span id="tstats"></span></p></section>
       <div class="grid2">
         <section class="block"><div class="kicker navy"><h2>States visited</h2></div><div id="smap"></div></section>
         <section class="block"><div class="kicker"><h2>The log</h2></div><div id="log"><div class="loading">Loading…</div></div></section>
@@ -174,7 +174,7 @@
     document.getElementById("log").innerHTML = dates.length ? dates.slice(0, 40).map(function (dt) {
       var nice = new Date(dt + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
       return '<div class="stopday"><b>' + E(nice) + '</b>' + E(byDay[dt].join(" · ")) + '</div>';
-    }).join("") : '<p class="note">The log starts soon. The truck\'s first week appears here a week after it rolls.</p>';
+    }).join("") : '<p class="note">The log starts soon. Stops appear here 30 days after the truck rolls.</p>';
   }).catch(function () { document.getElementById("log").innerHTML = '<p class="note">Unavailable right now.</p>'; });
 })();
 </script>

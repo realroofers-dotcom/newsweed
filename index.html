@@ -301,13 +301,16 @@
         }).join("") + '</div>';
   }
 
+  /* Newsweed's own top story, pinned above the feed (2026-10-29, Mark: "top story").
+     Remove or replace this one line to change it. */
+  var PINNED = [{ title: "Wax, oil and a bottle: a Terre Haute family's warning", link: "https://newsweed.com/story-andy-thompson", source: "Newsweed" }];
   function loadFeed() {
     NW.get("/api/feed").then(function (d) {
       var s = d.sections || {};
-      lead(s.top);
+      lead(PINNED.concat(s.top || []));
       ["markets", "world", "latam", "cannabis", "crime", "warrants", "medical", "wellness", "sports", "tribal"].forEach(function (k) { fill("s-" + k, s[k]); });
     }).catch(function () {
-      lead([]);
+      lead(PINNED);
     });
   }
 

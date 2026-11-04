@@ -1,4 +1,4 @@
-/* section.js — BUILT 2026-09-29 · section-1g (2026-10-16: WiseSleuths box in every rail; 1f Obituaries + All sections; 1d phones: no ad boxes, no section list, no AdHotBox tag; 1c Events, Travel & Nomads)
+/* section.js — BUILT 2026-09-29 · section-1h (2026-11-04: Legal; 1g 2026-10-16: WiseSleuths box in every rail; 1f Obituaries + All sections; 1d phones: no ad boxes, no section list, no AdHotBox tag; 1c Events, Travel & Nomads)
    Fills a section page. The page says which feed group it reads and where each desk goes:
      <body data-group="farm">
        <ul class="hl" data-s="fourh"></ul>      <- filled with /api/feed?group=farm -> sections.fourh
@@ -22,6 +22,7 @@
     ["/arts.html", "Arts & Music", "With MusicIsNews.com"],
     ["/states.html", "50 States", "Top story from every state"],
     ["/dui.html", "Crime & DUI", "The maps, the headlines"],
+    ["/legal.html", "Legal", "Court cases readers should know"],
     ["/gambling.html", "Gambling", "The industry and its cost"],
     ["/where.html", "Where it meets", "DUI, gambling, drugs, crime"],
     ["/classifieds.html", "Classifieds", "Free to post"],

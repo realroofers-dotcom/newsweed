@@ -107,7 +107,10 @@ export function parseFeed(xml) {
 
 export function clean(items, opts) {
   const medical = opts && opts.medical;
-  return items.filter(it => !PROMO.test(it.title) && !PROMO.test(it.snippet || "") && !(medical && HYPE.test(it.title)));
+  /* 2026-11-04 legal-1a: a desk can require words in the headline (must: every pattern) and refuse others (not), so a crash or a death is never shown under a heading it has nothing to do with */
+  const must = (opts && opts.must) || [], not = opts && opts.not;
+  return items.filter(it => !PROMO.test(it.title) && !PROMO.test(it.snippet || "") && !(medical && HYPE.test(it.title))
+    && must.every(re => re.test(it.title)) && !(not && not.test(it.title)));
 }
 
 export function fingerprint(t) { return String(t || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 50); }

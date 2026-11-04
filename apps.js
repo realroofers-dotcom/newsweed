@@ -1,4 +1,4 @@
-/* apps.js — BUILT 2026-09-29 · apps-1f (2026-10-16: Obituaries and All sections tiles, icons exported for sections.html; 1e + Contests tile; 1c video icon for any contributor who files one; 1b Luis video icon)
+/* apps.js — BUILT 2026-09-29 · apps-1g (2026-11-04: Legal tile; 1f 2026-10-16: Obituaries and All sections tiles, icons exported for sections.html; 1e + Contests tile; 1c video icon for any contributor who files one; 1b Luis video icon)
    Newsweed on the phone is icon driven (Mark, 29 Sep 2026): "icons for every section: news, then dating,
    then classifieds, then all other sections. When a user scrolls they should get what they want fast.
    Squeeze ads in between on the scroll, in text form, small letters only, so as not to interfere."
@@ -22,6 +22,7 @@
     markets: '<path d="M3 17.5l5.5-5.5 4 4L21 7.5"/><path d="M15 7.5h6v6"/>',
     world: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.9 5.2 3.9 8.5s-1.3 6.1-3.9 8.5c-2.6-2.4-3.9-5.2-3.9-8.5S9.4 5.9 12 3.5z"/>',
     corrupt: '<path d="M12 4v16M8 20h8M5 7.5h14M12 4.5l-7 3M12 4.5l7 3"/><path d="M5 7.5l-2.5 6a2.8 2.8 0 0 0 5 0zM19 7.5l-2.5 6a2.8 2.8 0 0 0 5 0z"/>',
+    legal: '<path d="M14 3.5l6.5 6.5-2.5 2.5L11.5 6z"/><path d="M12.8 9.2L4.5 17.5l2 2 8.3-8.3"/><path d="M12 20.5h8.5"/>',   // 2026-11-04 legal-1a: gavel
     dui: '<path d="M5 15.5l1.6-5a2 2 0 0 1 1.9-1.4h7a2 2 0 0 1 1.9 1.4l1.6 5"/><rect x="3.5" y="15.5" width="17" height="3.5" rx="1.2"/><path d="M6 19v1.5M18 19v1.5M10 4.5l1 2M14 4.5l-1 2M12 3v2.5"/>',
     events: '<rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M8 14h3"/>',
     chat: '<path d="M4.5 5h15a1 1 0 0 1 1 1v9.5a1 1 0 0 1-1 1H10l-5.5 4v-4h0a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 9.5h8M8 12.5h5"/>',
@@ -57,6 +58,7 @@
     ["/#markets", "Markets", "markets", "#0b6b3a"],
     ["/corruptmen.html", "CorruptMen", "corrupt", "#b3261e"],
     ["/dui.html", "Crime & DUI", "dui", "#7a1f16"],
+    ["/legal.html", "Legal", "legal", "#1d2470"],   // 2026-11-04 legal-1a
     ["/events.html", "Events", "events", "#c77f1c"],
     ["/contests.html", "Contests", "trophy", "#b8860b"],
     ["/chat.html", "Chat", "chat", "#4145b0"],

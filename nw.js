@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4n (2026-10-16 apps.js v1f: Obituaries + All sections; 4m Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4o (2026-11-04 Legal in the menu, apps.js v1g; 4n 2026-10-16 apps.js v1f: Obituaries + All sections; 4m Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -16,6 +16,7 @@
     ["/#world", "World"],
     ["/corruptmen.html", "CorruptMen", "cm"],
     ["/dui.html", "Crime & DUI"],
+    ["/legal.html", "Legal"],
     ["/classifieds.html", "Classifieds"],
     ["/obituaries.html", "Obituaries"],
     ["/events.html", "Events"],
@@ -112,7 +113,7 @@
     }
     el.innerHTML =
       '<div class="util"><div class="wrap"><span>Newsweed · Online since 2010 · In print since 2022 · New York · Medellín</span>'
-      + '<span class="sale"><b>This brand is for sale</b> · <a href="/#acquire">acquisition details</a></span></div></div>'
+      + '<span class="sale"><b>This brand is for sale: $900,000</b> · <a href="https://wallstdomains.com/domain/newsweed.com" rel="noopener">acquisition details</a></span></div></div>'
       + '<div class="wrap"><header class="mast">'
       +   '<a class="ear ai" href="/ai.html" id="aiEar"><span class="k">AI term of the day</span><b id="aiTerm">…</b><span class="def" id="aiDef"></span></a>'
       +   '<div class="center"><a class="brand" href="/" aria-label="Newsweed home">' + LOGO
@@ -185,10 +186,10 @@
       + '<p><b>Disclosure.</b> Newsweed.com is published by <a href="/editor.html">Mark Nejmeh</a>, who is the plaintiff in '
       + '<i>Nejmeh v. Theriva Biologics, Inc.</i>, No. 3:26-cv-00705 (D. Nev.) (<a href="https://nejmehvstheriva.com" rel="noopener">the filings</a>), '
       + "and holds shares of Theriva Biologics. He also runs Warrant Wire, JobCreation.us, WiseSleuth, ACHplug and AdHotBox, which are promoted on this site.</p>"
-      + '<div class="forsale" id="acquire"><b>Newsweed.com is for sale.</b> The site keeps publishing while it is listed. '
+      + '<div class="forsale" id="acquire"><b>Newsweed.com is for sale: $900,000.</b> The site keeps publishing while it is listed. '
       + 'Serious inquiries: <a href="tel:+17329953914">732-995-3914</a> · '
       + '<a href="mailto:realroofers@gmail.com?subject=Newsweed.com%20acquisition">realroofers@gmail.com</a> · '
-      + '<a href="https://wallstdomains.com" rel="noopener">wallstdomains.com</a>. A merger or partnership with an established media company would also be considered.</div>'
+      + '<a href="https://wallstdomains.com/domain/newsweed.com" rel="noopener">Newsweed on Wall St Domains</a>. A merger or partnership with an established media company would also be considered.</div>'
       + '<p class="stamp">© ' + new Date().getFullYear() + " Newsweed.com · " + esc(build) + "</p>"
       + "</div></footer>";
   }
@@ -233,7 +234,7 @@
   var phone = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   if (phone) Array.prototype.forEach.call(document.querySelectorAll(".ad"), function (el) { el.parentNode.removeChild(el); });
   var appsJs = document.createElement("script");
-  appsJs.src = "/apps.js?v=1f";
+  appsJs.src = "/apps.js?v=1g";
   document.body.appendChild(appsJs);
 
   window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };

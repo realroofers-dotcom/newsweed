@@ -1,4 +1,4 @@
-// functions/api/feed.js — BUILT 2026-09-29 · feed-3b (+ nomad group)
+// functions/api/feed.js — BUILT 2026-09-29 · feed-3c (2026-11-04: + legal group; 3b + nomad group)
 //
 // Every desk, grouped so no single call fetches too much:
 //   GET /api/feed                 -> the home page desks
@@ -29,7 +29,23 @@ function season() {
   return { name: "Winter", q: "winter storm OR holiday OR winter festival" };
 }
 
+/* 2026-11-04 legal-1a. Mark: "add a legal section"; "all cannabis law suits including car accidents and suicide"; "I want my readers to be aware of important legal cases".
+   Each cannabis desk needs the cannabis word AND the subject AND a court word in the headline itself. */
+const WEED = /\b(cannabis|marijuana|thc|dispensar(y|ies)|edibles?|hemp|delta-8|weed)\b/i;
+const LAW = /\b(sues?|sued|suing|suits?|lawsuits?|wrongful[- ]death|verdict|court|judge|settle(s|d|ment)?)\b/i;
+const LAWYER_ADS = /opportunity to lead|lead plaintiff|deadline|(shareholder|investor) alert|investigat|encourages|reminds|https?:\/\//i;
+
 const GROUPS = {
+  legal: [
+    { key: "important", label: "Important court cases", take: 8, must: [/supreme court|appeals court|circuit court|federal judge/i], not: /https?:\/\//i, feeds: [gnSearch("\"U.S. Supreme Court\" OR \"federal appeals court\" ruling OR ruled OR decision"), bing("Supreme Court ruling")] },
+    /* Mark, 4 Nov 2026: "I will want all impeachments and legal in biotech" */
+    { key: "impeach", label: "Impeachments", take: 8, must: [/impeach/i], feeds: [gnSearch("impeachment OR impeached OR \"articles of impeachment\""), bing("impeachment")] },
+    { key: "biotech", label: "Biotech in court", take: 8, must: [/biotech|pharma|drugmaker|drug maker|therapeutics|biologics|biosciences/i, /\b(sues?|sued|suing|lawsuits?|court|judge)\b/i], not: /opportunity to lead|lead plaintiff|deadline|(shareholder|investor) alert|investigat|encourages|reminds|law offices|lawsuit filed against|https?:\/\//i, feeds: [gnSearch("(biotech OR pharmaceutical OR drugmaker OR therapeutics) (lawsuit OR sued OR sues OR court OR judge OR verdict)"), bing("biotech lawsuit court")] },
+    { key: "weedsuits", label: "Cannabis lawsuits", take: 8, must: [WEED, LAW], feeds: [gnSearch("(cannabis OR marijuana OR dispensary OR THC OR hemp) (lawsuit OR sues OR sued OR \"class action\" OR court)"), bing("cannabis lawsuit")] },
+    { key: "crash", label: "Cannabis and crashes", take: 6, merge: true, must: [WEED, /crash|collision|impaired driv|delivery driver|wreck/i, LAW], feeds: [gnSearch("(marijuana OR cannabis OR THC OR dispensary) (crash OR collision OR \"impaired driver\") (lawsuit OR sued OR \"wrongful death\" OR verdict)"), bing("marijuana crash wrongful death lawsuit")] },
+    { key: "suicide", label: "Cannabis and suicide", take: 6, merge: true, must: [WEED, /suicid/i, LAW], feeds: [gnSearch("(marijuana OR cannabis OR THC OR edible) suicide (lawsuit OR sued OR \"wrongful death\" OR court)"), bing("marijuana suicide lawsuit")] },
+    { key: "investors", label: "Stockholder cases", take: 6, must: [/shareholder|stockholder|investor|securities/i, LAW], not: LAWYER_ADS, feeds: [gnSearch("\"shareholder lawsuit\" OR \"securities fraud\" OR \"stockholder lawsuit\" OR \"investors sue\" court OR judge OR ruling"), bing("shareholder lawsuit judge ruling")] }
+  ],
   home: [
     { key: "top", label: "Top story", take: 8, feeds: ["https://news.google.com/rss?" + GN, "https://feeds.npr.org/1001/rss.xml", "https://feeds.bbci.co.uk/news/rss.xml"] },
     { key: "markets", label: "Markets", take: 6, feeds: ["https://feeds.content.dowjones.io/public/rss/mw_topstories", "https://www.cnbc.com/id/15839069/device/rss/rss.html", gnSearch("stock market today")] },

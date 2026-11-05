@@ -303,7 +303,7 @@
 
   /* Newsweed's own top story, pinned above the feed (2026-10-29, Mark: "top story").
      Remove or replace this one line to change it. */
-  var PINNED = [{ title: "Wax, oil and a bottle: a Terre Haute family's warning", link: "https://newsweed.com/story-andy-thompson", source: "Newsweed" }];
+  var PINNED = [{ title: "How New Jersey opened the door to four small reactors without an approved design", link: "https://newsweed.com/story-nj-reactors", source: "By Mark Nejmeh · Newsweed" }, { title: "Wax, oil and a bottle: a Terre Haute family's warning", link: "https://newsweed.com/story-andy-thompson", source: "Newsweed" }];
   function loadFeed() {
     NW.get("/api/feed").then(function (d) {
       var s = d.sections || {};

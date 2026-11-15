@@ -9,7 +9,13 @@
 //
 // KV: EMAIL_LIST  events:all (the list), rsvp:<eventId>:<email>
 
-const KINDS = { authors: "Meet the authors", hike: "Hike with TrailShrinks", roofing: "Roofing class with RooferSchool", truck: "Newsweed truck stop", other: "Event" };
+/* events-2a (15 Nov 2026, Mark: "let people list event free please"): anyone can list an event, free.
+   POST { action:"list", title, date, time, place, city, state, kind, link, description, name, email, phone, website(honeypot) }
+   Name, email and phone are required and kept private (never sent back by GET), like the obituaries: nobody anonymous.
+   It shows at once, marked "Listed by a reader". At most 3 listings per email per day. The admin can hide one
+   (status 'hidden') - nothing is ever deleted (Mark's rule). */
+const KINDS = { authors: "Meet the authors", hike: "Hike with TrailShrinks", roofing: "Roofing class with RooferSchool", truck: "Newsweed truck stop",
+  concert: "Concert", flea: "Flea market", tradeshow: "Trade show", festival: "Fair or festival", meeting: "Stockholder meeting", community: "Community event", meetup: "Meetup", other: "Event" };
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function ok(obj) { return new Response(JSON.stringify(obj), { headers: JSON_HEADERS }); }
 function clean(s, max) { return String(s || "").replace(/[ \t]+/g, " ").trim().slice(0, max); }
@@ -32,9 +38,11 @@ export async function onRequestGet(context) {
   }
 
   const today = nyDate();
-  const upcoming = list.filter(e => e.date >= today).sort((a, b) => (a.date + a.time < b.date + b.time ? -1 : 1));
-  const past = list.filter(e => e.date < today).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 20);
-  const strip = e => { const { rsvpCount, ...rest } = e; return Object.assign(rest, { kindLabel: KINDS[e.kind] || "Event", going: rsvpCount || 0 }); };
+  const shown = list.filter(e => e.status !== "hidden");
+  const upcoming = shown.filter(e => e.date >= today).sort((a, b) => (a.date + a.time < b.date + b.time ? -1 : 1));
+  const past = shown.filter(e => e.date < today).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 20);
+  /* the lister's name, email and phone never leave the server */
+  const strip = e => { const { rsvpCount, contact, ...rest } = e; return Object.assign(rest, { kindLabel: KINDS[e.kind] || "Event", going: rsvpCount || 0 }); };
   return ok({ upcoming: upcoming.map(strip), past: past.map(strip), kinds: KINDS });
 }
 
@@ -47,9 +55,19 @@ export async function onRequestPost(context) {
   let list = await all(kv);
 
   if (isAdmin(env, url)) {
-    if (b.action === "delete") {
-      await kv.put("events:all", JSON.stringify(list.filter(e => e.id !== b.id)));
+    if (b.action === "delete" || b.action === "hide") {
+      /* events-2a: hidden, never deleted (Mark: "never delete records") */
+      const ev = list.find(e => e.id === b.id);
+      if (ev) { ev.status = "hidden"; ev.hidden_at = new Date().toISOString(); await kv.put("events:all", JSON.stringify(list)); }
+      return ok({ success: true, hidden: !!ev });
+    }
+    if (b.action === "unhide") {
+      const ev = list.find(e => e.id === b.id);
+      if (ev) { delete ev.status; await kv.put("events:all", JSON.stringify(list)); }
       return ok({ success: true });
+    }
+    if (b.action === "contacts") {
+      return ok({ success: true, listings: list.filter(e => e.contact).map(e => ({ id: e.id, title: e.title, date: e.date, status: e.status || "live", contact: e.contact })) });
     }
     if (b.action === "save") {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || "")) return ok({ success: false, error: "Pick a date." });
@@ -64,12 +82,42 @@ export async function onRequestPost(context) {
         description: clean(b.description, 1000)
       };
       const old = list.find(e => e.id === ev.id);
-      if (old) ev.rsvpCount = old.rsvpCount || 0;
+      if (old) { ev.rsvpCount = old.rsvpCount || 0; if (old.contact) ev.contact = old.contact; if (old.by_reader) ev.by_reader = true; if (old.status) ev.status = old.status; }
       list = list.filter(e => e.id !== ev.id).concat([ev]);
       await kv.put("events:all", JSON.stringify(list));
       return ok({ success: true, event: ev });
     }
     return ok({ success: false, error: "Unknown action." });
+  }
+
+  if (b.action === "list") {
+    if (clean(b.website, 50)) return ok({ success: true });
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || "")) return ok({ success: false, error: "Pick the date." });
+    if (b.date < nyDate()) return ok({ success: false, error: "That date has passed." });
+    const title = clean(b.title, 120);
+    if (title.length < 4) return ok({ success: false, error: "Give the event a name." });
+    const place = clean(b.place, 120), city = clean(b.city, 60), state = clean(b.state, 2).toUpperCase();
+    if (!place && !city) return ok({ success: false, error: "Where is it? A place or a town." });
+    const name = clean(b.name, 80), email = clean(b.email, 200).toLowerCase(), phone = clean(b.phone, 30);
+    if (name.split(" ").filter(Boolean).length < 2) return ok({ success: false, error: "Your full name, please (kept private)." });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return ok({ success: false, error: "A real email, please (kept private)." });
+    if (phone.replace(/\D/g, "").length < 7) return ok({ success: false, error: "A phone number, please (kept private)." });
+    const capKey = "evcap:" + nyDate() + ":" + email;
+    const used = parseInt((await kv.get(capKey)) || "0", 10);
+    if (used >= 3) return ok({ success: false, error: "Three listings a day per person. Thank you - come back tomorrow." });
+    let link = clean(b.link, 400);
+    if (link && !/^https?:\/\//.test(link)) link = "";
+    const ev = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      date: b.date, time: clean(b.time, 20), title, kind: KINDS[b.kind] ? b.kind : "community",
+      place: [place, city].filter(Boolean).join(", "), state, link,
+      description: clean(b.description, 600), by_reader: true,
+      contact: { name, email, phone, at: new Date().toISOString(), ip_country: (context.request.cf && context.request.cf.country) || "" }
+    };
+    list.push(ev);
+    await kv.put("events:all", JSON.stringify(list));
+    await kv.put(capKey, String(used + 1), { expirationTtl: 60 * 60 * 30 });
+    return ok({ success: true, id: ev.id });
   }
 
   if (b.action === "rsvp") {

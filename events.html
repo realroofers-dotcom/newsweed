@@ -50,6 +50,13 @@
 .ev form input { padding: 7px 9px; border: 1px solid var(--line); border-radius: 4px; font: 400 14px var(--sans); }
 .ev form input[type=email], .ev form input[name=n] { flex: 1; min-width: 150px; }
 .ev form input[type=number] { width: 64px; }
+.lf { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.lf input, .lf select, .lf textarea { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; font: 400 14.5px var(--sans); width: 100%; box-sizing: border-box; }
+.lf input[name=title], .lf input[name=link], .lf textarea, .lf .status { grid-column: 1 / -1; }
+.lf .btn { grid-column: 1 / 2; }
+.lf .hp { position: absolute; left: -9999px; }
+@media (max-width: 640px) { .lf { grid-template-columns: 1fr; } }
+.byr { font: 700 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); margin-left: 6px; }
 </style>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 </head>
@@ -65,6 +72,21 @@
         <div class="kind hike"><h3>Hikes</h3><p>Group hikes with TrailShrinks: walk it off, talk it out.</p><a href="https://trailshrinks.com" rel="noopener">TrailShrinks.com →</a></div>
         <div class="kind roofing"><h3>Roofing classes</h3><p>Learn the trade from a roofer who built a company. Hands-on, practical.</p><a href="https://rooferschool.com" rel="noopener">RooferSchool.com →</a></div>
       </div>
+
+      <!-- events-2a (15 Nov 2026, Mark: "let people list event free please") -->
+      <section class="block" id="listfree"><div class="kicker green"><h2>List your event &middot; free</h2></div>
+        <p class="note" style="margin:0 0 8px">Concerts, flea markets, fairs, trade shows, meetups, club nights, church suppers &mdash; if people can go, list it. Free. Your name, email and phone are required and stay private; they are never shown.</p>
+        <form id="lf" class="lf">
+          <input name="title" placeholder="Event name" required maxlength="120">
+          <select name="kind"><option value="community">Community event</option><option value="concert">Concert</option><option value="flea">Flea market</option><option value="festival">Fair or festival</option><option value="tradeshow">Trade show</option><option value="meetup">Meetup</option><option value="other">Other</option></select>
+          <input name="date" type="date" required><input name="time" placeholder="Time (e.g. 7 pm)" maxlength="20">
+          <input name="place" placeholder="Place (hall, park, address)" maxlength="120"><input name="city" placeholder="Town or city" maxlength="60"><input name="state" placeholder="State (2 letters)" maxlength="2">
+          <input name="link" type="url" placeholder="Link for details or tickets (optional)">
+          <textarea name="description" rows="3" maxlength="600" placeholder="A few words about it (optional)"></textarea>
+          <input name="name" placeholder="Your full name (private)" required><input name="email" type="email" placeholder="Your email (private)" required><input name="phone" type="tel" placeholder="Your phone (private)" required>
+          <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn" type="submit">List it free</button><div class="status" style="flex-basis:100%"></div>
+        </form></section>
 
       <section class="block"><div class="kicker green"><h2>Coming up</h2><span class="more"><a href="/travel.html">Where the truck has been →</a></span></div>
         <div id="up"><div class="loading">Loading…</div></div></section>
@@ -86,7 +108,7 @@
     var where = [e.place, NW_STATES.by[e.state] ? NW_STATES.by[e.state].name : e.state].filter(Boolean).join(", ");
     return '<div class="ev" id="' + E(e.id) + '"><div class="cal"><div class="m">' + d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }) + '</div>'
       + '<div class="d">' + d.getUTCDate() + '</div><div class="w">' + d.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" }) + '</div></div><div>'
-      + '<span class="kl">' + E(e.kindLabel) + '</span><h3>' + E(e.title) + '</h3>'
+      + '<span class="kl">' + E(e.kindLabel) + '</span>' + (e.by_reader ? '<span class="byr">Listed by a reader</span>' : '') + '<h3>' + E(e.title) + '</h3>'
       + '<div class="where">' + E(where) + (e.time ? " · " + E(e.time) : "") + (e.going ? " · " + E(e.going) + " going" : "") + '</div>'
       + (e.description ? '<p>' + E(e.description) + '</p>' : "")
       + (e.link ? '<a href="' + E(U(e.link)) + '" rel="noopener" style="color:var(--navy);font-size:13.5px">More details →</a>' : "")
@@ -101,6 +123,18 @@
       : '<p class="note">New dates are coming. Sign up for the Newsweed Daily to hear first.</p>';
     document.getElementById("past").innerHTML = past.length ? past.map(function (e) { return card(e, false); }).join("") : '<p class="note">The first events are being scheduled.</p>';
     if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ block: "start" }); }
+  });
+  /* events-2a: list an event free */
+  document.getElementById("lf").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var f = ev.target, st = f.querySelector(".status"), o = { action: "list" };
+    ["title", "kind", "date", "time", "place", "city", "state", "link", "description", "name", "email", "phone", "website"].forEach(function (k) { o[k] = f[k].value; });
+    st.className = "status"; st.textContent = "Listing…";
+    NW.post("/api/events", o).then(function (r) {
+      st.className = r.success ? "status" : "status err";
+      st.textContent = r.success ? "Listed. It is on the calendar now. Thank you." : (r.error || "Failed.");
+      if (r.success) { f.reset(); setTimeout(function () { location.hash = r.id || ""; location.reload(); }, 1200); }
+    });
   });
   document.getElementById("up").addEventListener("submit", function (ev) {
     ev.preventDefault();

@@ -40,8 +40,9 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-s]"), function (el) {
       var items = sections[el.getAttribute("data-s")] || [];
       var max = parseInt(el.getAttribute("data-max"), 10) || 99;
-      el.innerHTML = items.length ? items.slice(0, max).map(li).join("") : '<li class="loading">Nothing new right now. Check back shortly.</li>';
+      el.innerHTML = items.length ? NW.withAds(items.slice(0, max).map(li)) : '<li class="loading">Nothing new right now. Check back shortly.</li>';
     });
+    NW.adsNow();
   }
 
   function rail() {

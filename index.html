@@ -274,7 +274,7 @@
 
 <div id="nw-foot" data-build="Built 2026-09-29 · index-3a"></div>
 
-<script src="/nw.js?v=4p"></script>
+<script src="/nw.js?v=4q"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script>
 (function () {
@@ -287,7 +287,8 @@
   function fill(id, items, empty) {
     var el = document.getElementById(id);
     if (!el) return;
-    el.innerHTML = items && items.length ? items.map(li).join("") : '<li class="loading">' + (empty || "Nothing new right now. Check back shortly.") + '</li>';
+    el.innerHTML = items && items.length ? NW.withAds(items.map(li)) : '<li class="loading">' + (empty || "Nothing new right now. Check back shortly.") + '</li>';
+    NW.adsNow();
   }
 
   function lead(items) {

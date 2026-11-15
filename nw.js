@@ -237,7 +237,15 @@
   appsJs.src = "/apps.js?v=1g";
   document.body.appendChild(appsJs);
 
-  window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue };
+  /* ads-between-stories-1a (15 Nov 2026, Mark: "in between stories as well like a real newspaper"): a one-line ad after
+     every third story in a list (never after the last); house.js fills them. */
+  function withAds(rows) {
+    var out = [];
+    rows.forEach(function (r, i) { out.push(r); if ((i + 1) % 3 === 0 && i < rows.length - 1) out.push('<li data-house-inline data-mini></li>'); });
+    return out.join("");
+  }
+  function adsNow() { if (window.houseInline) window.houseInline(); else setTimeout(function () { if (window.houseInline) window.houseInline(); }, 1500); }
+  window.NW = { phone: phone, esc: esc, safeUrl: safeUrl, ago: ago, stamp: stamp, get: get, post: post, subscribe: subscribeForms, volume: volume, issue: issue, withAds: withAds, adsNow: adsNow };
   header();
   footer();
   subscribeForms();

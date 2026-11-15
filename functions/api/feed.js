@@ -50,14 +50,14 @@ const GROUPS = {
     { key: "top", label: "Top story", take: 8, feeds: ["https://news.google.com/rss?" + GN, "https://feeds.npr.org/1001/rss.xml", "https://feeds.bbci.co.uk/news/rss.xml"] },
     { key: "markets", label: "Markets", take: 6, feeds: ["https://feeds.content.dowjones.io/public/rss/mw_topstories", "https://www.cnbc.com/id/15839069/device/rss/rss.html", gnSearch("stock market today")] },
     { key: "world", label: "World", take: 6, feeds: [gnTopic("WORLD"), "https://feeds.bbci.co.uk/news/world/rss.xml", "https://feeds.npr.org/1004/rss.xml"] },
-    { key: "latam", label: "Latin America", take: 4, feeds: [gnSearch("Colombia OR Venezuela OR \"Latin America\" news"), "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml"] },
+    { key: "latam", label: "Latin America", take: 4, days: 5, feeds: [gnSearch("Colombia OR Venezuela OR \"Latin America\" news"), "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml"] },
     { key: "cannabis", label: "Cannabis law", take: 6, feeds: [gnSearch("cannabis legalization OR \"medical marijuana\" law OR court OR legislature"), "https://www.marijuanamoment.net/feed/"] },
     { key: "crime", label: "Crime", take: 5, feeds: [gnSearch("crime arrested charged"), "https://www.cbsnews.com/latest/rss/crime"] },
     { key: "warrants", label: "Warrants", take: 5, feeds: [gnSearch("\"arrest warrant\" issued"), bing("arrest warrant issued")] },
-    { key: "medical", label: "Medical", take: 5, medical: true, feeds: ["https://www.sciencedaily.com/rss/health_medicine.xml", gnSearch("clinical trial results published study"), "https://feeds.npr.org/1128/rss.xml"] },
-    { key: "wellness", label: "Holistic", take: 3, medical: true, feeds: [gnSearch("study finds meditation OR yoga OR acupuncture OR nutrition OR exercise benefit")] },
+    { key: "medical", label: "Medical", take: 5, days: 5, medical: true, feeds: ["https://www.sciencedaily.com/rss/health_medicine.xml", gnSearch("clinical trial results published study"), "https://feeds.npr.org/1128/rss.xml"] },
+    { key: "wellness", label: "Holistic", take: 3, days: 10, medical: true, feeds: [gnSearch("study finds meditation OR yoga OR acupuncture OR nutrition OR exercise benefit")] },
     { key: "sports", label: "Sports", take: 5, feeds: [gnTopic("SPORTS"), "https://feeds.bbci.co.uk/sport/rss.xml"] },
-    { key: "tribal", label: "Tribal nations", take: 3, merge: true, feeds: ["https://ictnews.org/feed", "https://nativenewsonline.net/feed", "https://www.aptnnews.ca/feed/"] }
+    { key: "tribal", label: "Tribal nations", take: 3, days: 7, merge: true, feeds: ["https://ictnews.org/feed", "https://nativenewsonline.net/feed", "https://www.aptnnews.ca/feed/"] }
   ],
   farm: [
     { key: "farm", label: "Farm news", take: 4, merge: true, feeds: ["https://www.farmprogress.com/rss.xml", "https://modernfarmer.com/feed/", gnSearch("farmers crop harvest USDA")] },
@@ -112,7 +112,7 @@ export async function onRequest(context) {
   const debug = url.searchParams.has("debug");
   const group = GROUPS[url.searchParams.get("group")] ? url.searchParams.get("group") : "home";
   const cache = caches.default;
-  const cacheKey = new Request(url.origin + "/api/feed?v=feed-4a&group=" + group);
+  const cacheKey = new Request(url.origin + "/api/feed?v=feed-4b&group=" + group);
 
   if (!debug) {
     const hit = await cache.match(cacheKey);
@@ -138,7 +138,7 @@ export async function onRequest(context) {
     }).map(it => Object.assign(it, { section: s.key, label: s.label }));
   });
 
-  const payload = { group, sections, updated: new Date().toISOString(), build: "feed-4a" };
+  const payload = { group, sections, updated: new Date().toISOString(), build: "feed-4b" };
   if (group === "college") payload.season = season().name;
   if (debug) payload.debug = log;
 

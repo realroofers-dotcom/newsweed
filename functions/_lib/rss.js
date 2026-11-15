@@ -9,8 +9,9 @@ const GN = "hl=en-US&gl=US&ceid=US:en";
 export function gnTopic(t) { return "https://news.google.com/rss/headlines/section/topic/" + t + "?" + GN; }
 /* fresh-1a (15 Nov 2026, Mark: "news should stay fresh on newsweed.com i am seeing the same stories day after day"):
    a Google News search ranks by relevance, so a 188-day-old story could sit on top for weeks. Every search now asks
-   for the last few days only (Google's own "when:" operator), and Bing is asked to sort by date. */
-export function gnSearch(q, days) { return "https://news.google.com/rss/search?q=" + encodeURIComponent("(" + q + ") when:" + (days || 3) + "d") + "&" + GN; }
+   for the last 10 days only (Google's own "when:" operator; each section then keeps its own 3/5/7/10/14 days, newest first),
+   and Bing is asked to sort by date. */
+export function gnSearch(q, days) { return "https://news.google.com/rss/search?q=" + encodeURIComponent("(" + q + ") when:" + (days || 10) + "d") + "&" + GN; }
 export function bing(q) { return "https://www.bing.com/news/search?format=rss&qft=" + encodeURIComponent('sortbydate="1"') + "&q=" + encodeURIComponent(q); }
 /* a story older than this many days is never shown as news (a section may set its own `days`) */
 export function freshOnly(items, days) {

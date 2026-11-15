@@ -158,30 +158,43 @@ export async function onRequest(context) {
 function daysFor(s) { return s.days || 3; }
 /* how far back each group looks: the front page 3 days; quieter desks a week; court desks two weeks */
 const GROUP_DAYS = { home: 3, legal: 14 };
+/* fill-1a (15 Nov 2026) - THE RULE: A STORY COMES DOWN ONLY WHEN A NEWER ONE IS THERE TO TAKE ITS PLACE.
+   Mark: "only archive when there is new story to fill the space". Fresh stories first, newest first; if a section
+   has fewer fresh stories than places, the newest of the older ones stay up until something newer replaces them.
+   No section is ever left empty because its news was quiet. (Everything shown is archived daily, as before.) */
+function byNewest(a, b) { return Date.parse(b.pubDate || 0) - Date.parse(a.pubDate || 0); }
 async function fetchSection(s) {
   if (!s.merge) {
-    const log = [], got = [], seenFp = new Set();
+    const log = [], got = [], older = [], seenFp = new Set();
     for (const u of s.feeds) {
       try {
-        const fresh = freshOnly(clean(await fetchFeed(u), s), daysFor(s));
-        log.push(host(u) + " -> " + fresh.length + " fresh");
+        const all = clean(await fetchFeed(u), s);
+        const fresh = freshOnly(all, daysFor(s));
+        log.push(host(u) + " -> " + fresh.length + " fresh of " + all.length);
         for (const it of fresh) { const fp = fingerprint(it.title); if (!seenFp.has(fp)) { seenFp.add(fp); got.push(it); } }
+        for (const it of all) { if (it.pubDate && !fresh.includes(it)) older.push(it); }
         if (got.length >= s.take) break;
       } catch (e) { log.push(host(u) + " " + e.message); }
     }
-    got.sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate));
+    got.sort(byNewest);
+    if (got.length < s.take) {   /* top up with the newest older stories - nothing comes down until replaced */
+      older.sort(byNewest);
+      for (const it of older) { if (got.length >= s.take) break; const fp = fingerprint(it.title); if (!seenFp.has(fp)) { seenFp.add(fp); got.push(it); } }
+    }
     return { items: got.slice(0, s.take), log };
   }
   const log = [];
   const all = await Promise.all(s.feeds.map(async u => {
     try {
-      const items = freshOnly(clean(await fetchFeed(u), s), daysFor(s));
-      log.push(host(u) + " -> " + items.length);
-      return items.slice(0, s.take);
+      const every = clean(await fetchFeed(u), s);
+      const fresh = freshOnly(every, daysFor(s));
+      log.push(host(u) + " -> " + fresh.length + " fresh of " + every.length);
+      const rest = every.filter(it => it.pubDate && !fresh.includes(it)).sort(byNewest);
+      return fresh.concat(rest).slice(0, s.take);
     } catch (e) { log.push(host(u) + " " + e.message); return []; }
   }));
   const out = [].concat.apply([], all);
-  out.sort((a, b) => Date.parse(b.pubDate || 0) - Date.parse(a.pubDate || 0));
+  out.sort(byNewest);
   return { items: out, log };
 }
 

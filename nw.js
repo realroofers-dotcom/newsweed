@@ -1,4 +1,4 @@
-/* nw.js — BUILT 2026-09-29 · nw-js-4o (2026-11-04 Legal in the menu, apps.js v1g; 4n 2026-10-16 apps.js v1f: Obituaries + All sections; 4m Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
+/* nw.js — BUILT 2026-09-29 · nw-js-4p (2026-11-15 ads-everywhere-1a: AdHotBox house.js on every page) · nw-js-4o (2026-11-04 Legal in the menu, apps.js v1g; 4n 2026-10-16 apps.js v1f: Obituaries + All sections; 4m Privacy in the footer; 4l trophy on the Contests menu link; 4k "truck is here now" bar; 4j Contests; 4i apps-1d students ad; 4h contributors; 4g apps-1b video icon; 4f phones: loads apps.js icon grid + text ads, removes ad boxes; 4e wordmark NEWSWEED.COM in truck lettering, dark blue; favicon; 4d footer "About & contact"; 4c motto per Mark 29 Sep: "News reported with respect for the weed audience, and for all."; 4b Mark: truck OFF the header, back to the Volume ear; Volume 6 · No. = day of year;
    "Online since 2010 · In print since 2022"; special-announcement bar kept; Events; Travel & Nomads)
    was nw-js-4a (truck ear), nw-js-3a (dramatic masthead: Volume, live clock, AI term ear; 2-row nav)
    Shared by every Newsweed page:
@@ -241,4 +241,10 @@
   header();
   footer();
   subscribeForms();
+  /* ads-everywhere-1a (15 Nov 2026, Mark: "newsweed should have all our ads everywhere" / "throughout every section"):
+     the AdHotBox ads on every page that loads nw.js - a space after every second section (every fourth long paragraph
+     on a story page), paid AdHotBox placements first, our own logo ads as fill, plus the strip above the footer. */
+  if (!document.querySelector('script[src*="adhotbox.com/house.js"]')) {
+    var hj = document.createElement("script"); hj.src = "https://adhotbox.com/house.js"; hj.defer = true; document.body.appendChild(hj);
+  }
 })();

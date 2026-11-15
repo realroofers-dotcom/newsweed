@@ -1,4 +1,4 @@
-// functions/api/feed.js — BUILT 2026-09-29 · feed-3c (2026-11-04: + legal group; 3b + nomad group)
+// functions/api/feed.js — BUILT 2026-09-29 · feed-4a (2026-11-15 fresh-1a: only recent stories, newest first, per-group day limits) · feed-3c (2026-11-04: + legal group; 3b + nomad group)
 //
 // Every desk, grouped so no single call fetches too much:
 //   GET /api/feed                 -> the home page desks
@@ -16,7 +16,7 @@
 //
 // Diagnostics: /api/feed?group=farm&debug=1
 
-import { gnTopic, gnSearch, bing, firstFeed, fetchFeed, clean, fingerprint, host } from "../_lib/rss.js";
+import { gnTopic, gnSearch, bing, firstFeed, fetchFeed, clean, fingerprint, host, freshOnly } from "../_lib/rss.js";
 
 const GN = "hl=en-US&gl=US&ceid=US:en";
 const CACHE_SECONDS = 900;
@@ -112,14 +112,15 @@ export async function onRequest(context) {
   const debug = url.searchParams.has("debug");
   const group = GROUPS[url.searchParams.get("group")] ? url.searchParams.get("group") : "home";
   const cache = caches.default;
-  const cacheKey = new Request(url.origin + "/api/feed?v=feed-3a&group=" + group);
+  const cacheKey = new Request(url.origin + "/api/feed?v=feed-4a&group=" + group);
 
   if (!debug) {
     const hit = await cache.match(cacheKey);
     if (hit) return hit;
   }
 
-  const defs = GROUPS[group].map(s => s.seasonal ? Object.assign({}, s, { label: season().name, feeds: [gnSearch(season().q), bing(season().q.replace(/ OR /g, " "))] }) : s);
+  const defs = GROUPS[group].map(s => s.seasonal ? Object.assign({}, s, { label: season().name, feeds: [gnSearch(season().q), bing(season().q.replace(/ OR /g, " "))] }) : s)
+    .map(s => Object.assign({}, s, { days: s.days || GROUP_DAYS[group] || 7 }));
   const results = await Promise.allSettled(defs.map(s => fetchSection(s)));
   const sections = {};
   const log = {};
@@ -137,7 +138,7 @@ export async function onRequest(context) {
     }).map(it => Object.assign(it, { section: s.key, label: s.label }));
   });
 
-  const payload = { group, sections, updated: new Date().toISOString(), build: "feed-3a" };
+  const payload = { group, sections, updated: new Date().toISOString(), build: "feed-4a" };
   if (group === "college") payload.season = season().name;
   if (debug) payload.debug = log;
 
@@ -151,15 +152,30 @@ export async function onRequest(context) {
   return res;
 }
 
+/* fresh-1a (15 Nov 2026): every section shows only stories from the last few days (3 by default; quieter desks
+   up to 7 via `days`), newest first. A feed that has nothing fresh no longer wins just because it answered:
+   the next feed is tried until the section is full. */
+function daysFor(s) { return s.days || 3; }
+/* how far back each group looks: the front page 3 days; quieter desks a week; court desks two weeks */
+const GROUP_DAYS = { home: 3, legal: 14 };
 async function fetchSection(s) {
   if (!s.merge) {
-    const r = await firstFeed(s.feeds);
-    return { items: clean(r.items, s).slice(0, s.take), log: r.log };
+    const log = [], got = [], seenFp = new Set();
+    for (const u of s.feeds) {
+      try {
+        const fresh = freshOnly(clean(await fetchFeed(u), s), daysFor(s));
+        log.push(host(u) + " -> " + fresh.length + " fresh");
+        for (const it of fresh) { const fp = fingerprint(it.title); if (!seenFp.has(fp)) { seenFp.add(fp); got.push(it); } }
+        if (got.length >= s.take) break;
+      } catch (e) { log.push(host(u) + " " + e.message); }
+    }
+    got.sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate));
+    return { items: got.slice(0, s.take), log };
   }
   const log = [];
   const all = await Promise.all(s.feeds.map(async u => {
     try {
-      const items = clean(await fetchFeed(u), s);
+      const items = freshOnly(clean(await fetchFeed(u), s), daysFor(s));
       log.push(host(u) + " -> " + items.length);
       return items.slice(0, s.take);
     } catch (e) { log.push(host(u) + " " + e.message); return []; }

@@ -7,8 +7,17 @@ export const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 
 const GN = "hl=en-US&gl=US&ceid=US:en";
 
 export function gnTopic(t) { return "https://news.google.com/rss/headlines/section/topic/" + t + "?" + GN; }
-export function gnSearch(q) { return "https://news.google.com/rss/search?q=" + encodeURIComponent(q) + "&" + GN; }
-export function bing(q) { return "https://www.bing.com/news/search?format=rss&q=" + encodeURIComponent(q); }
+/* fresh-1a (15 Nov 2026, Mark: "news should stay fresh on newsweed.com i am seeing the same stories day after day"):
+   a Google News search ranks by relevance, so a 188-day-old story could sit on top for weeks. Every search now asks
+   for the last few days only (Google's own "when:" operator), and Bing is asked to sort by date. */
+export function gnSearch(q, days) { return "https://news.google.com/rss/search?q=" + encodeURIComponent("(" + q + ") when:" + (days || 3) + "d") + "&" + GN; }
+export function bing(q) { return "https://www.bing.com/news/search?format=rss&qft=" + encodeURIComponent('sortbydate="1"') + "&q=" + encodeURIComponent(q); }
+/* a story older than this many days is never shown as news (a section may set its own `days`) */
+export function freshOnly(items, days) {
+  const cut = Date.now() - (days || 3) * 86400000;
+  return items.filter(it => it.pubDate && Date.parse(it.pubDate) >= cut)
+    .sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate));
+}
 
 // Promotion of alcohol or drug use, and deal/product copy. Dropped everywhere.
 export const PROMO = /\b(coupons?|promo codes?|discounts?|deals?|on sale|best (strains?|edibles|vapes?|weed|cbd|thc|gummies|bourbons?|beers?|wines?|whiske?ys?|cocktails?)|where to buy|buy (weed|cbd|thc)|happy hour|cocktail recipes?|drinking game|get high|stoner|420 (sale|deals?)|sportsbook promo|bonus code|free bets?|odds boost)\b/i;

@@ -274,7 +274,7 @@
 
 <div id="nw-foot" data-build="Built 2026-09-29 · index-3a"></div>
 
-<script src="/nw.js?v=4o"></script>
+<script src="/nw.js?v=4p"></script>
 <script src="/states-data.js?v=1a"></script><script src="/maps.js?v=1b"></script>
 <script>
 (function () {
@@ -305,14 +305,35 @@
      Remove or replace this one line to change it. */
   /* 2026-11-13 groundstop-1a (Mark: "make sure we have the news about the ground stop"): breaking news pinned first, linked to PBS NewsHour with its own headline. Remove this first entry when the story is over. */
   /* 2026-11-14 story-nothing-new-in-crime-1a pinned first (Mark: 'triggeredshort theory belongs on newsweed.com with a link'); the 11/13 ground-stop entry removed as its note said, story over. */
-  var PINNED = [{ title: "The AI drug that overdosed shareholders", link: "https://newsweed.com/story-ai-drug-overdosed-shareholders", source: "CorruptMen · Newsweed" }, { title: "Nothing new in crime: an old Polish trick, and the stock market", link: "https://newsweed.com/story-nothing-new-in-crime", source: "CorruptMen · Newsweed" }, { title: "No lawyer, still heard: the investors who take companies to federal court themselves", link: "https://newsweed.com/story-pro-se-investors", source: "Newsweed" }, { title: "How New Jersey opened the door to four small reactors without an approved design", link: "https://newsweed.com/story-nj-reactors", source: "By Mark Nejmeh · Newsweed" }, { title: "Wax, oil and a bottle: a Terre Haute family's warning", link: "https://newsweed.com/story-andy-thompson", source: "Newsweed" }];
+  /* fresh-1a (15 Nov 2026, Mark: "news should stay fresh on newsweed.com i am seeing the same stories day after day").
+     Five of the seven lead places were our own stories (some from 29 Oct), so the top never changed.
+     Now: our newest story leads for LEAD_DAYS days only; the day's news fills the rest of the lead; every one of
+     our stories stays one tap away in the "From Newsweed" row under the lead, newest first.
+     A NEW STORY: add it at the TOP of OURS with today's date - it leads for two days, then moves to the row. */
+  var LEAD_DAYS = 2;
+  var OURS = [
+    { date: "2026-11-14", title: "The AI drug that overdosed shareholders", link: "https://newsweed.com/story-ai-drug-overdosed-shareholders", source: "CorruptMen · Newsweed" },
+    { date: "2026-11-14", title: "Nothing new in crime: an old Polish trick, and the stock market", link: "https://newsweed.com/story-nothing-new-in-crime", source: "CorruptMen · Newsweed" },
+    { date: "2026-11-10", title: "No lawyer, still heard: the investors who take companies to federal court themselves", link: "https://newsweed.com/story-pro-se-investors", source: "Newsweed" },
+    { date: "2026-11-05", title: "How New Jersey opened the door to four small reactors without an approved design", link: "https://newsweed.com/story-nj-reactors", source: "By Mark Nejmeh · Newsweed" },
+    { date: "2026-10-29", title: "Wax, oil and a bottle: a Terre Haute family's warning", link: "https://newsweed.com/story-andy-thompson", source: "Newsweed" }
+  ];
+  var PINNED = OURS.filter(function (s) { return (Date.now() - Date.parse(s.date + "T12:00:00Z")) < LEAD_DAYS * 86400000; }).slice(0, 3);   /* Mark 15 Nov: "our pins go up but they come down when stale, our news always priority but never to stay up stale" */
+  function ourRow() {
+    var lead = document.getElementById("lead"); if (!lead || document.getElementById("ours")) return;
+    var row = document.createElement("section"); row.id = "ours"; row.className = "block"; row.setAttribute("aria-label", "From Newsweed");
+    row.innerHTML = '<h2 class="kicker" style="margin:0 0 8px">From Newsweed</h2><div class="lead-grid">' + OURS.map(function (s) {
+      return '<a href="' + E(s.link) + '">' + E(s.title) + '<span class="src">' + E(s.source) + ' · ' + E(new Date(s.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })) + '</span></a>';
+    }).join("") + '</div>';
+    lead.parentNode.insertBefore(row, lead.nextSibling);
+  }
   function loadFeed() {
     NW.get("/api/feed").then(function (d) {
       var s = d.sections || {};
-      lead(PINNED.concat(s.top || []));
+      lead(PINNED.concat(s.top || [])); ourRow();
       ["markets", "world", "latam", "cannabis", "crime", "warrants", "medical", "wellness", "sports", "tribal"].forEach(function (k) { fill("s-" + k, s[k]); });
     }).catch(function () {
-      lead(PINNED);
+      lead(PINNED.length ? PINNED : OURS); ourRow();
     });
   }
 

@@ -1,4 +1,4 @@
-// functions/api/states.js — BUILT 2026-09-29 · states-1a · states-1b 2026-11-20 (latest: the state's own headlines, for the tap)
+// functions/api/states.js — BUILT 2026-09-29 · states-1a · states-1b 2026-11-20 (latest: the state's own headlines, for the tap) · states-1d (the state's own papers via the press list worker, no Wikipedia)
 //
 // The 50-state desk, and the numbers behind the maps.
 //   GET /api/states             -> { states: { NY: {...}, ... }, asOf }
@@ -93,17 +93,27 @@ async function stateNews(kv, code) {
   const name = QNAME[code] || STATE_NAMES[code];
   const urls = [bing(name + " news"), gnSearch("\"" + name + "\"", 2), bing(name + " local news today"),
     gnSearch("\"" + name + "\" (governor OR county OR city OR police OR school OR court OR legislature)", 3)];
+  /* states-1d (2026-11-20, Mark: "why not search asbury park press for nj or the local papers" / "there are many more newspapeers
+     nationwide" / "stop using wilipedia"): the state's OWN papers and news sites, from the press list worker (ABYZ News Links +
+     Mark's adds, no Wikipedia), searched 10 sites at a time on Google News, up to 60 sites. */
+  try {
+    const r = await fetch("https://presslist.realroofers.workers.dev/?statesites=" + code, { cf: { cacheTtl: 3600 } });
+    const j = r.ok ? await r.json() : null;
+    const hosts = ((j && j.list) || []).map(s => s.host).filter(h => /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(h)).slice(0, 60);
+    for (let i = 0; i < hosts.length; i += 10) urls.push(gnSearch(hosts.slice(i, i + 10).map(h => "site:" + h).join(" OR "), 3));
+  } catch (e) {}
   const got = await Promise.allSettled(urls.map(u => fetchFeed(u)));
   const seen = new Set(), items = [];
   for (const g of got) {
     if (g.status !== "fulfilled") continue;
     for (const it of clean(g.value)) {
+      if (/ - USA Today$/i.test(it.title || "")) continue;   /* national wire copies carried by local papers */
       const fp = fingerprint(it.title); if (!it.title || !it.link || seen.has(fp)) continue;
       seen.add(fp); items.push(Object.assign(small(it), { story: String(it.snippet || "").slice(0, 240) }));
     }
   }
   items.sort((a, b) => (Date.parse(b.pubDate) || 0) - (Date.parse(a.pubDate) || 0));
-  const keep = items.slice(0, 60);
+  const keep = items.slice(0, 80);
   if (keep.length) await kv.put(key, JSON.stringify({ at: new Date().toISOString(), items: keep }));
   return keep;
 }

@@ -1,4 +1,4 @@
-<!-- BUILT 2026-11-20 · newsweed movies-1a · Movies & Entertainment. Mark: 'Please add a section on newsweed.com called movies and entertainement lets goive amc free ads on current movies and i will write the reviews' / 'add a section for up and coming actors and directors let people promote themselves and small short films pic required and one paragraph plot' / 'all actors require head shot and location , character prefeered'. Films: /api/movies (Wikipedia release list). Posts: /api/talent (KV, live at once, 3 reports hide, nothing deleted). Reviews: Mark's words only, REVIEWS array below. -->
+<!-- BUILT 2026-11-20 · newsweed movies-1a · Movies & Entertainment. Mark: 'Please add a section on newsweed.com called movies and entertainement lets goive amc free ads on current movies and i will write the reviews' / 'add a section for up and coming actors and directors let people promote themselves and small short films pic required and one paragraph plot' / 'all actors require head shot and location , character prefeered'. Films: /api/movies (Box Office Mojo weekend chart + release calendar; movies-1b, no Wikipedia). Posts: /api/talent (KV, live at once, 3 reports hide, nothing deleted). Reviews: Mark's words only, REVIEWS array below. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,7 +62,7 @@
   <div class="cols2">
     <main>
       <section class="block" id="now"><div class="kicker"><h2>Now in theaters</h2></div>
-        <p class="note" style="font:400 13px var(--sans);color:#666;margin:0 0 6px">Opened in U.S. theaters in the last five weeks, from Wikipedia&rsquo;s list of 2026 American releases. Showtimes and tickets: AMC Theatres.</p>
+        <p class="note" style="font:400 13px var(--sans);color:#666;margin:0 0 6px"><span id="mvsrc">Every film on the latest weekend box-office chart (Box Office Mojo).</span> Showtimes and tickets: AMC Theatres.</p>
         <div class="mv-grid" id="mvnow"><div class="loading">Loading&hellip;</div></div>
       </section>
       <section class="block" id="soon"><div class="kicker green"><h2>Coming soon</h2></div><ul class="soon" id="mvsoon"><li class="loading">Loading&hellip;</li></ul></section>
@@ -144,11 +144,11 @@
   fetch("/api/movies").then(function (r) { return r.json(); }).then(function (d) {
     var now = (d && d.now) || [], soon = (d && d.soon) || [];
     document.getElementById("mvnow").innerHTML = now.length ? now.map(function (m) {
-      return '<div class="mv"><b>' + E(m.title) + '</b><span class="m">Opened ' + day(m.date) + (m.company ? ' &middot; ' + E(m.company.split(" / ")[0]) : '') + '</span>'
-        + (m.wiki ? '<a class="m" href="' + E(m.wiki) + '" target="_blank" rel="noopener">About the film</a>' : '')
+      return '<div class="mv"><b>' + E(m.title) + '</b><span class="m">' + (m.weeks ? (m.weeks === 1 ? 'New this week' : 'Week ' + m.weeks) : '') + (m.theaters ? ' &middot; ' + E(m.theaters) + ' theaters' : '') + (m.distributor && m.distributor !== '-' ? ' &middot; ' + E(m.distributor) : '') + '</span>'
         + '<a class="amc" href="' + AMC + '" target="_blank" rel="noopener">Showtimes &amp; tickets at AMC &rarr;</a><span class="free">Free listing for AMC Theatres</span></div>';
     }).join("") : '<p style="color:#666">The list of films is not available right now. <a href="' + AMC + '" target="_blank" rel="noopener">See what is playing at AMC Theatres &rarr;</a></p>';
-    document.getElementById("mvsoon").innerHTML = soon.length ? soon.map(function (m) { return '<li><b>' + E(m.title) + '</b> &middot; opens ' + day(m.date) + (m.company ? ' &middot; ' + E(m.company.split(" / ")[0]) : '') + '</li>'; }).join("") : '<li style="color:#666">Nothing listed for the next three weeks.</li>';
+    if (d && d.weekend) document.getElementById("mvsrc").textContent = "Every film on the weekend box-office chart for " + d.weekend + " (Box Office Mojo).";
+    document.getElementById("mvsoon").innerHTML = soon.length ? soon.map(function (m) { return '<li><b>' + E(m.title) + '</b> &middot; opens ' + day(m.date) + (m.distributor && m.distributor !== '-' ? ' &middot; ' + E(m.distributor) : '') + (m.scale ? ' &middot; ' + E(m.scale) : '') + (m.genres ? ' &middot; <span style="color:#666">' + E(m.genres) + '</span>' : '') + '</li>'; }).join("") : '<li style="color:#666">Nothing listed for the next three weeks.</li>';
   }).catch(function () { document.getElementById("mvnow").innerHTML = '<p><a href="' + AMC + '" target="_blank" rel="noopener">See what is playing at AMC Theatres &rarr;</a></p>'; });
 
   var data = { actors: [], directors: [], films: [] }, cur = "actors", list = document.getElementById("tallist"), form = document.getElementById("talform");

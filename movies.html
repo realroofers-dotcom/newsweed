@@ -105,8 +105,29 @@
   var E = NW.esc, AMC = "https://www.amctheatres.com/movies";
   function day(d) { var p = String(d).split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString("en-US", { month: "short", day: "numeric" }); }
   /* Mark's reviews: added here as he writes them, newest first: { title, date, text } - his words only */
-  var REVIEWS = [];
-  document.getElementById("revlist").innerHTML = REVIEWS.length ? REVIEWS.map(function (r) { return '<article style="margin-bottom:16px"><b style="font:700 18px var(--serif)">' + E(r.title) + '</b><div style="font:500 12px var(--mono);color:#666">' + E(r.date) + '</div><p>' + E(r.text) + '</p></article>'; }).join("")
+  /* review-1a (2026-11-20): Mark's first review, his words exactly as he sent them. {n} = his numbered source links. */
+  var REVIEWS = [
+    { title: "Wild Horse Nine", stars: 5, date: "November 20, 2026", pull: "A hey I did this movie",
+      paras: [
+        "Martin McDonagh’s Wild Horse Nine is the kind of film that stays with you long after the credits roll—not because of espionage thrills, but because of its brutally honest look at aging, regret, and the rush to get things off your chest before the clock runs out.",
+        "At its heart, the story captures a painful realization: life could have been so much simpler if we hadn’t spent it \"just doing our jobs.\" As John Malkovich’s Chris faces physical decline and fading memory, the grand justifications of duty and institutional loyalty evaporate. Even his dry, cutting humor—like casually tossing out \"Arkansas\" as a word you'd rarely hear him say, playing right into the familiar trope of a place with a reputation folks either steer clear of or judge from afar—feels like the last defense of a man who spent his whole life keeping his distance from ordinary places and honest feelings. Strip away the bravado, and what remains is a terrifyingly human ledger: Who have we hurt? And when the end finally comes—because dead is dead—are we headed toward heaven or hell? {1} {2}",
+        "In old age, when physical strength and illusions fade, what is left comes down to two things: the few loyal friends who still stand beside you, and the hard-won lessons meant as warnings for the young. Sam Rockwell delivers an astounding performance as Lee, the strong, smart, and fiercely loyal friend whose value only deepens as everything else falls away. In a world that quickly disposes of its aging operatives, his loyalty becomes the last true anchor.",
+        "Opposite that heavy, weathered reality stands Mariana di Girolamo as Monica, a college student from Chile. She represents the vibrant fruit of life—youth, beauty, and uncorrupted idealism. Yet for an aging man staring down the bottom of the bucket, her presence is also a poignant reminder of what is permanently out of reach. She experiences the harsh realities of the world her generation inherited, while embodying the grace and vitality that the dying can only witness from afar.",
+        "Framed against the quiet, unbothered sweep of nature—where wild horses roam indifferent to human secrets and politics—Wild Horse Nine is a haunting meditation on mortality. It asks us to look closely at the cost of our choices before we run out of time to tell the truth."
+      ],
+      sources: ["https://www.hollywoodreporter.com/movies/movie-features/martin-mcdonagh-interview-making-wild-horse-9-1236753454/", "https://www.imdb.com/title/tt15799564/quotes/"] }
+  ];
+  function revHtml(r) {
+    var p = r.paras.map(function (t) {
+      return '<p>' + E(t).replace(/\{(\d)\}/g, function (m, n) { var u = r.sources[n - 1]; return u ? '<sup><a href="' + E(u) + '" target="_blank" rel="noopener">[' + n + ']</a></sup>' : ''; }) + '</p>';
+    }).join("");
+    return '<article style="margin-bottom:22px"><b style="font:800 24px/1.2 var(--serif)">' + E(r.title) + '</b>'
+      + '<div style="font:700 20px var(--sans);color:#c77f1c;letter-spacing:2px;margin:4px 0" aria-label="' + r.stars + ' stars">' + "★★★★★".slice(0, r.stars) + '<span style="color:#ccc">' + "★★★★★".slice(r.stars) + '</span></div>'
+      + '<div style="font:500 12px var(--mono);color:#666">' + r.stars + ' stars by Mark Nejmeh &middot; ' + E(r.date) + '</div>'
+      + (r.pull ? '<blockquote style="margin:12px 0;padding:8px 14px;border-left:4px solid #b3261e;font:italic 500 19px var(--serif)">&ldquo;' + E(r.pull) + '&rdquo;</blockquote>' : '')
+      + p + '<a class="mv amc" style="display:inline-block;color:#fff;background:#b3261e;border-radius:8px;padding:8px 12px;text-decoration:none;font:700 13px var(--sans)" href="' + AMC + '" target="_blank" rel="noopener">Showtimes &amp; tickets at AMC &rarr;</a></article>';
+  }
+  document.getElementById("revlist").innerHTML = REVIEWS.length ? REVIEWS.map(revHtml).join("")
     : '<p style="color:#666">Mark Nejmeh&rsquo;s reviews of the films in theaters appear here as he writes them.</p>';
   fetch("/api/movies").then(function (r) { return r.json(); }).then(function (d) {
     var now = (d && d.now) || [], soon = (d && d.soon) || [];

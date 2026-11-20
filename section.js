@@ -19,6 +19,7 @@
     ["/farm.html", "Farm & Garden", "4-H, farm news, gardening"],
     ["/college.html", "Schools & Colleges", "Campus, seasons, back to school"],
     ["/books.html", "Books & Libraries", "Where America's authors are"],
+    ["/movies.html", "Movies & Entertainment", "In theaters, reviews, up and coming"],
     ["/arts.html", "Arts & Music", "With MusicIsNews.com"],
     ["/states.html", "50 States", "Top story from every state"],
     ["/dui.html", "Crime & DUI", "The maps, the headlines"],

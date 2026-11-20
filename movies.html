@@ -1,0 +1,175 @@
+<!-- BUILT 2026-11-20 · newsweed movies-1a · Movies & Entertainment. Mark: 'Please add a section on newsweed.com called movies and entertainement lets goive amc free ads on current movies and i will write the reviews' / 'add a section for up and coming actors and directors let people promote themselves and small short films pic required and one paragraph plot' / 'all actors require head shot and location , character prefeered'. Films: /api/movies (Wikipedia release list). Posts: /api/talent (KV, live at once, 3 reports hide, nothing deleted). Reviews: Mark's words only, REVIEWS array below. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movies &amp; Entertainment: now in theaters, reviews, and up-and-coming actors, directors and short films — Newsweed</title>
+<!-- meta:start (from the Newsweed meta table; edit the table, not these lines) -->
+<meta name="description" content="Movies opening in theaters now with AMC showtimes, Mark Nejmeh&#39;s reviews, and a free place for up-and-coming actors, directors and short-film makers to promote themselves.">
+<link rel="canonical" href="https://newsweed.com/movies">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Newsweed">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Movies &amp; Entertainment: now in theaters, reviews, and up-and-coming actors, directors and short films — Newsweed">
+<meta property="og:description" content="Movies opening in theaters now with AMC showtimes, Mark Nejmeh&#39;s reviews, and a free place for up-and-coming actors, directors and short-film makers to promote themselves.">
+<meta property="og:url" content="https://newsweed.com/movies">
+<meta property="og:image" content="https://newsweed.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Newsweed.com: News reported with respect for the weed audience, and for all.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Movies &amp; Entertainment: now in theaters, reviews, and up-and-coming actors, directors and short films — Newsweed">
+<meta name="twitter:description" content="Movies opening in theaters now with AMC showtimes, Mark Nejmeh&#39;s reviews, and a free place for up-and-coming actors, directors and short-film makers to promote themselves.">
+<meta name="twitter:image" content="https://newsweed.com/og.png">
+<meta name="theme-color" content="#1d2470">
+<!-- meta:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nw.css?v=4g">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<style>
+.mv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:10px 0 6px}
+.mv{border:1px solid #e3e3e3;border-radius:10px;padding:12px 14px;background:#fff;display:flex;flex-direction:column;gap:4px}
+.mv b{font:700 17px/1.25 var(--serif,Fraunces,serif)}
+.mv .m{font:500 12px var(--mono,monospace);color:var(--ink3,#666)}
+.mv .amc{margin-top:auto;display:inline-block;font:700 13px var(--sans);color:#fff;background:#b3261e;border-radius:8px;padding:7px 10px;text-decoration:none;text-align:center}
+.mv .free{font:500 11px var(--mono,monospace);color:var(--ink3,#777)}
+.soon li{margin:4px 0}
+.tal-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.tal-tabs button{font:600 14px var(--sans);padding:8px 12px;border-radius:999px;border:1px solid #ccc;background:#fff;cursor:pointer}
+.tal-tabs button.on{background:#1d2470;color:#fff;border-color:#1d2470}
+.tal{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.tal .c{border:1px solid #e3e3e3;border-radius:10px;overflow:hidden;background:#fff}
+.tal .c img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#f2f2f2}
+.tal .c.film img{aspect-ratio:16/9}
+.tal .c div{padding:10px 12px;font:400 14.5px/1.5 var(--sans)}
+.tal .c b{font:700 16px var(--serif,Fraunces,serif);display:block}
+.tal .c .by{font:500 12px var(--mono,monospace);color:var(--ink3,#666)}
+.tal .c .rep{background:none;border:0;color:#999;font-size:12px;cursor:pointer;padding:0}
+.tf{display:grid;gap:10px;max-width:620px}
+.tf label{font:600 14px var(--sans)}
+.tf input,.tf textarea,.tf select{width:100%;font:400 15px var(--sans);padding:9px 10px;border:1px solid #ccc;border-radius:8px}
+.tf .note{font:400 13px var(--sans);color:#666}
+.tf button{font:700 15px var(--sans);padding:11px 16px;border:0;border-radius:10px;background:#1d2470;color:#fff;cursor:pointer;justify-self:start}
+.hp{position:absolute;left:-5000px}
+</style></head>
+<body data-group="arts">
+<div id="nw-top"></div>
+<div class="wrap">
+  <div class="sect-head"><span class="k">Movies &amp; Entertainment</span><h1>Movies &amp; Entertainment</h1>
+    <p>What is opening in theaters, reviews by Mark Nejmeh, and a free stage for the actors, directors and short-film makers on their way up.</p></div>
+  <div class="cols2">
+    <main>
+      <section class="block" id="now"><div class="kicker"><h2>Now in theaters</h2></div>
+        <p class="note" style="font:400 13px var(--sans);color:#666;margin:0 0 6px">Opened in U.S. theaters in the last five weeks, from Wikipedia&rsquo;s list of 2026 American releases. Showtimes and tickets: AMC Theatres.</p>
+        <div class="mv-grid" id="mvnow"><div class="loading">Loading&hellip;</div></div>
+      </section>
+      <section class="block" id="soon"><div class="kicker green"><h2>Coming soon</h2></div><ul class="soon" id="mvsoon"><li class="loading">Loading&hellip;</li></ul></section>
+      <section class="block" id="reviews"><div class="kicker"><h2>Reviews by Mark Nejmeh</h2></div><div id="revlist"></div></section>
+      <div data-house-inline></div>
+      <section class="block" id="upandcoming"><div class="kicker green"><h2>Up and coming</h2></div>
+        <p>Actors, directors and short-film makers: promote yourself here, free. Every actor shows a head shot and a location; every short film shows a picture and its plot in one paragraph.</p>
+        <div class="tal-tabs" role="tablist"><button class="on" data-k="actors">Actors</button><button data-k="directors">Directors</button><button data-k="films">Short films</button><button data-k="post">Promote yourself</button></div>
+        <div class="tal" id="tallist"><div class="loading">Loading&hellip;</div></div>
+        <form class="tf" id="talform" hidden>
+          <label>I am posting<select name="kind" id="tkind"><option value="actor">an actor (me)</option><option value="director">a director (me)</option><option value="film">a short film</option></select></label>
+          <label><span id="lname">Your name</span><input name="name" maxlength="80" required></label>
+          <label>Location (city and state, or country)<input name="location" maxlength="80" required></label>
+          <label class="k-actor">Character: the kind of role you play (preferred)<input name="character" maxlength="120" placeholder="e.g. the tough cop, the comic best friend"></label>
+          <label class="k-film" hidden>Film title<input name="title" maxlength="120"></label>
+          <label class="k-film" hidden>The plot, in one paragraph<textarea name="plot" rows="5" maxlength="1200"></textarea></label>
+          <label class="k-person">About you and your work, one paragraph<textarea name="text" rows="4" maxlength="1200"></textarea></label>
+          <label>Link to your reel, trailer or film (optional, https://)<input name="link" maxlength="300"></label>
+          <label><span id="limg">Head shot (required)</span><input type="file" name="image" accept="image/*" required></label>
+          <label>Email (private, never shown)<input type="email" name="email" maxlength="120" required></label>
+          <label>Phone (private, never shown)<input name="phone" maxlength="30" required></label>
+          <label style="font-weight:400"><input type="checkbox" name="agree" style="width:auto"> The picture and words are mine to post, and I am 18 or older.</label>
+          <input class="hp" name="website" tabindex="-1" autocomplete="off">
+          <button type="submit">Post it, free</button>
+          <p class="note" id="tmsg"></p>
+          <p class="note">Your post shows at once, marked &ldquo;Posted by the artist.&rdquo; Newsweed does not check it; three reader reports take a post down for review. No adult content, no drugs.</p>
+        </form>
+      </section>
+      <div data-house-inline></div>
+    </main>
+    <aside id="rail"></aside>
+  </div>
+</div>
+<div id="nw-foot" data-build="Built 2026-11-20 · movies-1a"></div>
+<script src="/nw.js?v=4q"></script><script src="/section.js?v=1i"></script>
+<script>
+/* movies-1a (Mark 2026-11-20: 'movies and entertainement lets goive amc free ads on current movies and i will write the reviews';
+   'up and coming actors and directors ... short films pic required and one paragraph plot'; 'all actors require head shot and location, character prefeered') */
+(function () {
+  var E = NW.esc, AMC = "https://www.amctheatres.com/movies";
+  function day(d) { var p = String(d).split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString("en-US", { month: "short", day: "numeric" }); }
+  /* Mark's reviews: added here as he writes them, newest first: { title, date, text } - his words only */
+  var REVIEWS = [];
+  document.getElementById("revlist").innerHTML = REVIEWS.length ? REVIEWS.map(function (r) { return '<article style="margin-bottom:16px"><b style="font:700 18px var(--serif)">' + E(r.title) + '</b><div style="font:500 12px var(--mono);color:#666">' + E(r.date) + '</div><p>' + E(r.text) + '</p></article>'; }).join("")
+    : '<p style="color:#666">Mark Nejmeh&rsquo;s reviews of the films in theaters appear here as he writes them.</p>';
+  fetch("/api/movies").then(function (r) { return r.json(); }).then(function (d) {
+    var now = (d && d.now) || [], soon = (d && d.soon) || [];
+    document.getElementById("mvnow").innerHTML = now.length ? now.map(function (m) {
+      return '<div class="mv"><b>' + E(m.title) + '</b><span class="m">Opened ' + day(m.date) + (m.company ? ' &middot; ' + E(m.company.split(" / ")[0]) : '') + '</span>'
+        + (m.wiki ? '<a class="m" href="' + E(m.wiki) + '" target="_blank" rel="noopener">About the film</a>' : '')
+        + '<a class="amc" href="' + AMC + '" target="_blank" rel="noopener">Showtimes &amp; tickets at AMC &rarr;</a><span class="free">Free listing for AMC Theatres</span></div>';
+    }).join("") : '<p style="color:#666">The list of films is not available right now. <a href="' + AMC + '" target="_blank" rel="noopener">See what is playing at AMC Theatres &rarr;</a></p>';
+    document.getElementById("mvsoon").innerHTML = soon.length ? soon.map(function (m) { return '<li><b>' + E(m.title) + '</b> &middot; opens ' + day(m.date) + (m.company ? ' &middot; ' + E(m.company.split(" / ")[0]) : '') + '</li>'; }).join("") : '<li style="color:#666">Nothing listed for the next three weeks.</li>';
+  }).catch(function () { document.getElementById("mvnow").innerHTML = '<p><a href="' + AMC + '" target="_blank" rel="noopener">See what is playing at AMC Theatres &rarr;</a></p>'; });
+
+  var data = { actors: [], directors: [], films: [] }, cur = "actors", list = document.getElementById("tallist"), form = document.getElementById("talform");
+  function card(p) {
+    return '<div class="c' + (p.kind === "film" ? ' film' : '') + '"><img loading="lazy" src="/api/talent?img=' + encodeURIComponent(p.id) + '" alt="' + E(p.kind === "film" ? p.title : p.name) + '"><div>'
+      + '<b>' + E(p.kind === "film" ? p.title : p.name) + '</b><span class="by">' + E(p.kindName) + (p.kind === "film" ? ' &middot; directed by ' + E(p.name) : '') + ' &middot; ' + E(p.location) + '</span>'
+      + (p.character ? '<p style="margin:6px 0 0"><i>Plays: ' + E(p.character) + '</i></p>' : '')
+      + (p.plot ? '<p style="margin:6px 0 0">' + E(p.plot) + '</p>' : '') + (p.text ? '<p style="margin:6px 0 0">' + E(p.text) + '</p>' : '')
+      + (p.link ? '<p style="margin:6px 0 0"><a href="' + E(NW.safeUrl(p.link)) + '" target="_blank" rel="noopener nofollow">Watch / see more &rarr;</a></p>' : '')
+      + '<p class="by" style="margin:8px 0 0">Posted by the artist &middot; <button class="rep" data-id="' + E(p.id) + '">Report</button></p></div></div>';
+  }
+  function show() {
+    form.hidden = cur !== "post"; list.hidden = cur === "post";
+    if (cur !== "post") list.innerHTML = (data[cur] || []).length ? data[cur].map(card).join("") : '<p style="color:#666">No ' + (cur === "films" ? "short films" : cur) + ' posted yet. <a href="#upandcoming" data-k="post" class="go">Be the first, free &rarr;</a></p>';
+  }
+  document.querySelectorAll(".tal-tabs button").forEach(function (b) { b.addEventListener("click", function () { document.querySelectorAll(".tal-tabs button").forEach(function (x) { x.classList.toggle("on", x === b); }); cur = b.dataset.k; show(); }); });
+  list.addEventListener("click", function (e) {
+    var g = e.target.closest(".go"); if (g) { e.preventDefault(); document.querySelector('.tal-tabs button[data-k="post"]').click(); return; }
+    var r = e.target.closest(".rep"); if (!r) return;
+    fetch("/api/talent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "report", id: r.dataset.id }) }).then(function () { r.textContent = "Reported, thank you"; r.disabled = true; });
+  });
+  fetch("/api/talent").then(function (r) { return r.json(); }).then(function (d) { data = d || data; show(); }).catch(function () { show(); });
+  var kind = document.getElementById("tkind");
+  function kindUI() {
+    var k = kind.value;
+    form.querySelectorAll(".k-actor").forEach(function (x) { x.hidden = k !== "actor"; });
+    form.querySelectorAll(".k-film").forEach(function (x) { x.hidden = k !== "film"; });
+    form.querySelectorAll(".k-person").forEach(function (x) { x.hidden = k === "film"; });
+    document.getElementById("lname").textContent = k === "film" ? "Director's name" : "Your name";
+    document.getElementById("limg").textContent = k === "actor" ? "Head shot (required)" : k === "film" ? "A still or poster from the film (required)" : "Your photo (required)";
+  }
+  kind.addEventListener("change", kindUI); kindUI();
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); var msg = document.getElementById("tmsg"); msg.textContent = "";
+    var f = form.elements, file = f.image.files[0];
+    if (!file) { msg.textContent = kind.value === "actor" ? "A head shot is required." : "A picture is required."; return; }
+    var rd = new FileReader();
+    rd.onload = function () {
+      var img = new Image(); img.onload = function () {
+        var s = Math.min(1, 1200 / Math.max(img.width, img.height)), cv = document.createElement("canvas");
+        cv.width = Math.round(img.width * s); cv.height = Math.round(img.height * s); cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+        var body = { action: "post", kind: kind.value, name: f.name.value, location: f.location.value, character: f.character.value, title: f.title.value, plot: f.plot.value,
+          text: f.text.value, link: f.link.value, email: f.email.value, phone: f.phone.value, agree: f.agree.checked, website: f.website.value, image: cv.toDataURL("image/jpeg", 0.85).split(",")[1] };
+        msg.textContent = "Posting...";
+        fetch("/api/talent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }).then(function (d) {
+          if (!d.success) { msg.textContent = d.error || "Could not post."; return; }
+          msg.textContent = "Posted. Thank you."; form.reset(); kindUI();
+          fetch("/api/talent").then(function (r) { return r.json(); }).then(function (d2) { data = d2 || data; });
+        }).catch(function () { msg.textContent = "Could not post. Please try again."; });
+      }; img.onerror = function () { msg.textContent = "That file is not a picture we can read."; }; img.src = rd.result;
+    };
+    rd.readAsDataURL(file);
+  });
+})();
+</script>
+</body>
+</html>

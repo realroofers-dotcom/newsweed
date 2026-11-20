@@ -31,6 +31,7 @@
     farm: '<path d="M12 20.5v-8"/><path d="M12 12.5C12 8 8.8 5.5 4.5 5.5c0 4.3 3 7 7.5 7zM12 14.5c0-4 2.8-6.5 7.5-6.5 0 4-3 6.5-7.5 6.5z"/><path d="M6 20.5h12"/>',
     college: '<path d="M2.5 9l9.5-4.5L21.5 9 12 13.5z"/><path d="M6.5 11v4.5c1.6 1.4 3.4 2 5.5 2s3.9-.6 5.5-2V11M21.5 9v5"/>',
     books: '<path d="M12 6.5c-2-1.4-4.8-2-8-1.8v13c3.2-.2 6 .4 8 1.8 2-1.4 4.8-2 8-1.8v-13c-3.2-.2-6 .4-8 1.8zM12 6.5v13"/>',
+    movies: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 11h18M7 7l2-4M12 7l2-4M17 7l2-4"/>',   // 2026-11-20 movies-1a
     arts: '<path d="M9 18V6.5l11-2.5v11.5"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/>',
     gambling: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="8.5" cy="8.5" r="1.1"/><circle cx="15.5" cy="8.5" r="1.1"/><circle cx="12" cy="12" r="1.1"/><circle cx="8.5" cy="15.5" r="1.1"/><circle cx="15.5" cy="15.5" r="1.1"/>',
     where: '<circle cx="9" cy="9.5" r="5.5"/><circle cx="15" cy="9.5" r="5.5"/><circle cx="12" cy="14.5" r="5.5"/>',
@@ -67,6 +68,7 @@
     ["/farm.html", "Farm", "farm", "#3f7d20"],
     ["/college.html", "Schools", "college", "#1d2470"],
     ["/books.html", "Books", "books", "#6b4f2a"],
+    ["/movies.html", "Movies", "movies", "#b3261e"],   // 2026-11-20 movies-1a
     ["/arts.html", "Music & Arts", "arts", "#8e24aa"],
     ["/#world", "World", "world", "#00796b"],
     ["/writer.html?w=luis-orozco", "Medellín", "luis", "#c77f1c"],

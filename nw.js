@@ -29,7 +29,7 @@
     ["/farm.html", "Farm & Garden"],
     ["/college.html", "Schools & Colleges"],
     ["/books.html", "Books & Libraries"],
-    ["/movies.html", "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M3 11h18M7 7l2-4M12 7l2-4M17 7l2-4\"/></svg> Movies & Entertainment"],   // 2026-11-20 movies-1a
+    ["/movies.html", "Movies & Entertainment"],   // 2026-11-20 movies-1a; icon removed from the menu (Mark: 'that icon is terrible for movies and it messes up the heading')
     ["/arts.html", "Arts & Music"],
     ["/gambling.html", "Gambling"],
     ["/where.html", "Where it meets"],

@@ -115,15 +115,27 @@
         "Opposite that heavy, weathered reality stands Mariana di Girolamo as Monica, a college student from Chile. She represents the vibrant fruit of life—youth, beauty, and uncorrupted idealism. Yet for an aging man staring down the bottom of the bucket, her presence is also a poignant reminder of what is permanently out of reach. She experiences the harsh realities of the world her generation inherited, while embodying the grace and vitality that the dying can only witness from afar.",
         "Framed against the quiet, unbothered sweep of nature—where wild horses roam indifferent to human secrets and politics—Wild Horse Nine is a haunting meditation on mortality. It asks us to look closely at the cost of our choices before we run out of time to tell the truth."
       ],
-      sources: ["https://www.hollywoodreporter.com/movies/movie-features/martin-mcdonagh-interview-making-wild-horse-9-1236753454/", "https://www.imdb.com/title/tt15799564/quotes/"] }
+      sources: ["https://www.hollywoodreporter.com/movies/movie-features/martin-mcdonagh-interview-making-wild-horse-9-1236753454/", "https://www.imdb.com/title/tt15799564/quotes/"] },
+    /* review-1b (2026-11-20): Mark's review of Nov 15, 2026 (first published on his Substack), his words exactly; no star rating given, none shown */
+    { title: "How to Rob a Bank (2026): Not a Toga Party, But a Generational Warning Shot", stars: 3.5, sub: "Animal House lets get serious the kids want it back. Wolf Up!",
+      by: "Newsweed.com and Mark Nejmeh", byLink: "https://substack.com/@marknejmeh", date: "Nov 15, 2026",
+      paras: [
+        "Every generation gets a movie that captures the exact moment its frustration boils over. In 1978, Animal House tapped into the anti-establishment rebellion of the late Vietnam era. In 2026, director David Leitch’s How to Rob a Bank has the makings of that same kind of cultural smash hit—except this time, the rebellion isn’t about campus rules, and it isn’t a toga party. It’s about an entire generation realizing the economic game is rigged against them.",
+        "On the surface, the movie is a fast-paced, social-media-fueled heist thriller starring Nicholas Hoult, Zoë Kravitz, and Pete Davidson. A crew of everyday people puts on wolf masks, robs banks in Pittsburgh, and livestreams the whole thing to an audience cheering them on. It’s loud, kinetic, and entertaining.",
+        "Beneath the action, though, the film hits a raw nerve that has been building for over twenty years.",
+        "To understand why audiences are connecting with this story, look at the timeline since 9/11. Working- and middle-class families watched the 2008 housing crash wipe out their home equity while Wall Street got bailed out. Traditional pensions vanished, forcing ordinary people to gamble their retirement in a stock market dominated by high-frequency trading, complex derivatives, and dense filings nobody can read. Today’s young adults aren’t just worried about losing what they have—they look at housing prices, inflation, and corporate insiders, and conclude they will never get a piece of the pie in the first place.",
+        "That is the powder keg How to Rob a Bank lights a match to, and Pete Davidson is the ideal guy to hold it. Playing Vince, an Afghanistan veteran pulled into the heist crew, Davidson serves as the ultimate “hey, what’s up” everyman for a generation that grew up watching 9/11 unfold and lived through every institutional failure since. He doesn’t play a slick movie-star criminal; he plays a guy who has seen the mess up close, shrugs at the absurdity of the system, and decides to push back.",
+        "How to Rob a Bank captures the exact mood on the ground right now—that feeling of the Vietnam era all over again, where the youth are ready to take to the streets because the shit is hitting the fan. Hollywood may have set out to make an action comedy, but they accidentally delivered a wake-up call. Wolf up, folks."
+      ], sources: [] }
   ];
   function revHtml(r) {
     var p = r.paras.map(function (t) {
       return '<p>' + E(t).replace(/\{(\d)\}/g, function (m, n) { var u = r.sources[n - 1]; return u ? '<sup><a href="' + E(u) + '" target="_blank" rel="noopener">[' + n + ']</a></sup>' : ''; }) + '</p>';
     }).join("");
-    return '<article style="margin-bottom:22px"><b style="font:800 24px/1.2 var(--serif)">' + E(r.title) + '</b>'
-      + '<div style="font:700 20px var(--sans);color:#c77f1c;letter-spacing:2px;margin:4px 0" aria-label="' + r.stars + ' stars">' + "★★★★★".slice(0, r.stars) + '<span style="color:#ccc">' + "★★★★★".slice(r.stars) + '</span></div>'
-      + '<div style="font:500 12px var(--mono);color:#666">' + r.stars + ' stars by Mark Nejmeh &middot; ' + E(r.date) + '</div>'
+    return '<article style="margin-bottom:28px;padding-top:6px;border-top:1px solid #eee"><b style="font:800 24px/1.2 var(--serif)">' + E(r.title) + '</b>'
+      + (r.sub ? '<div style="font:italic 500 18px var(--serif);color:#444;margin:4px 0">' + E(r.sub) + '</div>' : '')
+      + (r.stars ? '<div style="font:700 20px var(--sans);color:#c77f1c;letter-spacing:2px;margin:4px 0" aria-label="' + r.stars + ' stars">' + "★★★★★".slice(0, Math.floor(r.stars)) + (r.stars % 1 ? '½' : '') + '<span style="color:#ccc">' + "★★★★★".slice(Math.ceil(r.stars)) + '</span></div>' : '')
+      + '<div style="font:500 12px var(--mono);color:#666">' + (r.stars ? r.stars + ' stars by ' : 'By ') + (r.byLink ? E(r.by).replace('Mark Nejmeh', '<a href="' + E(r.byLink) + '" target="_blank" rel="noopener">Mark Nejmeh</a>') : E(r.by || 'Mark Nejmeh')) + ' &middot; ' + E(r.date) + '</div>'
       + (r.pull ? '<blockquote style="margin:12px 0;padding:8px 14px;border-left:4px solid #b3261e;font:italic 500 19px var(--serif)">&ldquo;' + E(r.pull) + '&rdquo;</blockquote>' : '')
       + p + '<a class="mv amc" style="display:inline-block;color:#fff;background:#b3261e;border-radius:8px;padding:8px 12px;text-decoration:none;font:700 13px var(--sans)" href="' + AMC + '" target="_blank" rel="noopener">Showtimes &amp; tickets at AMC &rarr;</a></article>';
   }

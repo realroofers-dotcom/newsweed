@@ -1,4 +1,4 @@
-/* maps.js — BUILT 2026-09-29 · maps-1b (+ state panel, values)
+/* maps.js — BUILT 2026-09-29 · maps-1b (+ state panel, values) · maps-1c 2026-11-20 (a tapped state shows its own news first)
    The Newsweed tile map: one square per state, one tap to open it.
    Needs states-data.js loaded first.
 
@@ -78,17 +78,24 @@
 
   // The panel under a map when a state is tapped: its top story and the headlines behind the count.
   // kind: "crime" | "dui" | "gambling" | "drugs" | null (top story only)
-  function panel(el, rec, code, kind, words) {
+  function panel(el, rec, code, kind, words, fetched) {
+    /* maps-1c: every page's state tap fetches that state's full news (/api/states?state=XX) once, then redraws */
+    if (!fetched && !(rec && rec.news)) {
+      fetch("/api/states?state=" + encodeURIComponent(code)).then(function (r) { return r.json(); }).then(function (j) { panel(el, (j && j.state) || rec, code, kind, words, true); }).catch(function () { panel(el, rec, code, kind, words, true); });
+      if (!rec) { el.innerHTML = '<h4>' + esc(window.NW_STATES.by[code].name) + '</h4><p class="note" style="margin:0">Gathering the news&hellip;</p>'; return; }
+    }
     var D = window.NW_STATES, st = D.by[code], safe = function (u) { return /^https?:\/\//i.test(u || "") ? u : "#"; };
     if (!rec) { el.innerHTML = '<h4>' + esc(st.name) + '</h4><p class="note" style="margin:0">Not gathered yet. States refresh through the day; try again shortly.</p>'; return; }
     var h = '<h4>' + esc(st.name) + '</h4><div class="src">Cannabis: ' + esc(D.CANNABIS_LABELS[st.cannabis]) + (st.note ? " (" + esc(st.note) + ")" : "") + '</div>';
+    /* maps-1c (2026-11-20, Mark: 'when i press a state i should get the news for that state'): the state's latest news first */
+    var news = (rec.news && rec.news.length) ? rec.news : rec.latest;
+    if (news && news.length) h += '<div class="kicker" style="margin-top:10px;border-top-width:1px"><h2>' + esc(st.name) + ' news &middot; ' + news.length + ' stories</h2></div><ul class="hl small" style="max-height:520px;overflow:auto">' + news.map(function (a) { return '<li><a href="' + esc(safe(a.link)) + '" target="_blank" rel="noopener">' + esc(a.title) + '</a><span class="src">' + esc(a.source || "") + (a.pubDate && window.NW && NW.ago ? ' &middot; ' + esc(NW.ago(a.pubDate)) : '') + '</span></li>'; }).join("") + '</ul>';
+    else if (rec.top) h += '<div class="kicker" style="margin-top:10px;border-top-width:1px"><h2>' + esc(st.name) + ' news</h2></div><a href="' + esc(safe(rec.top.link)) + '" target="_blank" rel="noopener" style="font:600 15px/1.3 var(--serif)">' + esc(rec.top.title) + '</a>' + (rec.top.story ? '<p class="story">' + esc(rec.top.story) + '</p>' : "") + '<div class="src">' + esc(rec.top.source || "") + '</div>';
     if (kind) {
       var list = rec[kind] || [];
       h += '<p class="story" style="margin-top:8px"><b>' + ((rec.counts || {})[kind] || 0) + '</b> ' + esc(words || kind + " headlines") + ' in the latest ' + ((rec.counts || {}).sample || 0) + ' ' + esc(st.name) + ' stories checked.</p>';
       if (list.length) h += '<ul class="hl small">' + list.map(function (a) { return '<li><a href="' + esc(safe(a.link)) + '" target="_blank" rel="noopener">' + esc(a.title) + '</a><span class="src">' + esc(a.source) + '</span></li>'; }).join("") + '</ul>';
     }
-    if (rec.top) h += '<div class="kicker" style="margin-top:10px;border-top-width:1px"><h2>Top story</h2></div><a href="' + esc(safe(rec.top.link)) + '" target="_blank" rel="noopener" style="font:600 15px/1.3 var(--serif)">' + esc(rec.top.title) + '</a>'
-      + (rec.top.story ? '<p class="story">' + esc(rec.top.story) + '</p>' : "") + '<div class="src">' + esc(rec.top.source || "") + '</div>';
     h += '<p style="margin:8px 0 0"><a href="/states.html#' + code + '" style="color:var(--navy);font-size:13px">All of ' + esc(st.name) + ' →</a></p>';
     el.innerHTML = h;
   }

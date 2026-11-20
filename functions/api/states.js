@@ -1,4 +1,4 @@
-// functions/api/states.js — BUILT 2026-09-29 · states-1a
+// functions/api/states.js — BUILT 2026-09-29 · states-1a · states-1b 2026-11-20 (latest: the state's own headlines, for the tap)
 //
 // The 50-state desk, and the numbers behind the maps.
 //   GET /api/states             -> { states: { NY: {...}, ... }, asOf }
@@ -16,7 +16,7 @@
 // map moving; a state is refreshed when its data is older than STALE_HOURS.
 
 import { STATE_NAMES, isState } from "../_lib/states.js";
-import { gnSearch, bing, firstFeed, clean, fingerprint } from "../_lib/rss.js";
+import { gnSearch, bing, firstFeed, fetchFeed, clean, fingerprint } from "../_lib/rss.js";
 
 const KEY = "states:v1";
 const STALE_HOURS = 3;
@@ -76,14 +76,39 @@ async function refresh(code) {
     counts,
     crime: pick.crime, dui: pick.dui, gambling: pick.gambling, drugs: pick.drugs,
     authors: clean(auth.items).slice(0, 4).map(small),
+    /* states-1b (2026-11-20, Mark: 'when i press a state i should get the news for that state'): the state's latest headlines */
+    latest: topItems.slice(0, 8).map(it => Object.assign(small(it), { story: String(it.snippet || "").slice(0, 240) })),
     updated: new Date().toISOString()
   };
 }
 
 function small(it) { return { title: it.title, link: it.link, source: it.source, pubDate: it.pubDate }; }
 
-export async function onRequestGet(context) {
-  const kv = context.env.EMAIL_LIST;
+/* states-1c (2026-11-20, Mark: 'not just one story all the stories we can aggreagate'): when a state is tapped, every story
+   we can gather for it - Bing News and Google News, four searches, newest first, duplicates removed - kept 1 hour per state
+   (KV statenews:<code>). Headlines, publisher and link only, as everywhere on Newsweed. */
+async function stateNews(kv, code) {
+  const key = "statenews:" + code;
+  try { const c = JSON.parse((await kv.get(key)) || "null"); if (c && Date.now() - Date.parse(c.at) < 3600 * 1000) return c.items; } catch (e) {}
+  const name = QNAME[code] || STATE_NAMES[code];
+  const urls = [bing(name + " news"), gnSearch("\"" + name + "\"", 2), bing(name + " local news today"),
+    gnSearch("\"" + name + "\" (governor OR county OR city OR police OR school OR court OR legislature)", 3)];
+  const got = await Promise.allSettled(urls.map(u => fetchFeed(u)));
+  const seen = new Set(), items = [];
+  for (const g of got) {
+    if (g.status !== "fulfilled") continue;
+    for (const it of clean(g.value)) {
+      const fp = fingerprint(it.title); if (!it.title || !it.link || seen.has(fp)) continue;
+      seen.add(fp); items.push(Object.assign(small(it), { story: String(it.snippet || "").slice(0, 240) }));
+    }
+  }
+  items.sort((a, b) => (Date.parse(b.pubDate) || 0) - (Date.parse(a.pubDate) || 0));
+  const keep = items.slice(0, 60);
+  if (keep.length) await kv.put(key, JSON.stringify({ at: new Date().toISOString(), items: keep }));
+  return keep;
+}
+
+export async function onRequestGet(context) {  const kv = context.env.EMAIL_LIST;
   const url = new URL(context.request.url);
   if (!kv) return ok({ states: {} });
   const all = await load(kv);
@@ -91,13 +116,15 @@ export async function onRequestGet(context) {
 
   if (one) {
     if (!isState(one)) return ok({ error: "Unknown state." });
-    if (isStale(all[one])) {
+    if (isStale(all[one]) || !all[one].latest) {
       try {
         all[one] = await refresh(one);
         await kv.put(KEY, JSON.stringify(all));
       } catch (e) {}
     }
-    return ok({ state: all[one] || null });
+    let news = [];
+    try { news = await stateNews(kv, one); } catch (e) {}
+    return ok({ state: all[one] ? Object.assign({}, all[one], { news }) : (news.length ? { code: one, name: STATE_NAMES[one], news, counts: {} } : null) });
   }
 
   // Refresh the stalest few, oldest first (never-fetched states come first).

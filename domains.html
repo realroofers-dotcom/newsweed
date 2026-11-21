@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Domains for Sale: names and prices at Wall St Domains, and list your own free for 6 months — Newsweed</title>
+<title>Domains and Websites for Sale: names, prices and built, live sites at Wall St Domains — Newsweed</title>
 <meta name="description" content="Domain names for sale with prices, each with its own page at Wall St Domains. Black Friday holiday sale: list your own domain free for 6 months, no commission, then $15 a month, through Jan 2, 2027.">
 <link rel="canonical" href="https://newsweed.com/domains">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -46,6 +46,19 @@
 .dc .ct{font:500 11.5px var(--mono,monospace);color:#888;text-transform:uppercase;letter-spacing:.06em}
 .dc .go{margin-top:auto;font:700 13px var(--sans);color:#b3261e}
 .dmeta{font:400 13px var(--sans);color:#666;margin:6px 0 10px}
+.two{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:20px;align-items:start}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.two .dgrid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr))}
+.ch{font:800 20px var(--serif,Fraunces,serif);margin:4px 0 6px;color:#1d2470}
+.colB{background:#fbfaf6;border:1px solid #e8e2d0;border-radius:12px;padding:12px 14px}
+.pgrid{display:grid;gap:10px}
+.pc{border:1px solid #e3e3e3;border-left:5px solid #e8b230;border-radius:10px;padding:11px 12px;background:#fff}
+.pc b{display:block;font:700 17px var(--sans);color:#0f172a;word-break:break-all}
+.pc .pr{display:block;font:700 15px var(--mono,monospace);color:#0b5d1e;margin:2px 0 4px}
+.pc p{margin:0 0 8px;font:400 13.5px/1.45 var(--sans);color:#444}
+.pc .lk{display:flex;flex-wrap:wrap;gap:8px}
+.pc .lk a{font:700 12.5px var(--sans);text-decoration:none;border-radius:8px;padding:6px 10px;background:#0f172a;color:#fff}
+.pc .lk a.live{background:#fff;color:#0f172a;border:1px solid #0f172a}
 </style></head>
 <body data-group="markets">
 <div id="nw-top"></div>
@@ -74,10 +87,22 @@
 
       <div data-house-inline></div>
 
-      <section class="block" id="forsale"><div class="kicker"><h2>Names for sale now</h2></div>
-        <div class="dtools"><input id="dq" type="search" placeholder="Search a name or a word (roof, solar, news...)" aria-label="Search domains"><select id="dcat" aria-label="Category"><option value="">All categories</option></select><select id="dsort" aria-label="Sort"><option value="name">A to Z</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select></div>
-        <p class="dmeta" id="dmeta">Loading the list from Wall St Domains&hellip;</p>
-        <div class="dgrid" id="dgrid"></div>
+      <!-- domains-1c (Mark 2026-11-21: "on newsweed.com i want to list the domains for sale and the completed projects for sale as well two columns") -->
+      <section class="block" id="forsale"><div class="kicker"><h2>For sale now</h2></div>
+        <div class="two">
+          <div class="colA">
+            <h3 class="ch">&#127760; Domain names</h3>
+            <div class="dtools"><input id="dq" type="search" placeholder="Search a name or a word (roof, solar, news...)" aria-label="Search domains"><select id="dcat" aria-label="Category"><option value="">All categories</option></select><select id="dsort" aria-label="Sort"><option value="name">A to Z</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select></div>
+            <p class="dmeta" id="dmeta">Loading the list from Wall St Domains&hellip;</p>
+            <div class="dgrid" id="dgrid"></div>
+          </div>
+          <div class="colB" id="projects">
+            <h3 class="ch">&#128640; Completed projects</h3>
+            <p class="dmeta">Built, live websites sold whole: the name, the site and the code. See each one running before you decide.</p>
+            <div class="pgrid" id="pgrid"><p class="dmeta">Loading&hellip;</p></div>
+            <p style="margin:10px 0 0"><a href="https://wallstdomains.com/businesses-for-sale" style="font:700 14px var(--sans)">Every completed project at Wall St Domains &rarr;</a></p>
+          </div>
+        </div>
       </section>
 
       <div data-house-inline></div>
@@ -113,6 +138,12 @@
   }
   fetch("/api/domains").then(function (r) { return r.json(); }).then(function (d) {
     all = (d && d.domains) || [];
+    /* domains-1c: the completed projects column */
+    var pr = (d && d.projects) || [], pg = document.getElementById("pgrid");
+    pg.innerHTML = pr.length ? pr.map(function (p) {
+      return '<div class="pc"><b>' + E(p.name) + '</b><span class="pr">' + money(p.price) + '</span>' + (p.blurb ? '<p>' + E(p.blurb) + '</p>' : '')
+        + '<div class="lk"><a href="https://wallstdomains.com/domain/' + encodeURIComponent(p.name) + '">Buy at Wall St Domains &rarr;</a><a class="live" href="https://' + encodeURIComponent(p.name) + '/" rel="noopener">See it live</a></div></div>';
+    }).join("") : '<p class="dmeta"><a href="https://wallstdomains.com/businesses-for-sale">See the completed projects at Wall St Domains &rarr;</a></p>';
     if (!all.length) { meta.innerHTML = 'The list is resting. <a href="https://wallstdomains.com/">See every name at Wall St Domains &rarr;</a>'; return; }
     var cats = {}; all.forEach(function (x) { if (x.category) cats[x.category] = (cats[x.category] || 0) + 1; });
     Object.keys(cats).sort().forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = k + " (" + cats[k] + ")"; cat.appendChild(o); });

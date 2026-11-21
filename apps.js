@@ -32,6 +32,7 @@
     college: '<path d="M2.5 9l9.5-4.5L21.5 9 12 13.5z"/><path d="M6.5 11v4.5c1.6 1.4 3.4 2 5.5 2s3.9-.6 5.5-2V11M21.5 9v5"/>',
     books: '<path d="M12 6.5c-2-1.4-4.8-2-8-1.8v13c3.2-.2 6 .4 8 1.8 2-1.4 4.8-2 8-1.8v-13c-3.2-.2-6 .4-8 1.8zM12 6.5v13"/>',
     movies: '<circle cx="11" cy="11" r="8"/><circle cx="11" cy="6.5" r="1.7"/><circle cx="11" cy="15.5" r="1.7"/><circle cx="6.5" cy="11" r="1.7"/><circle cx="15.5" cy="11" r="1.7"/><path d="M15.5 18.5h6"/>',   // 2026-11-20 movies-1a
+    domains: '<circle cx="10" cy="10" r="6.5"/><path d="M3.5 10h13M10 3.5c2 1.8 3 4 3 6.5s-1 4.7-3 6.5M10 3.5c-2 1.8-3 4-3 6.5s1 4.7 3 6.5"/><path d="M14.5 15.5l6 0v5l-4 0-2-2.5z"/>',   // 2026-11-21 domains-1a
     arts: '<path d="M9 18V6.5l11-2.5v11.5"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/>',
     gambling: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="8.5" cy="8.5" r="1.1"/><circle cx="15.5" cy="8.5" r="1.1"/><circle cx="12" cy="12" r="1.1"/><circle cx="8.5" cy="15.5" r="1.1"/><circle cx="15.5" cy="15.5" r="1.1"/>',
     where: '<circle cx="9" cy="9.5" r="5.5"/><circle cx="15" cy="9.5" r="5.5"/><circle cx="12" cy="14.5" r="5.5"/>',
@@ -69,6 +70,7 @@
     ["/college.html", "Schools", "college", "#1d2470"],
     ["/books.html", "Books", "books", "#6b4f2a"],
     ["/movies.html", "Movies", "movies", "#b3261e"],   // 2026-11-20 movies-1a
+    ["/domains.html", "Domains for sale", "domains", "#0b5d1e"],   // 2026-11-21 domains-1a (Black Friday: list free 6 months)
     ["/arts.html", "Music & Arts", "arts", "#8e24aa"],
     ["/#world", "World", "world", "#00796b"],
     ["/writer.html?w=luis-orozco", "Medellín", "luis", "#c77f1c"],

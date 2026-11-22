@@ -235,7 +235,7 @@
   var phone = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   if (phone) Array.prototype.forEach.call(document.querySelectorAll(".ad"), function (el) { el.parentNode.removeChild(el); });
   var appsJs = document.createElement("script");
-  appsJs.src = "/apps.js?v=1h";   /* 2026-11-21 domains-1a tile */
+  appsJs.src = "/apps.js?v=1i";   /* 2026-11-22 goodsolar-1a tile; 1h domains */
   document.body.appendChild(appsJs);
 
   /* ads-between-stories-1a (15 Nov 2026, Mark: "in between stories as well like a real newspaper"): a one-line ad after

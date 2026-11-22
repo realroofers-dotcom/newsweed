@@ -20,7 +20,8 @@
     ["/college.html", "Schools & Colleges", "Campus, seasons, back to school"],
     ["/books.html", "Books & Libraries", "Where America's authors are"],
     ["/movies.html", "Movies & Entertainment", "In theaters, reviews, up and coming"],
-    ["/domains.html", "Domains for Sale", "Names for sale; list yours free for 6 months"],   // 2026-11-21 domains-1a
+    ["/domains.html", "Domains for Sale", "Names for sale; list yours free for 6 months"],
+    ["/goodsolar.html", "GoodSolar", "Solar power where the sun lands; living on the road"],   // 2026-11-22 goodsolar-1a   // 2026-11-21 domains-1a
     ["/arts.html", "Arts & Music", "With MusicIsNews.com"],
     ["/states.html", "50 States", "Top story from every state"],
     ["/dui.html", "Crime & DUI", "The maps, the headlines"],

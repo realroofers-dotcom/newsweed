@@ -144,10 +144,51 @@
       + (r.stars ? '<div style="font:700 20px var(--sans);color:#c77f1c;letter-spacing:2px;margin:4px 0" aria-label="' + r.stars + ' stars">' + "★★★★★".slice(0, Math.floor(r.stars)) + (r.stars % 1 ? '½' : '') + '<span style="color:#ccc">' + "★★★★★".slice(Math.ceil(r.stars)) + '</span></div>' : '')
       + '<div style="font:500 12px var(--mono);color:#666">' + (r.stars ? r.stars + ' stars by ' : 'By ') + (r.byLink ? E(r.by).replace('Mark Nejmeh', '<a href="' + E(r.byLink) + '" target="_blank" rel="noopener">Mark Nejmeh</a>') : E(r.by || 'Mark Nejmeh')) + ' &middot; ' + E(r.date) + '</div>'
       + (r.pull ? '<blockquote style="margin:12px 0;padding:8px 14px;border-left:4px solid #b3261e;font:italic 500 19px var(--serif)">&ldquo;' + E(r.pull) + '&rdquo;</blockquote>' : '')
-      + p + '<a class="mv amc" style="display:inline-block;color:#fff;background:#b3261e;border-radius:8px;padding:8px 12px;text-decoration:none;font:700 13px var(--sans)" href="' + AMC + '" target="_blank" rel="noopener">Showtimes &amp; tickets at AMC &rarr;</a></article>';
+      + p
+      /* ratings-1a (Mark 2026-11-27: 'please start to put ratings from readers on the reviews') */
+      + '<div class="rr" data-slug="' + slugOf(r.title) + '" style="margin:10px 0 12px;padding:10px 12px;background:#faf7f0;border-radius:8px;font:500 14px var(--sans)">'
+      + '<div class="rravg" style="color:#444">Readers: no ratings yet</div>'
+      + '<div style="margin-top:6px">Your rating: <span class="rrstars" role="group" aria-label="Rate this review">'
+      + [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" data-n="' + n + '" aria-label="' + n + ' star' + (n > 1 ? 's' : '') + '" style="background:none;border:0;cursor:pointer;font:700 24px var(--sans);color:#ccc;padding:0 2px">★</button>'; }).join("")
+      + '</span> <span class="rrmsg" style="color:#666;font-size:13px"></span></div></div>'
+      + '<a class="mv amc" style="display:inline-block;color:#fff;background:#b3261e;border-radius:8px;padding:8px 12px;text-decoration:none;font:700 13px var(--sans)" href="' + AMC + '" target="_blank" rel="noopener">Showtimes &amp; tickets at AMC &rarr;</a></article>';
+  }
+  function slugOf(t) { return String(t).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80); }
+  function showAvg(box, a) {
+    var el = box.querySelector(".rravg");
+    if (!a || !a.count) { el.textContent = "Readers: no ratings yet. Be the first."; return; }
+    var full = Math.round(a.avg);
+    el.innerHTML = 'Readers: <span style="color:#c77f1c;letter-spacing:1px">' + "★★★★★".slice(0, full) + '</span><span style="color:#ccc;letter-spacing:1px">' + "★★★★★".slice(full) + '</span> '
+      + a.avg + ' from ' + a.count + ' reader' + (a.count === 1 ? '' : 's');
   }
   document.getElementById("revlist").innerHTML = REVIEWS.length ? REVIEWS.map(revHtml).join("")
     : '<p style="color:#666">Mark Nejmeh&rsquo;s reviews of the films in theaters appear here as he writes them.</p>';
+  (function ratings() {
+    var boxes = [].slice.call(document.querySelectorAll("#revlist .rr"));
+    if (!boxes.length) return;
+    fetch("/api/ratings?slugs=" + boxes.map(function (b) { return b.getAttribute("data-slug"); }).join(","))
+      .then(function (r) { return r.json(); }).then(function (d) { boxes.forEach(function (b) { showAvg(b, d[b.getAttribute("data-slug")]); }); })
+      .catch(function () {});
+    boxes.forEach(function (box) {
+      var btns = [].slice.call(box.querySelectorAll(".rrstars button")), msg = box.querySelector(".rrmsg");
+      function paint(n) { btns.forEach(function (b, i) { b.style.color = i < n ? "#c77f1c" : "#ccc"; }); }
+      btns.forEach(function (b) {
+        var n = +b.getAttribute("data-n");
+        b.addEventListener("mouseenter", function () { paint(n); });
+        b.addEventListener("mouseleave", function () { paint(+box.getAttribute("data-mine") || 0); });
+        b.addEventListener("click", function () {
+          if (box.getAttribute("data-mine")) return;
+          msg.textContent = "Saving...";
+          fetch("/api/ratings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slug: box.getAttribute("data-slug"), stars: n }) })
+            .then(function (r) { return r.json(); }).then(function (d) {
+              if (d.success) { box.setAttribute("data-mine", n); paint(n); msg.textContent = "Thank you for rating."; }
+              else msg.textContent = d.error || "Could not save your rating.";
+              if (d.count) showAvg(box, d);
+            }).catch(function () { msg.textContent = "Could not save your rating. Try again later."; });
+        });
+      });
+    });
+  })();
   fetch("/api/movies").then(function (r) { return r.json(); }).then(function (d) {
     var now = (d && d.now) || [], soon = (d && d.soon) || [];
     document.getElementById("mvnow").innerHTML = now.length ? now.map(function (m) {
